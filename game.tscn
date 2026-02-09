@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://b8pt6dxfyal5k"]
+[gd_scene load_steps=5 format=3 uid="uid://b8pt6dxfyal5k"]
 
 [ext_resource type="PackedScene" uid="uid://ca8du4avx1yur" path="res://ball_piece/ball_piece.tscn" id="1_80nbo"]
 [ext_resource type="Script" uid="uid://c455fht0j102m" path="res://input_handler.gd" id="2_e2o6t"]
 [ext_resource type="Texture2D" uid="uid://cwmtrjt71t2qq" path="res://Orbital_Go_Background.png" id="3_feb5d"]
+[ext_resource type="Script" uid="uid://cwfsl25rho6lh" path="res://trajectory_trace_handler.gd" id="4_fc0e3"]
 
 [node name="Game" type="Node2D"]
 
@@ -21,12 +22,16 @@ texture = ExtResource("3_feb5d")
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(0.85, 0.85)
 
-[node name="InputHandler" type="Node2D" parent="." node_paths=PackedStringArray("black_start_spot", "white_start_spot")]
+[node name="InputHandler" type="Node2D" parent="." node_paths=PackedStringArray("black_start_spot", "white_start_spot", "trajectory_trace_handler")]
 script = ExtResource("2_e2o6t")
 ball_scene = ExtResource("1_80nbo")
 black_start_spot = NodePath("../BlackStartLocation")
 white_start_spot = NodePath("../WhiteStartLocation")
 launch_power_multiplier = 1.0
+trajectory_trace_handler = NodePath("../TrajectoryTraceHandler")
+
+[node name="TrajectoryTraceHandler" type="Node2D" parent="."]
+script = ExtResource("4_fc0e3")
 
 [node name="BlackStartLocation" type="Node2D" parent="."]
 position = Vector2(-434.768, 0)
