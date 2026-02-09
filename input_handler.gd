@@ -4,17 +4,28 @@ extends Node2D
 @export var black_start_spot: Node2D
 @export var white_start_spot: Node2D
 
+@export var launch_power_multiplier: float
+
 var launch_point: Vector2
 var release_point: Vector2
-
 var ball: RigidBody2D
+
+var is_dragging: bool = false
+
+func _process(_delta):
+	if is_dragging:
+		print("launch vector: " + str(launch_vector()))
+		pass
+
+func launch_vector() -> Vector2:
+	return launch_power_multiplier * (Vector2(-get_global_mouse_position().x + launch_point.x,-get_global_mouse_position().y + launch_point.y))
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("spawn_piece"):
-		launch_point = DisplayServer.mouse_get_position()
-		#print("launch point: " + str(launch_point))
+		launch_point = get_global_mouse_position()
 		ball = ball_scene.instantiate()
 		ball.freeze = true
+		is_dragging = true
 		add_child(ball)
 		if Global.is_black_turn:
 			ball.global_position = black_start_spot.global_position
@@ -23,17 +34,6 @@ func _input(event: InputEvent) -> void:
 		
 	
 	if event.is_action_released("spawn_piece"):
-		release_point = DisplayServer.mouse_get_position()
-		#print("release point: " + str(release_point))
-		
-		var y_diff: float = release_point.y - launch_point.y
-		var x_diff: float = release_point.x - launch_point.x
-		
-		print("y diff: " + str(y_diff))
-		print("x diff: " + str(x_diff))
-		
-		var launch_velocity: Vector2 = Vector2(-x_diff,-y_diff)
-		print("velo: " + str(launch_velocity))
-		
 		ball.freeze = false
-		ball.linear_velocity = launch_velocity
+		is_dragging = false
+		ball.linear_velocity = launch_vector()

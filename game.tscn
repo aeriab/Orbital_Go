@@ -26,6 +26,7 @@ script = ExtResource("2_e2o6t")
 ball_scene = ExtResource("1_80nbo")
 black_start_spot = NodePath("../BlackStartLocation")
 white_start_spot = NodePath("../WhiteStartLocation")
+launch_power_multiplier = 1.0
 
 [node name="BlackStartLocation" type="Node2D" parent="."]
 position = Vector2(-434.768, 0)
