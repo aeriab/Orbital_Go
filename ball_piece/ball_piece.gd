@@ -64,14 +64,14 @@ func _ready():
 	connect_area_2d.body_exited.connect(_on_body_exited)
 	
 	
-	if (Global.is_white_turn):
+	if (Global.is_black_turn):
 		polygon_2d.self_modulate = p1_color
 		add_to_group("White")
 	else:
 		polygon_2d.self_modulate = p2_color
 		add_to_group("Black")
 	
-	Global.is_white_turn = !Global.is_white_turn
+	Global.is_black_turn = !Global.is_black_turn
 	
 	sleeping = false
 	#linear_velocity = Vector2(100,100)
