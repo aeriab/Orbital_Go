@@ -49,6 +49,9 @@ func _on_body_entered(body):
 		add_child(line)
 		connections[body] = line
 		
+		if body is Stone:
+			body.connections[self] = line
+		
 		StoneManager.check_for_capture(self)
 		
 	
