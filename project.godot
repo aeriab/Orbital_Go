@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="Four-Body-Problem"
+config/name="Orbital_Go"
 run/main_scene="uid://b8pt6dxfyal5k"
 config/features=PackedStringArray("4.5", "GL Compatibility")
 config/icon="res://icon.svg"

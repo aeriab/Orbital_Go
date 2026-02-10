@@ -17,7 +17,7 @@ var is_dragging: bool = false
 
 func _process(_delta):
 	if is_dragging:
-		trajectory_trace_handler.update_trajectory(ball.global_position, launch_vector())
+		trajectory_trace_handler.update_trajectory(ball, launch_vector())
 
 func launch_vector() -> Vector2:
 	return launch_power_multiplier * (Vector2(-get_global_mouse_position().x + launch_point.x,-get_global_mouse_position().y + launch_point.y))

@@ -30,8 +30,11 @@ white_start_spot = NodePath("../WhiteStartLocation")
 launch_power_multiplier = 1.0
 trajectory_trace_handler = NodePath("../TrajectoryTraceHandler")
 
-[node name="TrajectoryTraceHandler" type="Node2D" parent="."]
+[node name="TrajectoryTraceHandler" type="Node2D" parent="." node_paths=PackedStringArray("trajectory_line")]
 script = ExtResource("4_fc0e3")
+trajectory_line = NodePath("Line2D")
+
+[node name="Line2D" type="Line2D" parent="TrajectoryTraceHandler"]
 
 [node name="BlackStartLocation" type="Node2D" parent="."]
 position = Vector2(-434.768, 0)

@@ -4,10 +4,10 @@ extends Node2D
 var time_step: float = 0.05
 var max_steps: int = 30
 
-func update_trajectory(start_position: Vector2, start_velocity: Vector2):
+func update_trajectory(ball: Stone, start_velocity: Vector2):
 	trajectory_line.clear_points()
 	
-	var pos = start_position
+	var pos = ball.global_position
 	var vel = start_velocity
 	
 	for i in max_steps:
@@ -16,7 +16,7 @@ func update_trajectory(start_position: Vector2, start_velocity: Vector2):
 		# Same force as your ball: direction toward origin * gravity * 100
 		# F = direction_to_center * Global.gravity * 100
 		# For a RigidBody2D with mass 1, acceleration = force
-		var accel = pos.direction_to(Vector2.ZERO) * Global.gravity * 100
+		var accel = ball.stone_acceleration(pos)
 		
 		# Euler integration
 		vel += accel * time_step
