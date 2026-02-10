@@ -37,5 +37,6 @@ func _input(event: InputEvent) -> void:
 	
 	if event.is_action_released("spawn_piece"):
 		ball.freeze = false
+		ball.linear_velocity = Vector2.ZERO
 		is_dragging = false
 		ball.linear_velocity = launch_vector()

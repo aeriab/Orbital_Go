@@ -34,7 +34,8 @@ func stone_acceleration(pos: Vector2) -> Vector2:
 	return pos.direction_to(Vector2.ZERO) * Global.gravity * 100
 
 func _physics_process(_delta: float) -> void:
-	apply_central_force(stone_acceleration(global_position))
+	if not freeze:
+		apply_central_force(stone_acceleration(global_position))
 	
 
 func _on_body_entered(body):

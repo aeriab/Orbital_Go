@@ -1,7 +1,7 @@
 extends Node2D
 @export var trajectory_line: Line2D
 
-var time_step: float = 0.05
+var time_step: float = 1.0 / 60.0
 var max_steps: int = 30
 
 func update_trajectory(ball: Stone, start_velocity: Vector2):
@@ -9,6 +9,7 @@ func update_trajectory(ball: Stone, start_velocity: Vector2):
 	
 	var pos = ball.global_position
 	var vel = start_velocity
+	var damp = ball.linear_damp
 	
 	for i in max_steps:
 		trajectory_line.add_point(pos)
@@ -20,6 +21,8 @@ func update_trajectory(ball: Stone, start_velocity: Vector2):
 		
 		# Euler integration
 		vel += accel * time_step
+		vel *= max(1.0 - damp * time_step, 0.0)
+		
 		var next_pos = pos + vel * time_step
 		
 		# Raycast to check for collisions
