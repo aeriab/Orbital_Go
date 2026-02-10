@@ -91,7 +91,68 @@ func rebuild_union_find() -> void:
 	# don't double-union (since connections are bidirectional)
 	var processed: Dictionary = {}
 	
+	for stone in parent.keys():
+		for connected_stone in stone.connections.keys():
+			if !(is_instance_valid(connected_stone)):
+				continue
+			if !(parent.has(connected_stone)):
+				continue
+			
+			# Create a canonical key so A-B and B-A are the same
+			var key = _pair_key(stone, connected_stone)
+			if processed.has(key):
+				continue
+			processed[key] = true
+			
+			union(stone, connected_stone)
+			
+	
+	
+	
 
+
+# --- Capture Detection ---
+# Called from Stone._on_body_entered when find(a) == find(b),
+# meaning the new connection closed a loop.
+#
+# YOU DECIDE what happens here. Some options:
+# - Delete all stones inside the loop
+# - Score points for the player who made the encirclement
+# - Trigger a visual effect then capture
+#
+# For now, this is a stub you'll fill in with your game logic.
+func on_capture_detected(stone_a: Stone, stone_b: Stone) -> void:
+	print("CAPTURE! Loop closed between ", stone_a, " and ", stone_b)
+	# TODO: Your capture logic here. Some ideas:
+	#
+	# Option A: Find all stones in the loop and do something
+	# var loop_stones = _trace_loop(stone_a, stone_b)
+	#
+	# Option B: Use the influence map idea on just this region
+	# _flood_fill_capture(stone_a, stone_b)
+	#
+	# Option C: Just score points and flash the connections
+	# _award_points(stone_a)
+	# _flash_loop(stone_a, stone_b)
+	pass
+
+# --- Cleanup ---
+# Call this when a stone is destroyed/freed
+func remove_stone(stone: Stone) -> void:
+	unregister_stone(stone)
+	rebuild_union_find()
+
+
+# --- Utility ---
+# Creates a consistent key for a pair regardless of order.
+# We use instance IDs because they're unique integers.
+func _pair_key(a: Stone, b: Stone) -> int:
+	var id_a = a.get_instance_id()
+	var id_b = b.get_instance_id()
+#	Cantor pairing function on sorted IDs
+	var lo = mini(id_a, id_b)
+	var hi = maxi(id_a, id_b)
+	return (lo + hi) * (lo + hi + 1) / 2 + hi
 
 
 
