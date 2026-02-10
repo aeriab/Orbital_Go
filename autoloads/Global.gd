@@ -1,3 +1,5 @@
 extends Node
 
-var is_white_turn: bool = true;
+var is_black_turn: bool = true
+
+var gravity: float = 9.8

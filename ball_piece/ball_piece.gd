@@ -48,6 +48,9 @@ func _on_body_entered(body):
 		line.self_modulate = line_color
 		add_child(line)
 		connections[body] = line
+		
+		StoneManager.check_for_capture(self)
+		
 	
 
 func _on_body_exited(body):

@@ -1,9 +1,9 @@
 [gd_scene load_steps=5 format=3 uid="uid://b8pt6dxfyal5k"]
 
 [ext_resource type="PackedScene" uid="uid://ca8du4avx1yur" path="res://ball_piece/ball_piece.tscn" id="1_80nbo"]
-[ext_resource type="Script" uid="uid://c455fht0j102m" path="res://input_handler.gd" id="2_e2o6t"]
-[ext_resource type="Texture2D" uid="uid://cwmtrjt71t2qq" path="res://Orbital_Go_Background.png" id="3_feb5d"]
-[ext_resource type="Script" uid="uid://cwfsl25rho6lh" path="res://trajectory_trace_handler.gd" id="4_fc0e3"]
+[ext_resource type="Script" uid="uid://c455fht0j102m" path="res://game/input_handler.gd" id="2_e2o6t"]
+[ext_resource type="Texture2D" uid="uid://cwmtrjt71t2qq" path="res://game/Orbital_Go_Background.png" id="3_feb5d"]
+[ext_resource type="Script" uid="uid://cwfsl25rho6lh" path="res://trajectory/trajectory_trace_handler.gd" id="4_fc0e3"]
 
 [node name="Game" type="Node2D"]
 

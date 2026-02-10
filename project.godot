@@ -13,11 +13,11 @@ config_version=5
 config/name="Orbital_Go"
 run/main_scene="uid://b8pt6dxfyal5k"
 config/features=PackedStringArray("4.5", "GL Compatibility")
-config/icon="res://icon.svg"
 
 [autoload]
 
-Global="*res://Global.gd"
+Global="*res://autoloads/Global.gd"
+StoneManager="*res://autoloads/StoneManager.gd"
 
 [display]
 
