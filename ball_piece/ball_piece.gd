@@ -29,11 +29,11 @@ func _process(_delta: float) -> void:
 	
 
 
+func stone_acceleration() -> Vector2:
+	return global_position.direction_to(Vector2.ZERO) * Global.gravity * 100
+
 func _physics_process(_delta: float) -> void:
-	#var velocity_threshold = 1.0
-	var gravity_strength = 980
-	
-	apply_central_force(global_position.direction_to(Vector2.ZERO) * gravity_strength)
+	apply_central_force(stone_acceleration())
 	
 
 func _on_body_entered(body):
