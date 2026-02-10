@@ -40,3 +40,4 @@ func _input(event: InputEvent) -> void:
 		ball.linear_velocity = Vector2.ZERO
 		is_dragging = false
 		ball.linear_velocity = launch_vector()
+		trajectory_trace_handler.clear_trajectory()

@@ -32,9 +32,10 @@ trajectory_trace_handler = NodePath("../TrajectoryTraceHandler")
 
 [node name="TrajectoryTraceHandler" type="Node2D" parent="." node_paths=PackedStringArray("trajectory_line")]
 script = ExtResource("4_fc0e3")
-trajectory_line = NodePath("Line2D")
+trajectory_line = NodePath("TrajectoryLine2D")
 
-[node name="Line2D" type="Line2D" parent="TrajectoryTraceHandler"]
+[node name="TrajectoryLine2D" type="Line2D" parent="TrajectoryTraceHandler"]
+default_color = Color(1, 1, 1, 0.11764706)
 
 [node name="BlackStartLocation" type="Node2D" parent="."]
 position = Vector2(-434.768, 0)

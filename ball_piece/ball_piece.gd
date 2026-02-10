@@ -27,8 +27,6 @@ func draw_connecting_line() -> void:
 
 func _process(_delta: float) -> void:
 	draw_connecting_line()
-	
-
 
 func stone_acceleration(pos: Vector2) -> Vector2:
 	return pos.direction_to(Vector2.ZERO) * Global.gravity * 100
