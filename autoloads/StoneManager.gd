@@ -22,7 +22,7 @@ var debug_empty_color: Color = Color(0, 0, 0, 0.0)     # fully transparent
 
 # Grid resolution. 64x64 = 4096 cells. Flood fill is O(cells), so
 # this can run every frame without breaking a sweat.
-const GRID_SIZE: int = 32
+const GRID_SIZE: int = 100
 
 # How big is the play area in world units?
 # Your stones gravity toward Vector2.ZERO, so the play area is
