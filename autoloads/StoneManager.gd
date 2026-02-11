@@ -123,6 +123,7 @@ func rebuild_union_find() -> void:
 # For now, this is a stub you'll fill in with your game logic.
 func on_capture_detected(stone_a: Stone, stone_b: Stone) -> void:
 	print("CAPTURE! Loop closed between ", stone_a, " and ", stone_b)
+	
 	# TODO: Your capture logic here. Some ideas:
 	#
 	# Option A: Find all stones in the loop and do something
