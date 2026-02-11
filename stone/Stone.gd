@@ -5,6 +5,8 @@ extends RigidBody2D
 @export var p2_color: Color = Color.BLACK
 
 @onready var polygon_2d: Polygon2D = $Polygon2D
+@onready var red_indicator_polygon_2d: Polygon2D = $RedIndicatorPolygon2D
+
 var team: String = ""
 
 # How far (in world units) the "wall" extends beyond the stone's actual shape.
@@ -79,12 +81,14 @@ func _update_finish_timer(delta: float) -> void:
 		var danger = clampf(_finish_timer / finish_time_limit, 0.0, 1.0)
 		# Blend base color → red, and pulse using a sine wave that
 		# speeds up as danger increases
-		var pulse_speed = lerpf(2.0, 8.0, danger)
+		var pulse_speed = lerpf(0.5, 2.0, danger)
 		var pulse = (1.0 + sin(Time.get_ticks_msec() * 0.001 * pulse_speed * TAU)) * 0.5
-		var swell = lerpf(0.0, danger, pulse)
-		polygon_2d.self_modulate = _base_color.lerp(Color.RED, swell)
+		var swell: float = lerpf(0.0, danger, pulse)
+		red_indicator_polygon_2d.color.a = swell
+		#polygon_2d.self_modulate = _base_color.lerp(Color.RED, swell)
 	else:
-		polygon_2d.self_modulate = _base_color
+		red_indicator_polygon_2d.color.a = 0
+		#polygon_2d.self_modulate = _base_color
 
 	if _finish_timer >= finish_time_limit:
 		print("GAME OVER!!!!")
