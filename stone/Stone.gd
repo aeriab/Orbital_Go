@@ -9,7 +9,7 @@ var team: String = ""
 
 # How far (in world units) the "wall" extends beyond the stone's actual shape.
 # Bigger = more forgiving enclosures. Smaller = tighter walls.
-@export var paint_buffer: float = 15.0
+@export var paint_radius: float = 0.0
 
 
 func _ready():
