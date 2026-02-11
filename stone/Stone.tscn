@@ -10,6 +10,7 @@ self_modulate = Color(0.2393471, 0.23934716, 0.23934707, 1)
 gravity_scale = 0.0
 linear_damp = 1.0
 script = ExtResource("1_q1k2p")
+paint_buffer = 2.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_803en")

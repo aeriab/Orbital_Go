@@ -16,7 +16,6 @@ var debug_empty_color: Color = Color(0, 0, 0, 0.0)     # fully transparent
 
 
 
-
 # --- Grid Configuration ---
 # Tweak these to match your play area and desired resolution.
 
@@ -30,16 +29,9 @@ const GRID_SIZE: int = 100
 # (+WORLD_RADIUS, +WORLD_RADIUS). Adjust to fit your actual area.
 @export var world_radius: float = 500.0
 
-# How many grid cells each stone paints around itself.
-# This controls how CLOSE stones need to be to form a wall.
-# - 1 = stones must be nearly touching to seal a boundary
-# - 2 = small gaps are forgiven (recommended starting point)
-# - 3 = very forgiving, loose formations count as walls
-@export var paint_radius: int = 2
-
 # How often to run capture detection (seconds).
 # 0.0 = every physics frame. 0.2 = 5 times per second.
-@export var capture_interval: float = 0.2
+@export var capture_interval: float = 0.4
 
 # --- Cell Constants ---
 # Using raw ints instead of an enum for PackedByteArray compatibility.
@@ -174,27 +166,27 @@ func _run_capture_check() -> void:
 		print("Captured a ", stone.team, " stone!")
 		stone.on_captured()
 
-
-# --- Painting ---
-# Each stone stamps its color onto nearby grid cells.
-# This is what turns discrete point-objects into continuous
-# "territory" on the grid. The paint_radius controls how
-# close stones need to be to form a sealed wall.
-func _paint_all_stones() -> void:
-	for stone in stones:
-		if not is_instance_valid(stone):
-			continue
-
-		var center = _world_to_grid(stone.global_position)
-		var color = WHITE if stone.team == "White" else BLACK
-
-		# Paint a square of cells around the stone's grid position
-		for dx in range(-paint_radius, paint_radius + 1):
-			for dy in range(-paint_radius, paint_radius + 1):
-				var gx = center.x + dx
-				var gy = center.y + dy
-				if gx >= 0 and gx < GRID_SIZE and gy >= 0 and gy < GRID_SIZE:
-					grid[_idx(gx, gy)] = color
+#
+## --- Painting ---
+## Each stone stamps its color onto nearby grid cells.
+## This is what turns discrete point-objects into continuous
+## "territory" on the grid. The paint_radius controls how
+## close stones need to be to form a sealed wall.
+#func _paint_all_stones() -> void:
+	#for stone in stones:
+		#if not is_instance_valid(stone):
+			#continue
+#
+		#var center = _world_to_grid(stone.global_position)
+		#var color = WHITE if stone.team == "White" else BLACK
+#
+		## Paint a square of cells around the stone's grid position
+		#for dx in range(-paint_radius, paint_radius + 1):
+			#for dy in range(-paint_radius, paint_radius + 1):
+				#var gx = center.x + dx
+				#var gy = center.y + dy
+				#if gx >= 0 and gx < GRID_SIZE and gy >= 0 and gy < GRID_SIZE:
+					#grid[_idx(gx, gy)] = color
 
 
 # --- Flood Fill Capture Detection ---
@@ -286,3 +278,130 @@ func _world_to_grid(world_pos: Vector2) -> Vector2i:
 # Flat array index from 2D coordinates
 func _idx(x: int, y: int) -> int:
 	return y * GRID_SIZE + x
+
+
+func _paint_all_stones() -> void:
+	for stone in stones:
+		if not is_instance_valid(stone):
+			continue
+
+		var color = WHITE if stone.team == "White" else BLACK
+
+		# Get the stone's shape — NO inflation, just the raw polygon
+		var world_poly = stone.get_world_polygon()
+
+		# Convert to grid space (float precision)
+		var grid_poly = PackedVector2Array()
+		for point in world_poly:
+			grid_poly.append(_world_to_grid_float(point))
+
+		# Convert buffer from world units to grid units
+		var buffer_cells = stone.paint_buffer / (world_radius * 2.0) * GRID_SIZE
+
+		# Rasterize with distance-based buffer
+		_rasterize_polygon_buffered(grid_poly, color, buffer_cells)
+
+# Paints all grid cells that are EITHER:
+# - Inside the polygon, OR
+# - Within buffer_cells distance of any polygon edge
+#
+# This replaces the inflate-then-rasterize approach.
+# No polygon manipulation = no self-intersection issues.
+func _rasterize_polygon_buffered(grid_poly: PackedVector2Array, color: int, buffer_cells: float) -> void:
+	if grid_poly.size() < 3:
+		return
+
+	# Find bounding box, expanded by buffer
+	var min_x: int = GRID_SIZE
+	var max_x: int = 0
+	var min_y: int = GRID_SIZE
+	var max_y: int = 0
+
+	for point in grid_poly:
+		min_x = mini(min_x, int(floor(point.x - buffer_cells)))
+		max_x = maxi(max_x, int(ceil(point.x + buffer_cells)))
+		min_y = mini(min_y, int(floor(point.y - buffer_cells)))
+		max_y = maxi(max_y, int(ceil(point.y + buffer_cells)))
+
+	min_x = clampi(min_x, 0, GRID_SIZE - 1)
+	max_x = clampi(max_x, 0, GRID_SIZE - 1)
+	min_y = clampi(min_y, 0, GRID_SIZE - 1)
+	max_y = clampi(max_y, 0, GRID_SIZE - 1)
+
+	var buffer_sq = buffer_cells * buffer_cells
+
+	for y in range(min_y, max_y + 1):
+		for x in range(min_x, max_x + 1):
+			var point = Vector2(x + 0.5, y + 0.5)
+
+			# Check 1: Is the point inside the polygon?
+			if _point_in_polygon_2d(point, grid_poly):
+				grid[_idx(x, y)] = color
+				continue
+
+			# Check 2: Is the point within buffer distance of any edge?
+			if buffer_cells > 0.0 and _dist_sq_to_polygon(point, grid_poly) <= buffer_sq:
+				grid[_idx(x, y)] = color
+
+
+# Returns the squared distance from a point to the nearest edge of a polygon.
+# We use squared distance to avoid sqrt — comparing against buffer_sq instead.
+func _dist_sq_to_polygon(point: Vector2, polygon: PackedVector2Array) -> float:
+	var min_dist_sq = INF
+	var count = polygon.size()
+
+	for i in count:
+		var j = (i + 1) % count
+		var dist_sq = _dist_sq_point_to_segment(point, polygon[i], polygon[j])
+		if dist_sq < min_dist_sq:
+			min_dist_sq = dist_sq
+
+	return min_dist_sq
+
+
+# Squared distance from point P to line segment AB.
+# This is the standard closest-point-on-segment formula:
+# Project P onto the line through A→B, clamp to [0,1], measure distance.
+func _dist_sq_point_to_segment(p: Vector2, a: Vector2, b: Vector2) -> float:
+	var ab = b - a
+	var len_sq = ab.length_squared()
+
+	if len_sq < 0.0001:
+		# Degenerate edge (A and B are the same point)
+		return (p - a).length_squared()
+
+	# t = how far along AB the closest point is (0 = at A, 1 = at B)
+	var t = clampf((p - a).dot(ab) / len_sq, 0.0, 1.0)
+
+	# The closest point on the segment
+	var closest = a + ab * t
+
+	return (p - closest).length_squared()
+
+# --- Point-in-Polygon (Ray Casting) ---
+# Same algorithm we used before, but operating on Vector2
+# in grid space. Shoot a horizontal ray, count edge crossings.
+func _point_in_polygon_2d(point: Vector2, polygon: PackedVector2Array) -> bool:
+	var crossings = 0
+	var count = polygon.size()
+
+	for i in count:
+		var j = (i + 1) % count
+		var vi = polygon[i]
+		var vj = polygon[j]
+
+		if (vi.y <= point.y and vj.y > point.y) or (vj.y <= point.y and vi.y > point.y):
+			var t = (point.y - vi.y) / (vj.y - vi.y)
+			if point.x < vi.x + t * (vj.x - vi.x):
+				crossings += 1
+
+	return crossings % 2 == 1
+
+# Float-precision version — keeps sub-cell accuracy for polygon math.
+func _world_to_grid_float(world_pos: Vector2) -> Vector2:
+	var normalized_x = (world_pos.x + world_radius) / (world_radius * 2.0)
+	var normalized_y = (world_pos.y + world_radius) / (world_radius * 2.0)
+	return Vector2(
+		clampf(normalized_x * GRID_SIZE, 0.0, GRID_SIZE - 1.0),
+		clampf(normalized_y * GRID_SIZE, 0.0, GRID_SIZE - 1.0)
+	)
