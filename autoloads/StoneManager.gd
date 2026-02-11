@@ -2,7 +2,7 @@
 extends Node
 
 # --- Debug Visualization ---
-var debug_enabled: bool = true
+var debug_enabled: bool = false
 var debug_sprite: Sprite2D = null
 var debug_image: Image = null
 var debug_texture: ImageTexture = null
@@ -15,7 +15,7 @@ var debug_empty_color: Color = Color(0, 0, 0, 0.0)
 
 
 # --- Grid Configuration ---
-const GRID_SIZE: int = 48
+const GRID_SIZE: int = 64
 
 @export var world_radius: float = 500.0
 @export var capture_interval: float = 0.4
