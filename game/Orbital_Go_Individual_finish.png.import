@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cwmtrjt71t2qq"
-path="res://.godot/imported/Orbital_Go_Background.png-d0bc3dcf3dfae89a0a2a70b6266e8245.ctex"
+uid="uid://dipl25rh160l8"
+path="res://.godot/imported/Orbital_Go_Individual_finish.png-de49191cef5e5ce186ab440481a543fc.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://game/Orbital_Go_Background.png"
-dest_files=["res://.godot/imported/Orbital_Go_Background.png-d0bc3dcf3dfae89a0a2a70b6266e8245.ctex"]
+source_file="res://game/Orbital_Go_Individual_finish.png"
+dest_files=["res://.godot/imported/Orbital_Go_Individual_finish.png-de49191cef5e5ce186ab440481a543fc.ctex"]
 
 [params]
 
