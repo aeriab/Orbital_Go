@@ -16,19 +16,17 @@ var team: String = ""
 # --- Out-of-Bounds / Game Over ---
 @export var finish_min_velocity: float = 10.0
 @export var finish_time_limit: float = 3.0
+@export var finish_rate: float = 1.0
 
-var _finish_timer: float = 0.0
-var _base_color: Color
+var _finish_counter: float = 0.0
 
 func _ready():
 	if (Global.is_black_turn):
 		polygon_2d.self_modulate = p1_color
-		_base_color = p1_color
 		team = "White"
 		add_to_group("White")
 	else:
 		polygon_2d.self_modulate = p2_color
-		_base_color = p2_color
 		team = "Black"
 		add_to_group("Black")
 	
@@ -38,7 +36,7 @@ func _ready():
 	StoneManager.register_stone(self)
 
 func _physics_process(delta: float) -> void:
-	_update_finish_timer(delta)
+	_update_finish_counter(delta)
 	
 	if not freeze:
 		apply_central_force(stone_acceleration(global_position))
@@ -69,27 +67,17 @@ func get_world_polygon() -> PackedVector2Array:
 # When a stone drifts outside the play zone and slows down,
 # a timer starts. If it stays out for finish_time_limit seconds,
 # the game ends. The stone pulses increasingly red as a warning.
-func _update_finish_timer(delta: float) -> void:
-	var is_outside = global_position.length() > Global.finish_radius
-	var is_slow = linear_velocity.length() < finish_min_velocity
-	if is_outside and is_slow:
-		_finish_timer += delta
-	elif not is_outside:
-		_finish_timer = 0.0
-	# Visual warning: lerp toward red based on how close to game over
-	if _finish_timer > 0.0:
-		var danger = clampf(_finish_timer / finish_time_limit, 0.0, 1.0)
-		# Blend base color → red, and pulse using a sine wave that
-		# speeds up as danger increases
-		var pulse_speed = lerpf(0.5, 2.0, danger)
-		var pulse = (1.0 + sin(Time.get_ticks_msec() * 0.001 * pulse_speed * TAU)) * 0.5
-		var swell: float = lerpf(0.0, danger, pulse)
-		red_indicator_polygon_2d.color.a = swell
-		#polygon_2d.self_modulate = _base_color.lerp(Color.RED, swell)
+func _update_finish_counter(delta: float) -> void:
+	if (global_position.length() <= Global.finish_radius):
+		_finish_counter = max(_finish_counter - finish_rate * delta, 0)
 	else:
-		red_indicator_polygon_2d.color.a = 0
-		#polygon_2d.self_modulate = _base_color
-
-	if _finish_timer >= finish_time_limit:
+		_finish_counter = min(_finish_counter + finish_rate * delta, finish_time_limit)
+	
+	var _finish_magnitude: float = _finish_counter / finish_time_limit
+	var swell: float = 0.5 + ((-0.5) * cos(15 * PI * _finish_magnitude * _finish_magnitude))
+	
+	red_indicator_polygon_2d.color.a = swell
+	
+	if _finish_counter >= finish_time_limit:
 		print("GAME OVER!!!!")
 		# TODO: signal to a game manager, show UI, etc.
