@@ -4,7 +4,8 @@ extends RigidBody2D
 @export var p1_color: Color = Color.WHITE
 @export var p2_color: Color = Color.BLACK
 
-#@export var p1_outline_color
+@export var p1_outline_color: Color
+@export var p2_outline_color: Color
 
 @export var stone_polygon_2d: Polygon2D
 @export var outline_polygon_2d: Polygon2D
@@ -30,12 +31,12 @@ func _ready():
 	
 	if (Global.is_black_turn):
 		stone_polygon_2d.color = p1_color
-		outline_polygon_2d.color = Global.inverted_color(p1_color)
+		outline_polygon_2d.color = p1_outline_color
 		team = "White"
 		add_to_group("White")
 	else:
 		stone_polygon_2d.color = p2_color
-		outline_polygon_2d.color = Global.inverted_color(p2_color)
+		outline_polygon_2d.color = p2_outline_color
 		team = "Black"
 		add_to_group("Black")
 	
