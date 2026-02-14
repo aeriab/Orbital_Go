@@ -10,13 +10,11 @@ var sliders: Dictionary = {}
 # Define all tunable params here: "name": [default, min, max, step]
 var params: Dictionary = {
 	"gravity": [5.0, 0.1, 30.0, 0.1],
-	"linear_damp": [0.0, 0.0, 5.0, 0.05],
+	"stone_size": [1.0, 0.1, 5.0, 0.1],
+	"air_drag": [0.0, 0.0, 5.0, 0.05],
 	"bounce": [0.5, 0.0, 1.0, 0.05],
 	"friction": [0.3, 0.0, 1.0, 0.05],
-	"finish_rate": [1.0, 0.1, 5.0, 0.1],
-	"finish_time_limit": [3.0, 1.0, 15.0, 0.5],
 	"finish_radius": [300.0, 50.0, 800.0, 10.0],
-	"spawn_immunity_time": [3.0, 0.5, 10.0, 0.25],
 }
 
 # Current values — read these from your game code
@@ -39,6 +37,7 @@ func _unhandled_input(event: InputEvent):
 
 func _build_ui():
 	panel = PanelContainer.new()
+	panel.mouse_filter = Control.MOUSE_FILTER_STOP
 	panel.anchor_left = 1.0
 	panel.anchor_right = 1.0
 	panel.anchor_top = 0.0

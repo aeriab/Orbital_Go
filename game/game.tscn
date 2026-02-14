@@ -21,6 +21,7 @@ offset_left = -5361.0
 offset_top = -4261.0
 offset_right = 4768.0
 offset_bottom = 5868.0
+mouse_filter = 2
 color = Color(0.9647059, 0.8784314, 0.70980394, 1)
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1627936826]

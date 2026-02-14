@@ -22,7 +22,9 @@ func _process(_delta):
 func launch_vector() -> Vector2:
 	return launch_power_multiplier * (Vector2(-get_global_mouse_position().x + launch_point.x,-get_global_mouse_position().y + launch_point.y))
 
-func _input(event: InputEvent) -> void:
+func _unhandled_input(event: InputEvent) -> void:
+	
+	
 	if event.is_action_pressed("spawn_piece"):
 		launch_point = get_global_mouse_position()
 		ball = ball_scene.instantiate()
