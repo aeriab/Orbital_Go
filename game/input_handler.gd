@@ -35,7 +35,7 @@ func _input(event: InputEvent) -> void:
 			ball.global_position = p2_start_spot.global_position
 		
 	
-	if event.is_action_released("spawn_piece"):
+	if event.is_action_released("spawn_piece") && ball:
 		ball.freeze = false
 		ball.linear_velocity = Vector2.ZERO
 		is_dragging = false

@@ -5,7 +5,14 @@ extends Area2D
 func _ready():
 	area_entered.connect(_on_stone_entered)
 	area_exited.connect(_on_stone_exited)
+	
+	Global.zone_radius_changed.connect(update_radius)
+	Global.zone_radius_changed.emit()
 
+
+func update_radius():
+	print("Made herererr")
+	zone_collision_shape.shape.radius = Global.finish_radius
 
 func _on_stone_entered(area):
 	var stone: Stone = area.get_stone()

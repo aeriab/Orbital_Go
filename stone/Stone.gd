@@ -63,6 +63,11 @@ func stone_acceleration(pos: Vector2) -> Vector2:
 	return pos.direction_to(Vector2.ZERO) * Global.gravity * 100
 
 func on_captured() -> void:
+	if (team == "P1"):
+		Global.p2_add_score(1.0)
+	else:
+		Global.p1_add_score(1.0)
+	
 	StoneManager.unregister_stone(self)
 	queue_free()
 	# TODO
@@ -103,7 +108,9 @@ func _update_finish_counter(delta: float) -> void:
 	if (_finish_counter >= finish_time_limit) && Global.game_still_going:
 		Global.game_still_going = false
 		ending_stone_clear()
-		PointManager.tally_score()
+		Global.tally_score()
+		
+		queue_free()
 		# TODO: signal to a game manager, show UI, etc.
 	
 	

@@ -5,8 +5,10 @@
 [ext_resource type="Script" uid="uid://c455fht0j102m" path="res://game/input_handler.gd" id="2_e2o6t"]
 [ext_resource type="Texture2D" uid="uid://dipl25rh160l8" path="res://game/Orbital_Go_Individual_finish.png" id="4_4fuuu"]
 [ext_resource type="Script" uid="uid://cwfsl25rho6lh" path="res://trajectory/trajectory_trace_handler.gd" id="4_fc0e3"]
+[ext_resource type="PackedScene" uid="uid://b1641mfbhmk44" path="res://game/end_canvas_layer.tscn" id="5_l8g03"]
 [ext_resource type="PackedScene" uid="uid://bwr7a38eggnl5" path="res://game/GameUI/game_canvas_layer.tscn" id="6_dakft"]
 [ext_resource type="Script" uid="uid://qd7n2ssjmeoa" path="res://game/zone_area_2d.gd" id="7_u5opy"]
+[ext_resource type="Script" uid="uid://cnspslx1vuwbo" path="res://game/PointManager.gd" id="9_j8tme"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_dakft"]
 radius = 350.0
@@ -44,7 +46,10 @@ position = Vector2(-450, 0)
 [node name="P2StartLocation" type="Node2D" parent="." unique_id=765354191]
 position = Vector2(450, 0)
 
-[node name="CanvasLayer" parent="." unique_id=1682578805 instance=ExtResource("6_dakft")]
+[node name="GameCanvasLayer" parent="." unique_id=1682578805 instance=ExtResource("6_dakft")]
+
+[node name="EndCanvasLayer" parent="." unique_id=81199329 instance=ExtResource("5_l8g03")]
+visible = false
 
 [node name="Zone" type="Node2D" parent="." unique_id=12476847]
 
@@ -61,3 +66,8 @@ zone_collision_shape = NodePath("ZoneCollisionShape2D")
 
 [node name="ZoneCollisionShape2D" type="CollisionShape2D" parent="Zone/ZoneArea2D" unique_id=1720209613]
 shape = SubResource("CircleShape2D_dakft")
+
+[node name="PointManager" type="Node" parent="." unique_id=1415330333 node_paths=PackedStringArray("game_canvas_layer", "end_canvas_layer")]
+script = ExtResource("9_j8tme")
+game_canvas_layer = NodePath("../GameCanvasLayer")
+end_canvas_layer = NodePath("../EndCanvasLayer")
