@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://c8wyx2en4dv0k"]
+
+[ext_resource type="Script" uid="uid://bnl7vggsth2ox" path="res://game/Debug/debug_canvas_layer.gd" id="1_pdo01"]
+
+[node name="DebugTuner" type="CanvasLayer" unique_id=250715091]
+script = ExtResource("1_pdo01")
