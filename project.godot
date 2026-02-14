@@ -16,6 +16,7 @@ config/features=PackedStringArray("4.6", "GL Compatibility")
 
 [autoload]
 
+DebugCanvasLayer="*uid://c8wyx2en4dv0k"
 Global="*res://autoloads/Global.gd"
 StoneManager="*res://autoloads/StoneManager.gd"
 

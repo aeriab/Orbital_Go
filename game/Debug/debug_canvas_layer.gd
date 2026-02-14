@@ -9,9 +9,10 @@ var sliders: Dictionary = {}
 
 # Define all tunable params here: "name": [default, min, max, step]
 var params: Dictionary = {
-	"gravity": [5.0, 0.1, 30.0, 0.1],
+	"gravity": [9.8, 0.1, 30.0, 0.1],
 	"stone_size": [1.0, 0.1, 5.0, 0.1],
 	"air_drag": [0.0, 0.0, 5.0, 0.05],
+	"launch_velocity": [1.0, 0.1, 5.0, 0.1],
 	"bounce": [0.5, 0.0, 1.0, 0.05],
 	"friction": [0.3, 0.0, 1.0, 0.05],
 	"finish_radius": [300.0, 50.0, 800.0, 10.0],
@@ -62,8 +63,8 @@ func _build_ui():
 	
 	# Title
 	var title = Label.new()
-	title.text = "Debug Tuner (F1)"
-	title.add_theme_font_size_override("font_size", 18)
+	title.text = "Debug Tuner (D)"
+	title.add_theme_font_size_override("font_size", 30)
 	container.add_child(title)
 	
 	var sep = HSeparator.new()
@@ -76,9 +77,14 @@ func _build_ui():
 	
 	# Reset button
 	var reset_btn = Button.new()
-	reset_btn.text = "Reset All"
+	reset_btn.text = "Reset Params"
 	reset_btn.pressed.connect(_reset_all)
 	container.add_child(reset_btn)
+	
+	var reload_btn = Button.new()
+	reload_btn.text = "Reset Scene"
+	reload_btn.pressed.connect(_reload_scene)
+	container.add_child(reload_btn)
 	
 	add_child(panel)
 
@@ -88,7 +94,7 @@ func _add_slider_row(param_name: String, default: float, min_val: float, max_val
 	# Label showing name and current value
 	var label = Label.new()
 	label.text = "%s: %.2f" % [param_name, default]
-	label.add_theme_font_size_override("font_size", 13)
+	label.add_theme_font_size_override("font_size", 25)
 	row.add_child(label)
 	
 	var slider = HSlider.new()
@@ -117,6 +123,11 @@ func _reset_all():
 		var default_val = params[key][0]
 		sliders[key]["slider"].value = default_val
 		values[key] = default_val
+		# Add this line to trigger real-time updates when resetting:
+		param_changed.emit(key, default_val)
 
 func get_value(param_name: String) -> float:
 	return values.get(param_name, 0.0)
+
+func _reload_scene():
+	get_tree().reload_current_scene()

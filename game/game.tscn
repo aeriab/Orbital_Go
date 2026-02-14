@@ -9,7 +9,6 @@
 [ext_resource type="PackedScene" uid="uid://bwr7a38eggnl5" path="res://game/GameUI/game_canvas_layer.tscn" id="6_dakft"]
 [ext_resource type="Script" uid="uid://qd7n2ssjmeoa" path="res://game/zone_area_2d.gd" id="7_u5opy"]
 [ext_resource type="Script" uid="uid://cnspslx1vuwbo" path="res://game/PointManager.gd" id="9_j8tme"]
-[ext_resource type="PackedScene" uid="uid://c8wyx2en4dv0k" path="res://game/Debug/debug_tuner.tscn" id="10_j8tme"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_dakft"]
 radius = 350.0
@@ -73,5 +72,3 @@ shape = SubResource("CircleShape2D_dakft")
 script = ExtResource("9_j8tme")
 game_canvas_layer = NodePath("../GameCanvasLayer")
 end_canvas_layer = NodePath("../EndCanvasLayer")
-
-[node name="DebugTuner" parent="." unique_id=250715091 instance=ExtResource("10_j8tme")]

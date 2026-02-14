@@ -20,6 +20,24 @@ signal game_over
 
 func _ready():
 	change_zone_radius(finish_radius)
+	# Check if the node exists first to prevent Nil errors
+	if has_node("/root/DebugCanvasLayer"):
+		DebugCanvasLayer.param_changed.connect(_on_debug_param_changed)
+		gravity = DebugCanvasLayer.get_value("gravity")
+		print("first")
+	else:
+		print("second")
+
+func _on_debug_param_changed(param_name: String, value: float):
+	if param_name == "gravity":
+		gravity = value
+		print("my gravity: " + str(gravity))
+
+func _process(_delta: float) -> void:
+	#gravity = DebugCanvasLayer.get_value("gravity")
+	#print("my gravity: " + str(gravity))
+	
+	pass
 
 func tally_score() -> void:
 	p1_won = (p1_score > p2_score)
