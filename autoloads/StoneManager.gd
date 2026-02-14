@@ -133,7 +133,7 @@ func _run_capture_check() -> void:
 			to_destroy.append(stone)
 
 	for stone in to_destroy:
-		print("Captured a ", stone.team, " stone!")
+		#print("Captured a ", stone.team, " stone!")
 		stone.on_captured()
 
 

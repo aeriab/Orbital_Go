@@ -93,9 +93,17 @@ func _update_finish_counter(delta: float) -> void:
 	#
 	#red_indicator_polygon_2d.color.a = swell
 	
-	if _finish_counter >= finish_time_limit:
-		print("GAME OVER!!!!")
+	if (_finish_counter >= finish_time_limit) && Global.game_still_going:
+		Global.game_still_going = false
+		ending_stone_clear()
+		PointManager.tally_score()
 		# TODO: signal to a game manager, show UI, etc.
 	
 	
 	
+
+
+# Executes if this stone is the 
+func ending_stone_clear() -> void:
+	print(self)
+	pass
