@@ -8,8 +8,8 @@ var debug_image: Image = null
 var debug_texture: ImageTexture = null
 
 # Colors for the debug overlay
-var debug_white_color: Color = Color(1, 1, 1, 0.3)
-var debug_black_color: Color = Color(0, 0, 0, 0.3)
+var debug_p2_color: Color = Color(1, 1, 1, 0.3)
+var debug_p1_color: Color = Color(0, 0, 0, 0.3)
 var debug_captured_color: Color = Color(1, 0, 0, 0.4)
 var debug_empty_color: Color = Color(0, 0, 0, 0.0)
 
@@ -22,8 +22,8 @@ const GRID_SIZE: int = 64
 
 # --- Cell Constants ---
 const EMPTY: int = 0
-const WHITE: int = 1
-const BLACK: int = 2
+const P2: int = 1
+const P1: int = 2
 
 # --- Internal State ---
 var stones: Array[Stone] = []
@@ -68,19 +68,19 @@ func _setup_debug_overlay() -> void:
 	add_child(debug_sprite)
 
 
-func _update_debug_overlay(black_captured: PackedByteArray, white_captured: PackedByteArray) -> void:
+func _update_debug_overlay(p1_captured: PackedByteArray, p2_captured: PackedByteArray) -> void:
 	if not debug_enabled or debug_image == null:
 		return
 	for y in GRID_SIZE:
 		for x in GRID_SIZE:
 			var idx = _idx(x, y)
 			var color: Color
-			if black_captured[idx] == 1 or white_captured[idx] == 1:
+			if p1_captured[idx] == 1 or p2_captured[idx] == 1:
 				color = debug_captured_color
-			elif grid[idx] == WHITE:
-				color = debug_white_color
-			elif grid[idx] == BLACK:
-				color = debug_black_color
+			elif grid[idx] == P2:
+				color = debug_p2_color
+			elif grid[idx] == P1:
+				color = debug_p1_color
 			else:
 				color = debug_empty_color
 			debug_image.set_pixel(x, y, color)
@@ -110,14 +110,14 @@ func _run_capture_check() -> void:
 
 	_paint_all_stones()
 
-	var black_captured = _find_enclosed_cells(WHITE)
+	var p1_captured = _find_enclosed_cells(P2)
 	# _find_enclosed_cells reuses `enclosed`, so we need to copy
 	# the result before calling it again for the other color.
-	var black_captured_copy = black_captured.duplicate()
+	var p1_captured_copy = p1_captured.duplicate()
 
-	var white_captured = _find_enclosed_cells(BLACK)
+	var p2_captured = _find_enclosed_cells(P1)
 
-	_update_debug_overlay(black_captured_copy, white_captured)
+	_update_debug_overlay(p1_captured_copy, p2_captured)
 
 	var to_destroy: Array[Stone] = []
 
@@ -127,9 +127,9 @@ func _run_capture_check() -> void:
 		var cell = _world_to_grid(stone.global_position)
 		var idx = _idx(cell.x, cell.y)
 
-		if stone.team == "Black" and black_captured_copy[idx]:
+		if stone.team == "P1" and p1_captured_copy[idx]:
 			to_destroy.append(stone)
-		elif stone.team == "White" and white_captured[idx]:
+		elif stone.team == "P2" and p2_captured[idx]:
 			to_destroy.append(stone)
 
 	for stone in to_destroy:
@@ -150,7 +150,7 @@ func _paint_all_stones() -> void:
 			continue
 
 		var center = _world_to_grid(stone.global_position)
-		var color = WHITE if stone.team == "White" else BLACK
+		var color = P2 if stone.team == "P2" else P1
 
 		# Convert the stone's paint_radius from world units to grid cells
 		var radius_cells: int = ceili(stone.paint_radius / (world_radius * 2.0) * GRID_SIZE)

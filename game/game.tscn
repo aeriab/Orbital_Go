@@ -5,29 +5,29 @@
 [ext_resource type="Script" uid="uid://c455fht0j102m" path="res://game/input_handler.gd" id="2_e2o6t"]
 [ext_resource type="Texture2D" uid="uid://dipl25rh160l8" path="res://game/Orbital_Go_Individual_finish.png" id="4_4fuuu"]
 [ext_resource type="Script" uid="uid://cwfsl25rho6lh" path="res://trajectory/trajectory_trace_handler.gd" id="4_fc0e3"]
+[ext_resource type="PackedScene" uid="uid://bwr7a38eggnl5" path="res://game/GameUI/game_canvas_layer.tscn" id="6_dakft"]
+[ext_resource type="Script" uid="uid://qd7n2ssjmeoa" path="res://game/zone_area_2d.gd" id="7_u5opy"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_dakft"]
+radius = 350.0
 
 [node name="Game" type="Node2D" unique_id=1042450003]
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=1093015008]
-offset_left = -5351.0
-offset_top = -4355.0
-offset_right = 4778.0
-offset_bottom = 5774.0
+offset_left = -5361.0
+offset_top = -4261.0
+offset_right = 4768.0
+offset_bottom = 5868.0
 color = Color(0.9647059, 0.8784314, 0.70980394, 1)
-
-[node name="FinishLineSprite" type="Sprite2D" parent="." unique_id=355937218]
-scale = Vector2(0.239, 0.239)
-texture = ExtResource("4_4fuuu")
-script = ExtResource("2_dxrkv")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1627936826]
 zoom = Vector2(0.85, 0.85)
 
-[node name="InputHandler" type="Node2D" parent="." unique_id=1096041721 node_paths=PackedStringArray("black_start_spot", "white_start_spot", "trajectory_trace_handler")]
+[node name="InputHandler" type="Node2D" parent="." unique_id=1096041721 node_paths=PackedStringArray("p1_start_spot", "p2_start_spot", "trajectory_trace_handler")]
 script = ExtResource("2_e2o6t")
 ball_scene = ExtResource("1_80nbo")
-black_start_spot = NodePath("../BlackStartLocation")
-white_start_spot = NodePath("../WhiteStartLocation")
+p1_start_spot = NodePath("../P1StartLocation")
+p2_start_spot = NodePath("../P2StartLocation")
 launch_power_multiplier = 1.0
 trajectory_trace_handler = NodePath("../TrajectoryTraceHandler")
 
@@ -38,8 +38,26 @@ trajectory_line = NodePath("TrajectoryLine2D")
 [node name="TrajectoryLine2D" type="Line2D" parent="TrajectoryTraceHandler" unique_id=1750582579]
 default_color = Color(1, 1, 1, 0.11764706)
 
-[node name="BlackStartLocation" type="Node2D" parent="." unique_id=1600883736]
-position = Vector2(-824, 0)
+[node name="P1StartLocation" type="Node2D" parent="." unique_id=1600883736]
+position = Vector2(-450, 0)
 
-[node name="WhiteStartLocation" type="Node2D" parent="." unique_id=765354191]
-position = Vector2(431.807, 0)
+[node name="P2StartLocation" type="Node2D" parent="." unique_id=765354191]
+position = Vector2(450, 0)
+
+[node name="CanvasLayer" parent="." unique_id=1682578805 instance=ExtResource("6_dakft")]
+
+[node name="Zone" type="Node2D" parent="." unique_id=12476847]
+
+[node name="FinishLineSprite" type="Sprite2D" parent="Zone" unique_id=355937218]
+scale = Vector2(0.239, 0.239)
+texture = ExtResource("4_4fuuu")
+script = ExtResource("2_dxrkv")
+
+[node name="ZoneArea2D" type="Area2D" parent="Zone" unique_id=787652848 node_paths=PackedStringArray("zone_collision_shape")]
+collision_layer = 2
+collision_mask = 2
+script = ExtResource("7_u5opy")
+zone_collision_shape = NodePath("ZoneCollisionShape2D")
+
+[node name="ZoneCollisionShape2D" type="CollisionShape2D" parent="Zone/ZoneArea2D" unique_id=1720209613]
+shape = SubResource("CircleShape2D_dakft")

@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://bwr7a38eggnl5"]
+
+[ext_resource type="Script" uid="uid://bvhbn6hp2byhc" path="res://game/GameUI/p_1_score_label.gd" id="1_vm3nc"]
+[ext_resource type="Script" uid="uid://1fl2qmhe6tni" path="res://game/GameUI/p_2_score_label.gd" id="2_yb7el"]
+
+[node name="CanvasLayer" type="CanvasLayer" unique_id=1682578805]
+
+[node name="P1ScoreLabel" type="Label" parent="." unique_id=1336823343]
+offset_left = 50.0
+offset_top = 50.0
+offset_right = 1434.0
+offset_bottom = 215.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 120
+text = "Score: 0"
+script = ExtResource("1_vm3nc")
+
+[node name="P2ScoreLabel" type="Label" parent="." unique_id=220344554]
+offset_left = 178.0
+offset_top = 50.0
+offset_right = 1550.0007
+offset_bottom = 215.0
+pivot_offset_ratio = Vector2(1, 0)
+theme_override_font_sizes/font_size = 120
+text = "Score: 0.5"
+horizontal_alignment = 2
+script = ExtResource("2_yb7el")

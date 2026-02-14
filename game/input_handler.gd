@@ -1,8 +1,8 @@
 extends Node2D
 
 @export var ball_scene: PackedScene
-@export var black_start_spot: Node2D
-@export var white_start_spot: Node2D
+@export var p1_start_spot: Node2D
+@export var p2_start_spot: Node2D
 
 @export var launch_power_multiplier: float
 
@@ -29,10 +29,10 @@ func _input(event: InputEvent) -> void:
 		ball.freeze = true
 		is_dragging = true
 		add_child(ball)
-		if Global.is_black_turn:
-			ball.global_position = black_start_spot.global_position
+		if Global.is_p1_turn:
+			ball.global_position = p1_start_spot.global_position
 		else:
-			ball.global_position = white_start_spot.global_position
+			ball.global_position = p2_start_spot.global_position
 		
 	
 	if event.is_action_released("spawn_piece"):

@@ -12,6 +12,7 @@ extends RigidBody2D
 @export var red_indicator_polygon_2d: Polygon2D
 
 var team: String = ""
+var point_value: float = 1.0
 
 # How far (in world units) the "wall" extends beyond the stone's actual shape.
 # Bigger = more forgiving enclosures. Smaller = tighter walls.
@@ -29,18 +30,18 @@ var _finish_counter: float = 0.0
 
 func _ready():
 	
-	if (Global.is_black_turn):
+	if (Global.is_p1_turn):
 		stone_polygon_2d.color = p1_color
 		outline_polygon_2d.color = p1_outline_color
-		team = "White"
-		add_to_group("White")
+		team = "P2"
+		add_to_group("P2")
 	else:
 		stone_polygon_2d.color = p2_color
 		outline_polygon_2d.color = p2_outline_color
-		team = "Black"
-		add_to_group("Black")
+		team = "P1"
+		add_to_group("P1")
 	
-	Global.is_black_turn = !Global.is_black_turn
+	Global.is_p1_turn = !Global.is_p1_turn
 	sleeping = false
 	
 	StoneManager.register_stone(self)
