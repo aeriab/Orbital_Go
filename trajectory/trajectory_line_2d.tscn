@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dw2pd6ic7xonj"]
 
-[node name="TrajectoryLine2D" type="Line2D"]
+[node name="TrajectoryLine2D" type="Line2D" unique_id=550214469]
 z_index = 5
 z_as_relative = false
 points = PackedVector2Array(-50, 0, 50, 0)

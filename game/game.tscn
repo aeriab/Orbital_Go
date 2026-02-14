@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://b8pt6dxfyal5k"]
+[gd_scene format=3 uid="uid://b8pt6dxfyal5k"]
 
 [ext_resource type="PackedScene" uid="uid://ca8du4avx1yur" path="res://stone/Stone.tscn" id="1_80nbo"]
 [ext_resource type="Script" uid="uid://cl8rjugaouj0n" path="res://game/finish_line_sprite.gd" id="2_dxrkv"]
@@ -6,24 +6,24 @@
 [ext_resource type="Texture2D" uid="uid://dipl25rh160l8" path="res://game/Orbital_Go_Individual_finish.png" id="4_4fuuu"]
 [ext_resource type="Script" uid="uid://cwfsl25rho6lh" path="res://trajectory/trajectory_trace_handler.gd" id="4_fc0e3"]
 
-[node name="Game" type="Node2D"]
+[node name="Game" type="Node2D" unique_id=1042450003]
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1093015008]
 offset_left = -5351.0
 offset_top = -4355.0
 offset_right = 4778.0
 offset_bottom = 5774.0
 color = Color(0.9647059, 0.8784314, 0.70980394, 1)
 
-[node name="FinishLineSprite" type="Sprite2D" parent="."]
+[node name="FinishLineSprite" type="Sprite2D" parent="." unique_id=355937218]
 scale = Vector2(0.239, 0.239)
 texture = ExtResource("4_4fuuu")
 script = ExtResource("2_dxrkv")
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1627936826]
 zoom = Vector2(0.85, 0.85)
 
-[node name="InputHandler" type="Node2D" parent="." node_paths=PackedStringArray("black_start_spot", "white_start_spot", "trajectory_trace_handler")]
+[node name="InputHandler" type="Node2D" parent="." unique_id=1096041721 node_paths=PackedStringArray("black_start_spot", "white_start_spot", "trajectory_trace_handler")]
 script = ExtResource("2_e2o6t")
 ball_scene = ExtResource("1_80nbo")
 black_start_spot = NodePath("../BlackStartLocation")
@@ -31,15 +31,15 @@ white_start_spot = NodePath("../WhiteStartLocation")
 launch_power_multiplier = 1.0
 trajectory_trace_handler = NodePath("../TrajectoryTraceHandler")
 
-[node name="TrajectoryTraceHandler" type="Node2D" parent="." node_paths=PackedStringArray("trajectory_line")]
+[node name="TrajectoryTraceHandler" type="Node2D" parent="." unique_id=1472672657 node_paths=PackedStringArray("trajectory_line")]
 script = ExtResource("4_fc0e3")
 trajectory_line = NodePath("TrajectoryLine2D")
 
-[node name="TrajectoryLine2D" type="Line2D" parent="TrajectoryTraceHandler"]
+[node name="TrajectoryLine2D" type="Line2D" parent="TrajectoryTraceHandler" unique_id=1750582579]
 default_color = Color(1, 1, 1, 0.11764706)
 
-[node name="BlackStartLocation" type="Node2D" parent="."]
-position = Vector2(-434.768, 0)
+[node name="BlackStartLocation" type="Node2D" parent="." unique_id=1600883736]
+position = Vector2(-824, 0)
 
-[node name="WhiteStartLocation" type="Node2D" parent="."]
+[node name="WhiteStartLocation" type="Node2D" parent="." unique_id=765354191]
 position = Vector2(431.807, 0)

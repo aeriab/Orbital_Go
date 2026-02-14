@@ -4,8 +4,11 @@ extends RigidBody2D
 @export var p1_color: Color = Color.WHITE
 @export var p2_color: Color = Color.BLACK
 
-@onready var polygon_2d: Polygon2D = $Polygon2D
-@onready var red_indicator_polygon_2d: Polygon2D = $RedIndicatorPolygon2D
+#@export var p1_outline_color
+
+@export var stone_polygon_2d: Polygon2D
+@export var outline_polygon_2d: Polygon2D
+@export var red_indicator_polygon_2d: Polygon2D
 
 var team: String = ""
 
@@ -26,11 +29,13 @@ var _finish_counter: float = 0.0
 func _ready():
 	
 	if (Global.is_black_turn):
-		polygon_2d.self_modulate = p1_color
+		stone_polygon_2d.color = p1_color
+		outline_polygon_2d.color = Global.inverted_color(p1_color)
 		team = "White"
 		add_to_group("White")
 	else:
-		polygon_2d.self_modulate = p2_color
+		stone_polygon_2d.color = p2_color
+		outline_polygon_2d.color = Global.inverted_color(p2_color)
 		team = "Black"
 		add_to_group("Black")
 	
@@ -64,11 +69,11 @@ func on_captured() -> void:
 # Returns this stone's shape polygon in world-space coordinates.
 # StoneManager calls this when painting onto the grid.
 func get_world_polygon() -> PackedVector2Array:
-	var local_points = polygon_2d.polygon
+	var local_points = stone_polygon_2d.polygon
 	var world_points = PackedVector2Array()
 	for point in local_points:
 		# Transform from Polygon2D local space → world space
-		world_points.append(polygon_2d.global_transform * point)
+		world_points.append(stone_polygon_2d.global_transform * point)
 	return world_points
 
 
