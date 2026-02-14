@@ -18,9 +18,13 @@ var team: String = ""
 @export var finish_time_limit: float = 3.0
 @export var finish_rate: float = 1.0
 
+@export var spawn_immunity_time: float = 3.0
+var is_immune: bool = true
+
 var _finish_counter: float = 0.0
 
 func _ready():
+	
 	if (Global.is_black_turn):
 		polygon_2d.self_modulate = p1_color
 		team = "White"
@@ -36,10 +40,16 @@ func _ready():
 	StoneManager.register_stone(self)
 
 func _physics_process(delta: float) -> void:
-	_update_finish_counter(delta)
 	
 	if not freeze:
 		apply_central_force(stone_acceleration(global_position))
+		
+		if (is_immune):
+			spawn_immunity_time = spawn_immunity_time - delta
+			if spawn_immunity_time <= 0.0:
+				is_immune = false
+		else:
+			_update_finish_counter(delta)
 	
 
 func stone_acceleration(pos: Vector2) -> Vector2:
@@ -68,16 +78,24 @@ func get_world_polygon() -> PackedVector2Array:
 # a timer starts. If it stays out for finish_time_limit seconds,
 # the game ends. The stone pulses increasingly red as a warning.
 func _update_finish_counter(delta: float) -> void:
+	
 	if (global_position.length() <= Global.finish_radius):
+		# Decrease _finish_counter, inside of zone
 		_finish_counter = max(_finish_counter - finish_rate * delta, 0)
 	else:
+		# Increase _finish_counter, outside of zone
 		_finish_counter = min(_finish_counter + finish_rate * delta, finish_time_limit)
 	
 	var _finish_magnitude: float = _finish_counter / finish_time_limit
-	var swell: float = 0.5 + ((-0.5) * cos(15 * PI * _finish_magnitude * _finish_magnitude))
-	
-	red_indicator_polygon_2d.color.a = swell
+	red_indicator_polygon_2d.color.a = _finish_magnitude
+	#var _finish_magnitude: float = _finish_counter / finish_time_limit
+	#var swell: float = 0.5 + ((-0.5) * cos(15 * PI * _finish_magnitude * _finish_magnitude))
+	#
+	#red_indicator_polygon_2d.color.a = swell
 	
 	if _finish_counter >= finish_time_limit:
 		print("GAME OVER!!!!")
 		# TODO: signal to a game manager, show UI, etc.
+	
+	
+	
