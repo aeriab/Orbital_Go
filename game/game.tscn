@@ -1,14 +1,14 @@
 [gd_scene format=3 uid="uid://b8pt6dxfyal5k"]
 
 [ext_resource type="PackedScene" uid="uid://ca8du4avx1yur" path="res://stone/Stone.tscn" id="1_80nbo"]
-[ext_resource type="Script" uid="uid://cl8rjugaouj0n" path="res://game/finish_line_sprite.gd" id="2_dxrkv"]
+[ext_resource type="Script" path="res://game/finish_line_sprite.gd" id="2_dxrkv"]
 [ext_resource type="Script" uid="uid://c455fht0j102m" path="res://game/input_handler.gd" id="2_e2o6t"]
 [ext_resource type="Texture2D" uid="uid://dipl25rh160l8" path="res://game/Orbital_Go_Individual_finish.png" id="4_4fuuu"]
 [ext_resource type="Script" uid="uid://cwfsl25rho6lh" path="res://trajectory/trajectory_trace_handler.gd" id="4_fc0e3"]
 [ext_resource type="PackedScene" uid="uid://b1641mfbhmk44" path="res://game/end_canvas_layer.tscn" id="5_l8g03"]
 [ext_resource type="PackedScene" uid="uid://bwr7a38eggnl5" path="res://game/GameUI/game_canvas_layer.tscn" id="6_dakft"]
-[ext_resource type="Script" uid="uid://qd7n2ssjmeoa" path="res://game/zone_area_2d.gd" id="7_u5opy"]
-[ext_resource type="Script" uid="uid://cnspslx1vuwbo" path="res://game/PointManager.gd" id="9_j8tme"]
+[ext_resource type="Script" path="res://game/zone_area_2d.gd" id="7_u5opy"]
+[ext_resource type="Script" path="res://game/PointManager.gd" id="9_j8tme"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_dakft"]
 radius = 350.0

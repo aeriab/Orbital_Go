@@ -24,14 +24,15 @@ func _ready():
 	if has_node("/root/DebugCanvasLayer"):
 		DebugCanvasLayer.param_changed.connect(_on_debug_param_changed)
 		gravity = DebugCanvasLayer.get_value("gravity")
-		print("first")
+		#print("first")
 	else:
-		print("second")
+		#print("second")
+		pass
 
 func _on_debug_param_changed(param_name: String, value: float):
 	if param_name == "gravity":
 		gravity = value
-		print("my gravity: " + str(gravity))
+		#print("my gravity: " + str(gravity))
 
 func _process(_delta: float) -> void:
 	#gravity = DebugCanvasLayer.get_value("gravity")
