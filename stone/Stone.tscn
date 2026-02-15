@@ -1,20 +1,20 @@
-[gd_scene load_steps=3 format=3 uid="uid://ca8du4avx1yur"]
+[gd_scene format=3 uid="uid://ca8du4avx1yur"]
 
 [ext_resource type="Script" uid="uid://bcwvk66op7nba" path="res://stone/Stone.gd" id="1_q1k2p"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_803en"]
 radius = 23.0
 
-[node name="Stone" type="RigidBody2D"]
+[node name="Stone" type="RigidBody2D" unique_id=1602094669]
 self_modulate = Color(0.2393471, 0.23934716, 0.23934707, 1)
 gravity_scale = 0.0
 linear_damp = 1.0
 script = ExtResource("1_q1k2p")
 paint_buffer = 2.0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=918755560]
 shape = SubResource("CircleShape2D_803en")
 
-[node name="Polygon2D" type="Polygon2D" parent="."]
+[node name="Polygon2D" type="Polygon2D" parent="." unique_id=299723987]
 scale = Vector2(2.3, 2.3)
 polygon = PackedVector2Array(10.015625, 0.0234375, 9.6328125, -2.6640625, 8.63281, -5.0437517, 7.045311, -7.060931, 4.982814, -8.632806, 2.5671902, -9.6249895, 0.02031517, -9.992177, -2.6124973, -9.632802, -5.073435, -8.6406145, -7.073432, -7.03749, -8.643744, -4.990615, -9.628119, -2.63124, -9.987494, 0.017197609, -9.621861, 2.603135, -8.645299, 5.040635, -7.065612, 7.079698, -4.9796743, 8.681261, -2.5577993, 9.689074, 0.02032566, 9.985949, 2.6218882, 9.673449, 5.0359507, 8.634386, 7.0984488, 7.0484476, 8.660949, 5.009385, 9.660949, 2.5484478)
