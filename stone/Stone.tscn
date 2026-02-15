@@ -3,6 +3,9 @@
 [ext_resource type="Script" uid="uid://bcwvk66op7nba" path="res://stone/Stone.gd" id="1_q1k2p"]
 [ext_resource type="Script" uid="uid://bfme48ybivq6d" path="res://stone/zone_detection_area_2d.gd" id="2_2jb1u"]
 
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_2jb1u"]
+bounce = 0.2
+
 [sub_resource type="CircleShape2D" id="CircleShape2D_803en"]
 radius = 23.0
 
@@ -12,6 +15,7 @@ radius = 0.01
 [node name="Stone" type="RigidBody2D" unique_id=665321105 node_paths=PackedStringArray("stone_polygon_2d", "outline_polygon_2d", "red_indicator_polygon_2d")]
 self_modulate = Color(0.2393471, 0.23934716, 0.23934707, 1)
 z_as_relative = false
+physics_material_override = SubResource("PhysicsMaterial_2jb1u")
 gravity_scale = 0.0
 linear_damp = 1.0
 script = ExtResource("1_q1k2p")
@@ -20,7 +24,7 @@ p2_outline_color = Color(0, 0, 0, 0.11764706)
 stone_polygon_2d = NodePath("StonePolygon2D")
 outline_polygon_2d = NodePath("StonePolygon2D/OutlinePolygon2D")
 red_indicator_polygon_2d = NodePath("RedIndicatorPolygon2D")
-paint_radius = 0.001
+paint_radius = 1.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=676780668]
 shape = SubResource("CircleShape2D_803en")

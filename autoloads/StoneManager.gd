@@ -2,14 +2,16 @@
 extends Node
 
 # --- Debug Visualization ---
-var debug_enabled: bool = false
+var debug_enabled: bool = true
 var debug_sprite: Sprite2D = null
 var debug_image: Image = null
 var debug_texture: ImageTexture = null
 
 # Colors for the debug overlay
-var debug_p2_color: Color = Color(1, 1, 1, 0.3)
-var debug_p1_color: Color = Color(0, 0, 0, 0.3)
+var debug_p2_color: Color = Color(1.0, 1.0, 1.0, 0.392)
+var debug_p1_color: Color = Color(0.0, 0.0, 0.0, 0.392)
+var debug_neutral_color: Color = Color(0.408, 0.408, 0.408, 0.392)
+
 var debug_captured_color: Color = Color(1, 0, 0, 0.4)
 var debug_empty_color: Color = Color(0, 0, 0, 0.0)
 
@@ -18,7 +20,7 @@ var debug_empty_color: Color = Color(0, 0, 0, 0.0)
 const GRID_SIZE: int = 64
 
 @export var world_radius: float = 500.0
-@export var capture_interval: float = 0.4
+@export var capture_interval: float = 0.3
 
 # --- Cell Constants ---
 const EMPTY: int = 0

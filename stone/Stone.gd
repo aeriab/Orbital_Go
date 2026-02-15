@@ -60,7 +60,7 @@ func _physics_process(delta: float) -> void:
 	
 
 func stone_acceleration(pos: Vector2) -> Vector2:
-	return pos.direction_to(Vector2.ZERO) * Global.gravity * 100
+	return pos.direction_to(Vector2.ZERO) * Global.gravity * 100 * mass
 
 func on_captured() -> void:
 	if (team == "P1"):

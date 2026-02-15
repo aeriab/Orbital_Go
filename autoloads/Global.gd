@@ -4,7 +4,7 @@ var is_p1_turn: bool = false
 var gravity: float = 9.8
 
 # TODO: rename to zone_radius
-var finish_radius: float = 150.0
+var finish_radius: float = 250.0
 signal zone_radius_changed
 
 var game_still_going: bool = true
