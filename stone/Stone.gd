@@ -2,10 +2,10 @@ class_name Stone
 extends RigidBody2D
 
 @export_group("Visuals")
-@export var p1_color: Color = Color.WHITE
-@export var p2_color: Color = Color.BLACK
-@export var p1_outline_color: Color = Color.GRAY
-@export var p2_outline_color: Color = Color.DARK_GRAY
+@export var p1_color: Color = Color.BLACK
+@export var p2_color: Color = Color.WHITE
+@export var p1_outline_color: Color = Color.DARK_GRAY
+@export var p2_outline_color: Color = Color.GRAY
 
 @export_group("Internal References")
 @export var stone_polygon_2d: Polygon2D
