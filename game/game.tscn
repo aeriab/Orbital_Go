@@ -39,6 +39,8 @@ trajectory_trace_handler = NodePath("../TrajectoryTraceHandler")
 [node name="TrajectoryTraceHandler" type="Node2D" parent="." unique_id=1472672657 node_paths=PackedStringArray("trajectory_line")]
 script = ExtResource("4_fc0e3")
 trajectory_line = NodePath("TrajectoryLine2D")
+min_alpha = 0.2
+max_steps = 300
 
 [node name="TrajectoryLine2D" type="Line2D" parent="TrajectoryTraceHandler" unique_id=1750582579]
 top_level = true
