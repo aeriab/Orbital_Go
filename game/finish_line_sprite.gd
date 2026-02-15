@@ -1,4 +1,7 @@
 extends Sprite2D
 
-func _process(_delta):
-	scale = Vector2(Global.finish_radius / 1465.0, Global.finish_radius / 1465.0)
+func _ready() -> void:
+	Global.zone_radius_changed.connect(change_zone_radius)
+
+func change_zone_radius(radius: float) -> void:
+	scale = Vector2(radius / 1465.0, radius / 1465.0)

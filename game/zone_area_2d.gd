@@ -2,36 +2,22 @@ extends Area2D
 
 @export var zone_collision_shape: CollisionShape2D
 
-func _ready():
-	area_entered.connect(_on_stone_entered)
-	area_exited.connect(_on_stone_exited)
+func _ready() -> void:
+	# Connect to the Global signal we renamed in the last step
+	Global.zone_radius_changed.connect(_on_zone_radius_changed)
 	
-	Global.zone_radius_changed.connect(update_radius)
-	Global.zone_radius_changed.emit()
+	# Initial sync with the current Global state
+	_on_zone_radius_changed(Global.zone_radius)
 
-
-func update_radius():
-	print("Made herererr")
-	zone_collision_shape.shape.radius = Global.finish_radius
-
-func _on_stone_entered(area):
-	var stone: Stone = area.get_stone()
-	var points: float = stone.point_value
-	var is_p1_team: bool = stone.is_in_group("P1")
-	
-	if is_p1_team:
-		Global.p1_add_score(points)
+func _on_zone_radius_changed(new_radius: float) -> void:
+	if zone_collision_shape and zone_collision_shape.shape is CircleShape2D:
+		# We must ensure we are modifying a UNIQUE resource so 
+		# other circles in the game don't accidentally resize too.
+		zone_collision_shape.shape.radius = new_radius
 	else:
-		Global.p2_add_score(points)
-	
+		push_warning("Zone collision shape is missing or not a CircleShape2D!")
 
-func _on_stone_exited(area):
-	var stone: Stone = area.get_stone()
-	var points: float = stone.point_value
-	var is_p1_team: bool = stone.is_in_group("P1")
-	
-	if is_p1_team:
-		Global.p1_add_score(-points)
-	else:
-		Global.p2_add_score(-points)
-	
+# This function is now a "Query" that the C# Manager can use
+# to see if a stone has drifted too far.
+func is_point_inside(global_pos: Vector2) -> bool:
+	return global_pos.length() <= Global.zone_radius
