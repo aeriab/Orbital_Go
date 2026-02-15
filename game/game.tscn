@@ -40,7 +40,9 @@ script = ExtResource("4_fc0e3")
 trajectory_line = NodePath("TrajectoryLine2D")
 
 [node name="TrajectoryLine2D" type="Line2D" parent="TrajectoryTraceHandler" unique_id=1750582579]
+top_level = true
 default_color = Color(1, 1, 1, 0.11764706)
+joint_mode = 2
 
 [node name="P1StartLocation" type="Node2D" parent="." unique_id=1600883736]
 position = Vector2(-450, 0)

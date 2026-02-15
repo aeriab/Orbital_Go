@@ -1,123 +1,48 @@
 class_name Stone
 extends RigidBody2D
 
+@export_group("Visuals")
 @export var p1_color: Color = Color.WHITE
 @export var p2_color: Color = Color.BLACK
+@export var p1_outline_color: Color = Color.GRAY
+@export var p2_outline_color: Color = Color.DARK_GRAY
 
-@export var p1_outline_color: Color
-@export var p2_outline_color: Color
-
+@export_group("Internal References")
 @export var stone_polygon_2d: Polygon2D
 @export var outline_polygon_2d: Polygon2D
-@export var red_indicator_polygon_2d: Polygon2D
 
 var team: String = ""
-var point_value: float = 1.0
 
-# How far (in world units) the "wall" extends beyond the stone's actual shape.
-# Bigger = more forgiving enclosures. Smaller = tighter walls.
-@export var paint_radius: float = 0.0
-
-# --- Out-of-Bounds / Game Over ---
-@export var finish_min_velocity: float = 10.0
-@export var finish_time_limit: float = 3.0
-@export var finish_rate: float = 1.0
-
-@export var spawn_immunity_time: float = 3.0
-var is_immune: bool = true
-
-var _finish_counter: float = 0.0
-
-func _ready():
-	
-	if (Global.is_p1_turn):
-		stone_polygon_2d.color = p1_color
-		outline_polygon_2d.color = p1_outline_color
-		team = "P2"
-		add_to_group("P2")
+func _ready() -> void:
+	# Use the current turn to set team, then flip the turn
+	# Note: Better to handle the turn-flip in your "Launcher" script!
+	if Global.is_p1_turn:
+		setup_stone("P1", p1_color, p1_outline_color)
 	else:
-		stone_polygon_2d.color = p2_color
-		outline_polygon_2d.color = p2_outline_color
-		team = "P1"
-		add_to_group("P1")
+		setup_stone("P2", p2_color, p2_outline_color)
 	
-	Global.is_p1_turn = !Global.is_p1_turn
-	sleeping = false
-	
+	# Only register to the manager for the capture logic
 	StoneManager.register_stone(self)
 
-func _physics_process(delta: float) -> void:
-	
+func setup_stone(t: String, fill: Color, stroke: Color) -> void:
+	team = t
+	add_to_group(t)
+	stone_polygon_2d.color = fill
+	outline_polygon_2d.color = stroke
+
+func _physics_process(_delta: float) -> void:
 	if not freeze:
 		apply_central_force(stone_acceleration(global_position))
-		
-		if (is_immune):
-			spawn_immunity_time = spawn_immunity_time - delta
-			if spawn_immunity_time <= 0.0:
-				is_immune = false
-		else:
-			_update_finish_counter(delta)
-	
 
+# Used by both the stone and your trajectory preview
 func stone_acceleration(pos: Vector2) -> Vector2:
 	return pos.direction_to(Vector2.ZERO) * Global.gravity * 100 * mass
 
+
 func on_captured() -> void:
-	if (team == "P1"):
-		Global.p2_add_score(1.0)
-	else:
-		Global.p1_add_score(1.0)
-	
+	# If a P1 stone is captured, P2 gets the points
+	var scoring_team = "P2" if team == "P1" else "P1"
+	Global.update_score(scoring_team, 1.0)
+
 	StoneManager.unregister_stone(self)
 	queue_free()
-	# TODO
-	# Other audio, particles, and points for capture
-
-# Returns this stone's shape polygon in world-space coordinates.
-# StoneManager calls this when painting onto the grid.
-func get_world_polygon() -> PackedVector2Array:
-	var local_points = stone_polygon_2d.polygon
-	var world_points = PackedVector2Array()
-	for point in local_points:
-		# Transform from Polygon2D local space → world space
-		world_points.append(stone_polygon_2d.global_transform * point)
-	return world_points
-
-
-
-# --- Out-of-Bounds Timer ---
-# When a stone drifts outside the play zone and slows down,
-# a timer starts. If it stays out for finish_time_limit seconds,
-# the game ends. The stone pulses increasingly red as a warning.
-func _update_finish_counter(delta: float) -> void:
-	
-	if (global_position.length() <= Global.finish_radius):
-		# Decrease _finish_counter, inside of zone
-		_finish_counter = max(_finish_counter - finish_rate * delta, 0)
-	else:
-		# Increase _finish_counter, outside of zone
-		_finish_counter = min(_finish_counter + finish_rate * delta, finish_time_limit)
-	
-	var _finish_magnitude: float = _finish_counter / finish_time_limit
-	red_indicator_polygon_2d.color.a = _finish_magnitude
-	#var _finish_magnitude: float = _finish_counter / finish_time_limit
-	#var swell: float = 0.5 + ((-0.5) * cos(15 * PI * _finish_magnitude * _finish_magnitude))
-	#
-	#red_indicator_polygon_2d.color.a = swell
-	
-	if (_finish_counter >= finish_time_limit) && Global.game_still_going:
-		Global.game_still_going = false
-		ending_stone_clear()
-		Global.tally_score()
-		
-		queue_free()
-		# TODO: signal to a game manager, show UI, etc.
-	
-	
-	
-
-
-# Executes if this stone is the 
-func ending_stone_clear() -> void:
-	print(self)
-	pass

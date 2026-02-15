@@ -1,63 +1,53 @@
 extends Node
 
-var is_p1_turn: bool = false
+# --- Game State ---
+var is_p1_turn: bool = true # Typically P1 (Black) starts in Go
+var game_still_going: bool = true
 var gravity: float = 9.8
 
-# TODO: rename to zone_radius
-var finish_radius: float = 250.0
-signal zone_radius_changed
+# --- Area / Zone ---
+var zone_radius: float = 250.0
+signal zone_radius_changed(new_radius: float)
 
-var game_still_going: bool = true
+# --- Scoring ---
+# White (P2) often starts with 0.5 or 6.5 "Komi" points in Go to offset 
+# the disadvantage of going second.
+var p1_score: float = 0.0 
+var p2_score: float = 0.5 
 
-# SCORE
-var p1_score: float = 0.0 # Black
-var p2_score: float = 0.5 # White
-signal p1_score_updated
-signal p2_score_updated
+signal score_updated(p1_val: float, p2_val: float)
+signal game_over(p1_won: bool)
 
-var p1_won: bool = false
-signal game_over
+func _ready() -> void:
+	# Use a safe call to check for the Debug layer
+	var debug = get_node_or_null("/root/DebugCanvasLayer")
+	if debug:
+		debug.param_changed.connect(_on_debug_param_changed)
+		gravity = debug.get_value("gravity")
 
-func _ready():
-	change_zone_radius(finish_radius)
-	# Check if the node exists first to prevent Nil errors
-	if has_node("/root/DebugCanvasLayer"):
-		DebugCanvasLayer.param_changed.connect(_on_debug_param_changed)
-		gravity = DebugCanvasLayer.get_value("gravity")
-		#print("first")
-	else:
-		#print("second")
-		pass
-
-func _on_debug_param_changed(param_name: String, value: float):
+func _on_debug_param_changed(param_name: String, value: float) -> void:
 	if param_name == "gravity":
 		gravity = value
-		#print("my gravity: " + str(gravity))
 
-func _process(_delta: float) -> void:
-	#gravity = DebugCanvasLayer.get_value("gravity")
-	#print("my gravity: " + str(gravity))
-	
-	pass
+# --- Methods ---
+
+func update_score(team: String, amount: float) -> void:
+	if team == "P1":
+		p1_score += amount
+	else:
+		p2_score += amount
+	score_updated.emit(p1_score, p2_score)
+
+func change_zone_radius(new_radius: float) -> void:
+	zone_radius = new_radius
+	zone_radius_changed.emit(zone_radius)
 
 func tally_score() -> void:
-	p1_won = (p1_score > p2_score)
-	game_over.emit()
+	game_still_going = false
+	var p1_won = p1_score > p2_score
+	game_over.emit(p1_won)
 
+# --- Utilities ---
 
-
-func change_zone_radius(radius: float):
-	finish_radius = radius
-	zone_radius_changed.emit()
-
-func p1_add_score(val: float) -> void:
-	p1_score += val
-	p1_score_updated.emit()
-
-func p2_add_score(val: float) -> void:
-	p2_score += val
-	p2_score_updated.emit()
-
-
-func inverted_color(c1: Color) -> Color:
-	return Color(1.0 - c1.r, 1.0 - c1.g, 1.0 - c1.b, c1.a)
+func get_inverted_color(c: Color) -> Color:
+	return Color(1.0 - c.r, 1.0 - c.g, 1.0 - c.b, c.a)
