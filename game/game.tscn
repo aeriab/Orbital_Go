@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://bwr7a38eggnl5" path="res://game/GameUI/game_canvas_layer.tscn" id="6_dakft"]
 [ext_resource type="Script" path="res://game/zone_area_2d.gd" id="7_u5opy"]
 [ext_resource type="Script" path="res://game/PointManager.gd" id="9_j8tme"]
+[ext_resource type="Script" uid="uid://cwbskgy3hyted" path="res://game/PhysicsTest.cs" id="10_j8tme"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_dakft"]
 radius = 350.0
@@ -72,3 +73,6 @@ shape = SubResource("CircleShape2D_dakft")
 script = ExtResource("9_j8tme")
 game_canvas_layer = NodePath("../GameCanvasLayer")
 end_canvas_layer = NodePath("../EndCanvasLayer")
+
+[node name="PhysicsTest" type="Node2D" parent="." unique_id=836721930]
+script = ExtResource("10_j8tme")
