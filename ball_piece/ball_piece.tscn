@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://ca8du4avx1yur"]
+[gd_scene format=3 uid="uid://ca8du4avx1yur"]
 
 [ext_resource type="Script" uid="uid://bcwvk66op7nba" path="res://ball_piece/ball_piece.gd" id="1_q1k2p"]
 [ext_resource type="PackedScene" uid="uid://dmr1dhrxtu8qr" path="res://connecting_visuals/connecting_line_2d.tscn" id="2_6lmgn"]
@@ -9,7 +9,7 @@ radius = 15.0
 [sub_resource type="CircleShape2D" id="CircleShape2D_q1k2p"]
 radius = 15.804933
 
-[node name="BallPiece" type="RigidBody2D"]
+[node name="BallPiece" type="RigidBody2D" unique_id=738736861]
 self_modulate = Color(0.2393471, 0.23934716, 0.23934707, 1)
 gravity_scale = 0.0
 linear_damp = 1.0
@@ -17,14 +17,14 @@ script = ExtResource("1_q1k2p")
 connecting_line = ExtResource("2_6lmgn")
 line_color = Color(0, 1, 1, 1)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=699723579]
 shape = SubResource("CircleShape2D_803en")
 
-[node name="Polygon2D" type="Polygon2D" parent="."]
+[node name="Polygon2D" type="Polygon2D" parent="." unique_id=93986577]
 scale = Vector2(1.5, 1.5)
 polygon = PackedVector2Array(10.015625, 0.0234375, 9.6328125, -2.6640625, 8.63281, -5.0437517, 7.045311, -7.060931, 4.982814, -8.632806, 2.5671902, -9.6249895, 0.02031517, -9.992177, -2.6124973, -9.632802, -5.073435, -8.6406145, -7.073432, -7.03749, -8.643744, -4.990615, -9.628119, -2.63124, -9.987494, 0.017197609, -9.621861, 2.603135, -8.645299, 5.040635, -7.065612, 7.079698, -4.9796743, 8.681261, -2.5577993, 9.689074, 0.02032566, 9.985949, 2.6218882, 9.673449, 5.0359507, 8.634386, 7.0984488, 7.0484476, 8.660949, 5.009385, 9.660949, 2.5484478)
 
-[node name="ConnectArea2D" type="Area2D" parent="."]
+[node name="ConnectArea2D" type="Area2D" parent="." unique_id=1958356442]
 
-[node name="ConnectCollisionShape2D" type="CollisionShape2D" parent="ConnectArea2D"]
+[node name="ConnectCollisionShape2D" type="CollisionShape2D" parent="ConnectArea2D" unique_id=360188700]
 shape = SubResource("CircleShape2D_q1k2p")
