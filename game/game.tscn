@@ -88,9 +88,8 @@ end_canvas_layer = NodePath("../EndCanvasLayer")
 [node name="PhysicsTest" type="Node2D" parent="." unique_id=836721930]
 script = ExtResource("10_j8tme")
 
-[node name="CaptureManager" type="Node" parent="." unique_id=848100643]
+[node name="CaptureManager" type="Node2D" parent="." unique_id=1565135333]
 script = ExtResource("13_vsp63")
-CheckInterval = 5.0
 
 [connection signal="area_entered" from="Zone/ZoneArea2D" to="Zone/ZoneArea2D" method="_on_area_entered"]
 [connection signal="area_exited" from="Zone/ZoneArea2D" to="Zone/ZoneArea2D" method="_on_area_exited"]

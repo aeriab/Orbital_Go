@@ -28,12 +28,8 @@ func is_point_inside(global_pos: Vector2) -> bool:
 
 func _on_area_entered(area: Area2D) -> void:
 	if area.get_parent() is Stone:
-		print("area...")
-		# call_deferred waits until the "Idle" time at the end of the frame
 		CaptureManager.call_deferred("UpdateTerritoryScore")
 
 func _on_area_exited(area: Area2D) -> void:
 	if area.get_parent() is Stone:
-		print("area exit...")
-		# call_deferred waits until the "Idle" time at the end of the frame
 		CaptureManager.call_deferred("UpdateTerritoryScore")

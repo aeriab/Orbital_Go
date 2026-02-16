@@ -25,7 +25,7 @@ script = ExtResource("1_q1k2p")
 stone_polygon_2d = NodePath("StonePolygon2D")
 outline_polygon_2d = NodePath("StonePolygon2D/OutlinePolygon2D")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=676780668]
+[node name="CollisionShape2D_MUST_BE_FIRST" type="CollisionShape2D" parent="." unique_id=676780668]
 shape = SubResource("CircleShape2D_803en")
 
 [node name="StonePolygon2D" type="Polygon2D" parent="." unique_id=1311104513]
