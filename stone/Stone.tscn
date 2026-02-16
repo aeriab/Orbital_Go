@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://bcwvk66op7nba" path="res://stone/Stone.gd" id="1_q1k2p"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_2jb1u"]
+friction = 0.0
 bounce = 0.2
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_803en"]
