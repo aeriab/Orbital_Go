@@ -12,6 +12,7 @@
 [ext_resource type="Script" uid="uid://qd7n2ssjmeoa" path="res://game/zone_area_2d.gd" id="7_u5opy"]
 [ext_resource type="Script" path="res://game/PointManager.gd" id="9_j8tme"]
 [ext_resource type="Script" uid="uid://cwbskgy3hyted" path="res://game/PhysicsTest.cs" id="10_j8tme"]
+[ext_resource type="Script" uid="uid://bbkmlq0i31k53" path="res://game/CaptureManager.cs" id="13_vsp63"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_dakft"]
 resource_local_to_scene = true
@@ -85,3 +86,6 @@ end_canvas_layer = NodePath("../EndCanvasLayer")
 
 [node name="PhysicsTest" type="Node2D" parent="." unique_id=836721930]
 script = ExtResource("10_j8tme")
+
+[node name="CaptureManager" type="Node" parent="." unique_id=848100643]
+script = ExtResource("13_vsp63")
