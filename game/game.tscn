@@ -69,12 +69,13 @@ scale = Vector2(0.239, 0.239)
 texture = ExtResource("4_4fuuu")
 script = ExtResource("2_dxrkv")
 
-[node name="ZoneArea2D" type="Area2D" parent="Zone" unique_id=787652848 node_paths=PackedStringArray("zone_collision_shape")]
+[node name="ZoneArea2D" type="Area2D" parent="Zone" unique_id=787652848 node_paths=PackedStringArray("zone_collision_shape", "CaptureManager")]
 collision_layer = 2
 collision_mask = 2
 monitorable = false
 script = ExtResource("7_u5opy")
 zone_collision_shape = NodePath("ZoneCollisionShape2D")
+CaptureManager = NodePath("../../CaptureManager")
 
 [node name="ZoneCollisionShape2D" type="CollisionShape2D" parent="Zone/ZoneArea2D" unique_id=1720209613]
 shape = SubResource("CircleShape2D_dakft")
@@ -89,3 +90,7 @@ script = ExtResource("10_j8tme")
 
 [node name="CaptureManager" type="Node" parent="." unique_id=848100643]
 script = ExtResource("13_vsp63")
+CheckInterval = 5.0
+
+[connection signal="area_entered" from="Zone/ZoneArea2D" to="Zone/ZoneArea2D" method="_on_area_entered"]
+[connection signal="area_exited" from="Zone/ZoneArea2D" to="Zone/ZoneArea2D" method="_on_area_exited"]
