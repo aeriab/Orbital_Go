@@ -11,10 +11,14 @@ public partial class CaptureManager : Node2D
     [Export] public float CheckInterval = 0.2f;
     private float _timer = 0.0f;
 
+    private List<(Vector2, Vector2)> _debugConnections = new List<(Vector2, Vector2)>();
+    private List<(Vector2[], Color)> _debugPolygons = new List<(Vector2[], Color)>();
+
     public override void _Ready()
     {
         _global = GetNode("/root/Global");
         _stoneManager = GetNode("/root/StoneManager");
+        ZIndex = 10;
     }
 
     public override void _PhysicsProcess(double delta)
@@ -24,8 +28,34 @@ public partial class CaptureManager : Node2D
         {
             _timer = 0.0f;
             RunGameLogic();
+            QueueRedraw();
         }
     }
+
+
+    public override void _Draw()
+    {
+        // 1. Draw the adjacency lines (the graph edges)
+        foreach (var connection in _debugConnections)
+        {
+            // Center-to-center thin line
+            DrawLine(ToLocal(connection.Item1), ToLocal(connection.Item2), Colors.Cyan, 1.0f);
+        }
+
+        // 2. Draw the detected cycles as semi-transparent polygons
+        foreach (var polyData in _debugPolygons)
+        {
+            Vector2[] localPoints = new Vector2[polyData.Item1.Length];
+            for (int i = 0; i < polyData.Item1.Length; i++)
+                localPoints[i] = ToLocal(polyData.Item1[i]);
+
+            if (localPoints.Length >= 3)
+            {
+                DrawColoredPolygon(localPoints, polyData.Item2);
+            }
+        }
+    }
+
 
     public void UpdateTerritoryScore()
     {
@@ -33,7 +63,7 @@ public partial class CaptureManager : Node2D
         float zoneRadius = (float)_global.Get("zone_radius");
         float radiusSq = zoneRadius * zoneRadius;
 
-        float p1Current = 0;
+        float p1Current = 0.0f;
         float p2Current = 0.5f; 
 
         foreach (var stone in stones)
@@ -53,6 +83,9 @@ public partial class CaptureManager : Node2D
 
     private void RunGameLogic()
     {
+        _debugConnections.Clear();
+        _debugPolygons.Clear();
+
         UpdateTerritoryScore();
         DetectAndProcessCaptures("P1", "P2"); // P1 creates loops to capture P2
         DetectAndProcessCaptures("P2", "P1"); // P2 creates loops to capture P1
@@ -75,15 +108,27 @@ public partial class CaptureManager : Node2D
         // 1. Build Adjacency Graph
         var adj = BuildAdjacency(teamStones);
 
+        foreach (var kvp in adj)
+        {
+            foreach (var neighbor in kvp.Value)
+            {
+                _debugConnections.Add((kvp.Key.GlobalPosition, neighbor.GlobalPosition));
+            }
+        }
+
         // 2. Find Cycles
         var cycles = FindCycles(teamStones, adj);
 
         // 3. Check for victims in each cycle
         var capturedStones = new HashSet<RigidBody2D>();
+        Color polyColor = team == "P1" ? new Color(0.1f, 0.1f, 0.1f, 0.5f) : new Color(0.9f, 0.9f, 0.9f, 0.5f);
+        
         foreach (var cycle in cycles)
         {
             Vector2[] polygon = new Vector2[cycle.Count];
             for (int i = 0; i < cycle.Count; i++) polygon[i] = cycle[i].GlobalPosition;
+
+            _debugPolygons.Add((polygon, polyColor));
 
             foreach (var victim in opponentStones)
             {

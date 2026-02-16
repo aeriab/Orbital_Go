@@ -8,5 +8,5 @@ func _ready() -> void:
 	Global.score_updated.connect(score_text_update)
 
 func score_text_update(p1_val: float, p2_val: float) -> void:
-	p1_label.text = "Score: " + str(Global.p1_score)
-	p2_label.text = "Score: " + str(Global.p2_score)
+	p1_label.text = "Score: " + str(p1_val)
+	p2_label.text = "Score: " + str(p2_val)
