@@ -1,23 +1,28 @@
 extends Node2D
 
+@export_group("Scenes")
 @export var ball_scene: PackedScene
+
+@export_group("Stone Types")
+@export var p1_resource: StoneType
+@export var p2_resource: StoneType
+# You can add @export var neutral_resource: StoneType here later!
+
+@export_group("Launch Settings")
 @export var p1_start_spot: Node2D
 @export var p2_start_spot: Node2D
-
 @export var launch_power_multiplier: float = 5.0
 @export var trajectory_trace_handler: Node2D
 
 var launch_point: Vector2
-var ball: RigidBody2D
+var ball: Stone # Changed type to 'Stone' to access apply_stone_type()
 var is_dragging: bool = false
 
 func _process(_delta):
 	if is_dragging and ball:
-		# Pass the vector and the current ball to the trajectory handler
 		trajectory_trace_handler.update_trajectory(ball, launch_vector())
 
 func launch_vector() -> Vector2:
-	# Simplified vector math: (Start Drag - Current Mouse)
 	return (launch_point - get_global_mouse_position()) * launch_power_multiplier
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -31,29 +36,25 @@ func start_dragging():
 	launch_point = get_global_mouse_position()
 	is_dragging = true
 	
-	# 1. Instantiate the ball
-	ball = ball_scene.instantiate()
+	ball = ball_scene.instantiate() as Stone
 	ball.freeze = true
 	
-	# 2. add the ball to the top of the scene
+	# 1. Decide which resource to use based on the turn
+	var selected_type = p1_resource if Global.is_p1_turn else p2_resource
+	
+	# 2. Inject the data into the stone before adding it to the scene
+	ball.apply_stone_type(selected_type)
+	
 	get_parent().add_child(ball)
 	
 	# 3. Position based on turn
-	if Global.is_p1_turn:
-		ball.global_position = p1_start_spot.global_position
-	else:
-		ball.global_position = p2_start_spot.global_position
+	ball.global_position = p1_start_spot.global_position if Global.is_p1_turn else p2_start_spot.global_position
 
 func fire_ball():
 	is_dragging = false
-	
 	if ball:
 		ball.freeze = false
 		ball.linear_velocity = launch_vector()
-		
-		# 4. Flip the turn ONLY after a successful launch
 		Global.is_p1_turn = !Global.is_p1_turn
-		
-		# Clean up trajectory visuals
 		trajectory_trace_handler.clear_trajectory()
-		ball = null # Release reference so we don't accidentally move it later
+		ball = null

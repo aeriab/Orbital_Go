@@ -18,8 +18,6 @@ continuous_cd = 1
 linear_damp_mode = 1
 linear_damp = 1.0
 script = ExtResource("1_q1k2p")
-p1_outline_color = Color(0, 0, 0, 0.11764706)
-p2_outline_color = Color(0, 0, 0, 0.11764706)
 stone_polygon_2d = NodePath("StonePolygon2D")
 outline_polygon_2d = NodePath("StonePolygon2D/OutlinePolygon2D")
 
