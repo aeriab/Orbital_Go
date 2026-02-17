@@ -8,8 +8,11 @@ public partial class CaptureManager : Node2D
     private Node _global;
     private Node _stoneManager;
 
-    [Export] public float CheckInterval = 0.2f;
-    private float _timer = 0.0f;
+    [Export] public float CaptureCheckInterval = 0.2f;
+    [Export] public float PointCheckInterval = 0.2f;
+
+    private float _capture_timer = 0.0f;
+    private float _point_timer = 0.0f;
 
     private List<(Vector2, Vector2)> _debugConnections = new List<(Vector2, Vector2)>();
     private List<(Vector2[], Color)> _debugPolygons = new List<(Vector2[], Color)>();
@@ -23,13 +26,21 @@ public partial class CaptureManager : Node2D
 
     public override void _PhysicsProcess(double delta)
     {
-        _timer += (float)delta;
-        if (_timer >= CheckInterval)
+        _capture_timer += (float)delta;
+        if (_capture_timer >= CaptureCheckInterval)
         {
-            _timer = 0.0f;
-            RunGameLogic();
+            _capture_timer = 0.0f;
+            RunCaptureLogic();
             QueueRedraw();
         }
+
+        _point_timer += (float)delta;
+        if (_point_timer >= PointCheckInterval)
+        {
+            _point_timer = 0.0f;
+            UpdateTerritoryScore();
+        }
+
     }
 
 
@@ -81,12 +92,11 @@ public partial class CaptureManager : Node2D
         _global.EmitSignal("score_updated", p1Current, p2Current);
     }
 
-    private void RunGameLogic()
+    private void RunCaptureLogic()
     {
         _debugConnections.Clear();
         _debugPolygons.Clear();
 
-        UpdateTerritoryScore();
         DetectAndProcessCaptures("P1", "P2"); // P1 creates loops to capture P2
         DetectAndProcessCaptures("P2", "P1"); // P2 creates loops to capture P1
     }

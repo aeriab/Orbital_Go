@@ -7,6 +7,8 @@ extends RigidBody2D
 @export var stone_polygon_2d: Polygon2D
 @export var outline_polygon_2d: Polygon2D
 
+@export var neutral_resource: StoneType
+
 func _ready() -> void:
 	if stone_data:
 		apply_stone_type(stone_data)
@@ -43,5 +45,6 @@ func on_captured() -> void:
 		var scoring_team = "P2" if victim_team == "P1" else "P1"
 		Global.update_score(scoring_team, stone_data.point_value)
 	
-	StoneManager.unregister_stone(self)
-	queue_free()
+	apply_stone_type(neutral_resource)
+	#StoneManager.unregister_stone(self)
+	#queue_free()
