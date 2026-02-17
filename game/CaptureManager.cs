@@ -11,6 +11,8 @@ public partial class CaptureManager : Node2D
     [Export] public float CaptureCheckInterval = 0.2f;
     [Export] public float PointCheckInterval = 0.2f;
 
+    [Export]public float debug_alpha = 0.1f;
+
     private float _capture_timer = 0.0f;
     private float _point_timer = 0.0f;
 
@@ -50,7 +52,7 @@ public partial class CaptureManager : Node2D
         foreach (var connection in _debugConnections)
         {
             // Center-to-center thin line
-            DrawLine(ToLocal(connection.Item1), ToLocal(connection.Item2), Colors.Cyan, 1.0f);
+            DrawLine(ToLocal(connection.Item1), ToLocal(connection.Item2), Colors.Cyan, debug_alpha);
         }
 
         // 2. Draw the detected cycles as semi-transparent polygons
@@ -131,7 +133,7 @@ public partial class CaptureManager : Node2D
 
         // 3. Check for victims in each cycle
         var capturedStones = new HashSet<RigidBody2D>();
-        Color polyColor = team == "P1" ? new Color(0.1f, 0.1f, 0.1f, 0.5f) : new Color(0.9f, 0.9f, 0.9f, 0.5f);
+        Color polyColor = team == "P1" ? new Color(0.1f, 0.1f, 0.1f, debug_alpha) : new Color(0.9f, 0.9f, 0.9f, debug_alpha);
         
         foreach (var cycle in cycles)
         {

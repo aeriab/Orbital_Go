@@ -13,3 +13,5 @@ func spawn_neutral() -> void:
 	var spawn_pos: Vector2 = get_global_mouse_position()
 	ball = ball_scene.instantiate() as Stone
 	ball.apply_stone_type(neutral_resource)
+	ball.global_position = spawn_pos
+	get_parent().add_child(ball)

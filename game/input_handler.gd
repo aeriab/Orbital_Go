@@ -1,7 +1,7 @@
 extends Node2D
 
 @export_group("Scenes")
-@export var ball_scene: PackedScene
+@export var stone_scene: PackedScene
 
 @export_group("Stone Types")
 @export var p1_resource: StoneType
@@ -36,7 +36,7 @@ func start_dragging():
 	launch_point = get_global_mouse_position()
 	is_dragging = true
 	
-	ball = ball_scene.instantiate() as Stone
+	ball = stone_scene.instantiate() as Stone
 	ball.freeze = true
 	
 	# 1. Decide which resource to use based on the turn
