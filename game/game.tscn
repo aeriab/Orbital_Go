@@ -10,9 +10,9 @@
 [ext_resource type="PackedScene" uid="uid://b1641mfbhmk44" path="res://game/end_canvas_layer.tscn" id="5_l8g03"]
 [ext_resource type="PackedScene" uid="uid://bwr7a38eggnl5" path="res://game/GameUI/game_canvas_layer.tscn" id="6_dakft"]
 [ext_resource type="Script" uid="uid://qd7n2ssjmeoa" path="res://game/zone_area_2d.gd" id="7_u5opy"]
-[ext_resource type="Script" path="res://game/PointManager.gd" id="9_j8tme"]
+[ext_resource type="Script" uid="uid://cnspslx1vuwbo" path="res://game/PointManager.gd" id="9_j8tme"]
 [ext_resource type="Script" uid="uid://cwbskgy3hyted" path="res://game/PhysicsTest.cs" id="10_j8tme"]
-[ext_resource type="Script" uid="uid://bbkmlq0i31k53" path="res://game/CaptureManager.cs" id="13_vsp63"]
+[ext_resource type="Script" path="res://game/CaptureManager.cs" id="13_vsp63"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_dakft"]
 resource_local_to_scene = true
@@ -78,6 +78,7 @@ zone_collision_shape = NodePath("ZoneCollisionShape2D")
 CaptureManager = NodePath("../../CaptureManager")
 
 [node name="ZoneCollisionShape2D" type="CollisionShape2D" parent="Zone/ZoneArea2D" unique_id=1720209613]
+visible = false
 shape = SubResource("CircleShape2D_dakft")
 
 [node name="PointManager" type="Node" parent="." unique_id=1415330333 node_paths=PackedStringArray("game_canvas_layer", "end_canvas_layer")]
