@@ -11,7 +11,11 @@ public partial class CaptureManager : Node2D
     [Export] public float CaptureCheckInterval = 0.2f;
     [Export] public float PointCheckInterval = 0.2f;
 
-    [Export]public float debug_alpha = 0.1f;
+    [Export] public bool draw_debug_lines = false;
+    [Export] public bool draw_debug_polygons = true;
+    
+    [Export] public float debug_alpha = 0.1f;
+
 
     private float _capture_timer = 0.0f;
     private float _point_timer = 0.0f;
@@ -49,24 +53,32 @@ public partial class CaptureManager : Node2D
     public override void _Draw()
     {
         // 1. Draw the adjacency lines (the graph edges)
-        foreach (var connection in _debugConnections)
+        if (draw_debug_lines)
         {
-            // Center-to-center thin line
-            DrawLine(ToLocal(connection.Item1), ToLocal(connection.Item2), Colors.Cyan, debug_alpha);
-        }
-
-        // 2. Draw the detected cycles as semi-transparent polygons
-        foreach (var polyData in _debugPolygons)
-        {
-            Vector2[] localPoints = new Vector2[polyData.Item1.Length];
-            for (int i = 0; i < polyData.Item1.Length; i++)
-                localPoints[i] = ToLocal(polyData.Item1[i]);
-
-            if (localPoints.Length >= 3)
+            foreach (var connection in _debugConnections)
             {
-                DrawColoredPolygon(localPoints, polyData.Item2);
+                // Center-to-center thin line
+                DrawLine(ToLocal(connection.Item1), ToLocal(connection.Item2), Colors.Cyan, 1.0f);
             }
         }
+        
+
+        // 2. Draw the detected cycles as semi-transparent polygons
+        if (draw_debug_polygons)
+        {
+            foreach (var polyData in _debugPolygons)
+            {
+                Vector2[] localPoints = new Vector2[polyData.Item1.Length];
+                for (int i = 0; i < polyData.Item1.Length; i++)
+                    localPoints[i] = ToLocal(polyData.Item1[i]);
+
+                if (localPoints.Length >= 3)
+                {
+                    DrawColoredPolygon(localPoints, polyData.Item2);
+                }
+            }
+        }
+        
     }
 
 
@@ -106,8 +118,8 @@ public partial class CaptureManager : Node2D
     private void DetectAndProcessCaptures(string team, string opponent)
     {
         var allStones = _stoneManager.Call("get_active_stones").AsGodotArray<RigidBody2D>();
-        var teamStones = new List<RigidBody2D>();
-        var opponentStones = new List<RigidBody2D>();
+        var teamNodes = new List<Node2D>();
+        var opponentNodes = new List<Node2D>();
 
         foreach (var s in allStones)
         {

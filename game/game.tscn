@@ -95,7 +95,7 @@ script = ExtResource("10_j8tme")
 script = ExtResource("13_vsp63")
 CaptureCheckInterval = 0.3
 PointCheckInterval = 0.05
-debug_alpha = 0.01
+debug_alpha = 0.15
 
 [node name="TestingNeutral" type="Node2D" parent="." unique_id=161186164]
 script = ExtResource("14_b686c")
