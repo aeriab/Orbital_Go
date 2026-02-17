@@ -1,11 +1,8 @@
 [gd_scene format=3 uid="uid://ca8du4avx1yur"]
 
 [ext_resource type="Script" uid="uid://bcwvk66op7nba" path="res://stone/Stone.gd" id="1_q1k2p"]
+[ext_resource type="PhysicsMaterial" uid="uid://byfl5owjvqxpw" path="res://stone/stone_physics_material.tres" id="1_rlup4"]
 [ext_resource type="Resource" uid="uid://daney87qdejv4" path="res://stone/stone_resources/neutral_stone.tres" id="2_2jb1u"]
-
-[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_2jb1u"]
-friction = 0.0
-bounce = 0.05
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_803en"]
 radius = 23.0
@@ -13,16 +10,17 @@ radius = 23.0
 [sub_resource type="CircleShape2D" id="CircleShape2D_ylx43"]
 radius = 0.1
 
-[node name="Stone" type="RigidBody2D" unique_id=665321105 node_paths=PackedStringArray("stone_polygon_2d", "outline_polygon_2d")]
+[node name="Stone" type="RigidBody2D" unique_id=665321105 node_paths=PackedStringArray("collision_shape_2d", "stone_polygon_2d", "outline_polygon_2d")]
 self_modulate = Color(0.2393471, 0.23934716, 0.23934707, 1)
 z_as_relative = false
 collision_layer = 3
-physics_material_override = SubResource("PhysicsMaterial_2jb1u")
+physics_material_override = ExtResource("1_rlup4")
 gravity_scale = 0.0
 continuous_cd = 1
 linear_damp_mode = 1
 linear_damp = 1.0
 script = ExtResource("1_q1k2p")
+collision_shape_2d = NodePath("CollisionShape2D_MUST_BE_FIRST")
 stone_polygon_2d = NodePath("StonePolygon2D")
 outline_polygon_2d = NodePath("StonePolygon2D/OutlinePolygon2D")
 neutral_resource = ExtResource("2_2jb1u")

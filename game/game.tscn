@@ -15,6 +15,7 @@
 [ext_resource type="Script" uid="uid://bbkmlq0i31k53" path="res://game/CaptureManager.cs" id="13_vsp63"]
 [ext_resource type="Script" uid="uid://bcgom7m2td08q" path="res://game/testing_neutral.gd" id="14_b686c"]
 [ext_resource type="Resource" uid="uid://daney87qdejv4" path="res://stone/stone_resources/neutral_stone.tres" id="15_hb504"]
+[ext_resource type="PackedScene" uid="uid://dbah0xr3rpibq" path="res://stone/connected_stones.tscn" id="16_ee6o4"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_dakft"]
 resource_local_to_scene = true
@@ -95,12 +96,16 @@ script = ExtResource("10_j8tme")
 script = ExtResource("13_vsp63")
 CaptureCheckInterval = 0.3
 PointCheckInterval = 0.05
-debug_alpha = 0.15
+draw_debug_lines = true
+debug_alpha = 0.05
 
 [node name="TestingNeutral" type="Node2D" parent="." unique_id=161186164]
 script = ExtResource("14_b686c")
 ball_scene = ExtResource("1_80nbo")
 neutral_resource = ExtResource("15_hb504")
+
+[node name="ConnectedStones" parent="." unique_id=1104073080 instance=ExtResource("16_ee6o4")]
+position = Vector2(18, -443)
 
 [connection signal="area_entered" from="Zone/ZoneArea2D" to="Zone/ZoneArea2D" method="_on_area_entered"]
 [connection signal="area_exited" from="Zone/ZoneArea2D" to="Zone/ZoneArea2D" method="_on_area_exited"]
