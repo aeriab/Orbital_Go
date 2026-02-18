@@ -1,12 +1,14 @@
 extends Node2D
 
 @export_group("Scenes")
-@export var stone_scene: PackedScene
+@export var base_stone_type: PackedScene
+@export var heavy_stone_type: PackedScene
 
-@export_group("Stone Types")
-@export var p1_resource: StoneType
-@export var p2_resource: StoneType
-# You can add @export var neutral_resource: StoneType here later!
+@export_group("Stone Deck")
+@export var p1_stone_deck: Array[PackedScene]
+@export var p2_stone_deck: Array[PackedScene]
+# Make it so that the first element in the array is used as 
+# the next stone, and then that stone is pushed to the back of the array
 
 @export_group("Launch Settings")
 @export var p1_start_spot: Node2D
@@ -36,19 +38,24 @@ func start_dragging():
 	launch_point = get_global_mouse_position()
 	is_dragging = true
 	
-	ball = stone_scene.instantiate() as Stone
+	# 1. Identify the current player's deck
+	var deck = p1_stone_deck if Global.is_p1_turn else p2_stone_deck
+	
+	if deck.is_empty():
+		return
+	
+	# 2. Cycle the deck: take the first, move it to the end
+	var next_stone_scene = deck.pop_front()
+	deck.push_back(next_stone_scene)
+	
+	# 3. Instantiate the specific stone from the deck
+	ball = next_stone_scene.instantiate() as Stone
 	ball.freeze = true
 	
-	# 1. Decide which resource to use based on the turn
-	var selected_type = p1_resource if Global.is_p1_turn else p2_resource
-	
-	# 2. Inject the data into the stone before adding it to the scene
-	ball.apply_stone_type(selected_type)
+	# 4. Position based on turn
+	ball.global_position = p1_start_spot.global_position if Global.is_p1_turn else p2_start_spot.global_position
 	
 	get_parent().add_child(ball)
-	
-	# 3. Position based on turn
-	ball.global_position = p1_start_spot.global_position if Global.is_p1_turn else p2_start_spot.global_position
 
 func fire_ball():
 	is_dragging = false

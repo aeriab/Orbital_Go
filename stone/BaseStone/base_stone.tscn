@@ -1,34 +1,7 @@
-[gd_scene format=3 uid="uid://ca8du4avx1yur"]
+[gd_scene format=3 uid="uid://cptgi3capavq2"]
 
-[ext_resource type="Script" uid="uid://bcwvk66op7nba" path="res://stone/Stone.gd" id="1_q1k2p"]
-[ext_resource type="PhysicsMaterial" uid="uid://byfl5owjvqxpw" path="res://stone/stone_physics_material.tres" id="1_rlup4"]
-
-[sub_resource type="GDScript" id="GDScript_2jb1u"]
-script/source = "class_name StoneType
-extends Resource
-
-@export var type_name: String = \"Normal\"
-@export var fill_color: Color = Color.WHITE
-@export var outline_color: Color = Color.DARK_GRAY
-
-# Use bitmasks or an array for teams so a stone can be multiple teams
-# e.g., [\"P1\", \"P2\"] for a neutral stone that connects both
-@export var valid_teams: Array[String] = [\"P1\"]
-@export var point_value: float = 1.0
-
-# Future-proofing: unique physics or logic
-@export var mass_multiplier: float = 1.0
-@export var can_be_captured: bool = true
-"
-
-[sub_resource type="Resource" id="Resource_rlup4"]
-script = SubResource("GDScript_2jb1u")
-type_name = "Neutral"
-fill_color = Color(0.50980395, 0.50980395, 0.50980395, 1)
-outline_color = Color(0.3137255, 0.3137255, 0.3137255, 1)
-valid_teams = Array[String](["P1", "P2"])
-point_value = 0.0
-can_be_captured = false
+[ext_resource type="PhysicsMaterial" uid="uid://byfl5owjvqxpw" path="res://stone/stone_physics_material.tres" id="1_veonh"]
+[ext_resource type="Script" uid="uid://crbc3bc2ne0oo" path="res://stone/BaseStone/base_stone.gd" id="2_px5nb"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_803en"]
 radius = 23.0
@@ -36,20 +9,16 @@ radius = 23.0
 [sub_resource type="CircleShape2D" id="CircleShape2D_ylx43"]
 radius = 0.1
 
-[node name="Stone" type="RigidBody2D" unique_id=665321105 node_paths=PackedStringArray("collision_shape_2d", "stone_polygon_2d", "outline_polygon_2d")]
+[node name="BaseStone" type="RigidBody2D" unique_id=665321105]
 self_modulate = Color(0.2393471, 0.23934716, 0.23934707, 1)
 z_as_relative = false
 collision_layer = 3
-physics_material_override = ExtResource("1_rlup4")
+physics_material_override = ExtResource("1_veonh")
 gravity_scale = 0.0
 continuous_cd = 1
 linear_damp_mode = 1
 linear_damp = 1.0
-script = ExtResource("1_q1k2p")
-collision_shape_2d = NodePath("CollisionShape2D_MUST_BE_FIRST")
-stone_polygon_2d = NodePath("StonePolygon2D")
-outline_polygon_2d = NodePath("StonePolygon2D/OutlinePolygon2D")
-neutral_resource = SubResource("Resource_rlup4")
+script = ExtResource("2_px5nb")
 
 [node name="CollisionShape2D_MUST_BE_FIRST" type="CollisionShape2D" parent="." unique_id=676780668]
 shape = SubResource("CircleShape2D_803en")

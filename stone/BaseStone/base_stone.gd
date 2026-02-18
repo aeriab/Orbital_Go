@@ -1,5 +1,5 @@
-class_name Stone
-extends RigidBody2D
+class_name BaseStone
+extends Stone
 
 @export_group("Internal References")
 @export var collision_shape_2d: CollisionShape2D
