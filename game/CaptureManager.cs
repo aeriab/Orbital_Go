@@ -94,6 +94,23 @@ public partial class CaptureManager : Node2D
         _global.EmitSignal("score_updated", p1Current, p2Current);
     }
 
+    private Shape2D GetStoneShape(RigidBody2D stone)
+    {
+        // Search children for any collision shape
+        foreach (var child in stone.GetChildren())
+        {
+            if (child is CollisionShape2D cs) return cs.Shape;
+            if (child is CollisionPolygon2D cp)
+            {
+                // Convert polygon to a ConvexPolygonShape2D
+                var shape = new ConvexPolygonShape2D();
+                shape.Points = cp.Polygon;
+                return shape;
+            }
+        }
+        return null;
+    }
+
     private void RunCaptureLogic()
     {
         _debugConnections.Clear();
@@ -168,9 +185,10 @@ public partial class CaptureManager : Node2D
             adj[s] = new List<RigidBody2D>();
             var query = new PhysicsShapeQueryParameters2D();
             
-            // Use the stone's own shape to find neighbors
-            var shapeOwner = s.GetChild<CollisionShape2D>(0); 
-            query.Shape = shapeOwner.Shape;
+            var shape = GetStoneShape(s);
+            if (shape == null) continue;
+            query.Shape = shape;
+            
             query.Transform = s.GlobalTransform;
             query.CollideWithAreas = false;
             query.CollideWithBodies = true;

@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://ca8du4avx1yur"]
 
-[ext_resource type="Script" uid="uid://bcwvk66op7nba" path="res://stone/Stone.gd" id="1_q1k2p"]
-[ext_resource type="Resource" uid="uid://daney87qdejv4" path="res://stone/stone_resources/neutral_stone.tres" id="2_2jb1u"]
+[ext_resource type="Script" uid="uid://bcwvk66op7nba" path="res://stone/Stone.gd" id="1_8exjl"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_2jb1u"]
 friction = 0.0
@@ -22,10 +21,9 @@ gravity_scale = 0.0
 continuous_cd = 1
 linear_damp_mode = 1
 linear_damp = 1.0
-script = ExtResource("1_q1k2p")
+script = ExtResource("1_8exjl")
 stone_polygon_2d = NodePath("StonePolygon2D")
-outline_polygon_2d = NodePath("StonePolygon2D/OutlinePolygon2D")
-neutral_resource = ExtResource("2_2jb1u")
+outline_polygon_2d = NodePath("OutlinePolygon2D")
 
 [node name="CollisionShape2D_MUST_BE_FIRST" type="CollisionShape2D" parent="." unique_id=676780668]
 shape = SubResource("CircleShape2D_803en")
@@ -36,17 +34,10 @@ z_as_relative = false
 scale = Vector2(2.3, 2.3)
 polygon = PackedVector2Array(10.015625, 0.0234375, 9.6328125, -2.6640625, 8.63281, -5.0437517, 7.045311, -7.060931, 4.982814, -8.632806, 2.5671902, -9.6249895, 0.02031517, -9.992177, -2.6124973, -9.632802, -5.073435, -8.6406145, -7.073432, -7.03749, -8.643744, -4.990615, -9.628119, -2.63124, -9.987494, 0.017197609, -9.621861, 2.603135, -8.645299, 5.040635, -7.065612, 7.079698, -4.9796743, 8.681261, -2.5577993, 9.689074, 0.02032566, 9.985949, 2.6218882, 9.673449, 5.0359507, 8.634386, 7.0984488, 7.0484476, 8.660949, 5.009385, 9.660949, 2.5484478)
 
-[node name="OutlinePolygon2D" type="Polygon2D" parent="StonePolygon2D" unique_id=753561829]
+[node name="OutlinePolygon2D" type="Polygon2D" parent="." unique_id=753561829]
 z_as_relative = false
-scale = Vector2(1.25, 1.25)
+scale = Vector2(2.875, 2.875)
 color = Color(0, 0, 0, 0.11764706)
-polygon = PackedVector2Array(10.015625, 0.0234375, 9.6328125, -2.6640625, 8.63281, -5.0437517, 7.045311, -7.060931, 4.982814, -8.632806, 2.5671902, -9.6249895, 0.02031517, -9.992177, -2.6124973, -9.632802, -5.073435, -8.6406145, -7.073432, -7.03749, -8.643744, -4.990615, -9.628119, -2.63124, -9.987494, 0.017197609, -9.621861, 2.603135, -8.645299, 5.040635, -7.065612, 7.079698, -4.9796743, 8.681261, -2.5577993, 9.689074, 0.02032566, 9.985949, 2.6218882, 9.673449, 5.0359507, 8.634386, 7.0984488, 7.0484476, 8.660949, 5.009385, 9.660949, 2.5484478)
-
-[node name="RedIndicatorPolygon2D" type="Polygon2D" parent="." unique_id=295062106]
-z_index = 1
-z_as_relative = false
-scale = Vector2(2.3, 2.3)
-color = Color(1, 0, 0, 0)
 polygon = PackedVector2Array(10.015625, 0.0234375, 9.6328125, -2.6640625, 8.63281, -5.0437517, 7.045311, -7.060931, 4.982814, -8.632806, 2.5671902, -9.6249895, 0.02031517, -9.992177, -2.6124973, -9.632802, -5.073435, -8.6406145, -7.073432, -7.03749, -8.643744, -4.990615, -9.628119, -2.63124, -9.987494, 0.017197609, -9.621861, 2.603135, -8.645299, 5.040635, -7.065612, 7.079698, -4.9796743, 8.681261, -2.5577993, 9.689074, 0.02032566, 9.985949, 2.6218882, 9.673449, 5.0359507, 8.634386, 7.0984488, 7.0484476, 8.660949, 5.009385, 9.660949, 2.5484478)
 
 [node name="CenterArea2D" type="Area2D" parent="." unique_id=1632896308]

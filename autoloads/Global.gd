@@ -15,6 +15,9 @@ signal zone_radius_changed(new_radius: float)
 var p1_score: float = 0.0 
 var p2_score: float = 0.5 
 
+var neutral_fill_color: Color = Color.WEB_GRAY
+var neutral_outline_color: Color = Color.DIM_GRAY
+
 signal score_updated(p1_val: float, p2_val: float)
 signal game_over(p1_won: bool)
 
