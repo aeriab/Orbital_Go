@@ -11,6 +11,7 @@ extends RigidBody2D
 @export var mass_multiplier: float = 1.0
 @export var point_value: int = 1
 @export var can_be_captured: bool = true
+@export var aero_torque_strength: float = 5.0
 
 @export_group("Team Roles")
 @export var scores_for_teams: Array[String] = []   # e.g. ["P1_Scoring"]
@@ -29,6 +30,12 @@ func _ready() -> void:
 func _physics_process(_delta: float) -> void:
 	if not freeze:
 		apply_central_force(stone_acceleration(global_position))
+		
+		
+		# Simulated aerodynamic restoring torque
+		if linear_velocity.length_squared() > 1.0:
+			var angle_diff = wrapf(linear_velocity.angle() - rotation, -PI, PI)
+			apply_torque(angle_diff * aero_torque_strength * linear_velocity.length())
 
 func stone_acceleration(pos: Vector2) -> Vector2:
 	return pos.direction_to(Vector2.ZERO) * Global.gravity * 100 * mass
