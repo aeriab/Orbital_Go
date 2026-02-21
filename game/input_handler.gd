@@ -41,13 +41,12 @@ func start_dragging():
 	var scene = p1_stone_scene if Global.is_p1_turn else p2_stone_scene
 	ball = scene.instantiate() as Stone
 	ball.freeze = true
-
-	# Assign team identity
+	
 	if Global.is_p1_turn:
-		ball.assign_team(p1_fill_color, p1_outline_color, ["P1"])
+		ball.assign_team(p1_fill_color, p1_outline_color, ["P1_Scoring"], ["P1_Capturing"])
 	else:
-		ball.assign_team(p2_fill_color, p2_outline_color, ["P2"])
-
+		ball.assign_team(p2_fill_color, p2_outline_color, ["P2_Scoring"], ["P2_Capturing"])
+	
 	get_parent().add_child(ball)
 	ball.global_position = p1_start_spot.global_position if Global.is_p1_turn else p2_start_spot.global_position
 

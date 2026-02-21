@@ -32,8 +32,10 @@ project/assembly_name="Orbital_Go"
 
 [global_group]
 
-P1=""
-P2=""
+P1_Scoring=""
+P2_Scoring=""
+P2_Capturing=""
+P1_Capturing=""
 
 [input]
 

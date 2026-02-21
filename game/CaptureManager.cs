@@ -11,7 +11,7 @@ public partial class CaptureManager : Node2D
     [Export] public float CaptureCheckInterval = 0.2f;
     [Export] public float PointCheckInterval = 0.2f;
 
-    [Export]public float debug_alpha = 0.1f;
+    [Export] public float debug_alpha = 0.1f;
 
     private float _capture_timer = 0.0f;
     private float _point_timer = 0.0f;
@@ -42,20 +42,15 @@ public partial class CaptureManager : Node2D
             _point_timer = 0.0f;
             UpdateTerritoryScore();
         }
-
     }
-
 
     public override void _Draw()
     {
-        // 1. Draw the adjacency lines (the graph edges)
         foreach (var connection in _debugConnections)
         {
-            // Center-to-center thin line
             DrawLine(ToLocal(connection.Item1), ToLocal(connection.Item2), Colors.Cyan, debug_alpha);
         }
 
-        // 2. Draw the detected cycles as semi-transparent polygons
         foreach (var polyData in _debugPolygons)
         {
             Vector2[] localPoints = new Vector2[polyData.Item1.Length];
@@ -69,7 +64,6 @@ public partial class CaptureManager : Node2D
         }
     }
 
-
     public void UpdateTerritoryScore()
     {
         var stones = _stoneManager.Call("get_active_stones").AsGodotArray<RigidBody2D>();
@@ -77,15 +71,15 @@ public partial class CaptureManager : Node2D
         float radiusSq = zoneRadius * zoneRadius;
 
         float p1Current = 0.0f;
-        float p2Current = 0.5f; 
+        float p2Current = 0.5f;
 
         foreach (var stone in stones)
         {
             if (!IsInstanceValid(stone)) continue;
             if (stone.GlobalPosition.LengthSquared() <= radiusSq)
             {
-                if (stone.IsInGroup("P1")) p1Current += 1;
-                if (stone.IsInGroup("P2")) p2Current += 1;
+                if (stone.IsInGroup("P1_Scoring")) p1Current += 1;
+                if (stone.IsInGroup("P2_Scoring")) p2Current += 1;
             }
         }
 
@@ -96,13 +90,11 @@ public partial class CaptureManager : Node2D
 
     private Shape2D GetStoneShape(RigidBody2D stone)
     {
-        // Search children for any collision shape
         foreach (var child in stone.GetChildren())
         {
             if (child is CollisionShape2D cs) return cs.Shape;
             if (child is CollisionPolygon2D cp)
             {
-                // Convert polygon to a ConvexPolygonShape2D
                 var shape = new ConvexPolygonShape2D();
                 shape.Points = cp.Polygon;
                 return shape;
@@ -116,26 +108,30 @@ public partial class CaptureManager : Node2D
         _debugConnections.Clear();
         _debugPolygons.Clear();
 
-        DetectAndProcessCaptures("P1", "P2"); // P1 creates loops to capture P2
-        DetectAndProcessCaptures("P2", "P1"); // P2 creates loops to capture P1
+        // P1's capturing stones form loops to capture non-P1_Capturing stones
+        DetectAndProcessCaptures("P1_Capturing");
+        // P2's capturing stones form loops to capture non-P2_Capturing stones
+        DetectAndProcessCaptures("P2_Capturing");
     }
 
-    private void DetectAndProcessCaptures(string team, string opponent)
+    private void DetectAndProcessCaptures(string capturingGroup)
     {
         var allStones = _stoneManager.Call("get_active_stones").AsGodotArray<RigidBody2D>();
-        var teamStones = new List<RigidBody2D>();
-        var opponentStones = new List<RigidBody2D>();
+        var capturingStones = new List<RigidBody2D>();
+        var potentialVictims = new List<RigidBody2D>();
 
         foreach (var s in allStones)
         {
-            if (s.IsInGroup(team)) teamStones.Add(s);
-            else if (s.IsInGroup(opponent)) opponentStones.Add(s);
+            if (s.IsInGroup(capturingGroup))
+                capturingStones.Add(s);
+            else
+                potentialVictims.Add(s); // Anything NOT in this capturing group is a potential victim
         }
 
-        if (teamStones.Count < 3) return; // Need at least 3 stones for a loop
+        if (capturingStones.Count < 3) return;
 
         // 1. Build Adjacency Graph
-        var adj = BuildAdjacency(teamStones);
+        var adj = BuildAdjacency(capturingStones);
 
         foreach (var kvp in adj)
         {
@@ -146,12 +142,14 @@ public partial class CaptureManager : Node2D
         }
 
         // 2. Find Cycles
-        var cycles = FindCycles(teamStones, adj);
+        var cycles = FindCycles(capturingStones, adj);
 
         // 3. Check for victims in each cycle
         var capturedStones = new HashSet<RigidBody2D>();
-        Color polyColor = team == "P1" ? new Color(0.1f, 0.1f, 0.1f, debug_alpha) : new Color(0.9f, 0.9f, 0.9f, debug_alpha);
-        
+        Color polyColor = capturingGroup == "P1_Capturing"
+            ? new Color(0.1f, 0.1f, 0.1f, debug_alpha)
+            : new Color(0.9f, 0.9f, 0.9f, debug_alpha);
+
         foreach (var cycle in cycles)
         {
             Vector2[] polygon = new Vector2[cycle.Count];
@@ -159,7 +157,7 @@ public partial class CaptureManager : Node2D
 
             _debugPolygons.Add((polygon, polyColor));
 
-            foreach (var victim in opponentStones)
+            foreach (var victim in potentialVictims)
             {
                 if (Geometry2D.IsPointInPolygon(victim.GlobalPosition, polygon))
                 {
@@ -184,11 +182,11 @@ public partial class CaptureManager : Node2D
         {
             adj[s] = new List<RigidBody2D>();
             var query = new PhysicsShapeQueryParameters2D();
-            
+
             var shape = GetStoneShape(s);
             if (shape == null) continue;
             query.Shape = shape;
-            
+
             query.Transform = s.GlobalTransform;
             query.CollideWithAreas = false;
             query.CollideWithBodies = true;
@@ -235,7 +233,6 @@ public partial class CaptureManager : Node2D
                         }
                         else if (parent.ContainsKey(current) && neighbor != parent[current])
                         {
-                            // Cycle detected! Backtrace to build the cycle list
                             var cycle = new List<RigidBody2D> { neighbor, current };
                             var temp = current;
                             while (parent.ContainsKey(temp) && parent[temp] != neighbor)
