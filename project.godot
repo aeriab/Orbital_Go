@@ -52,6 +52,7 @@ test_fire={
 
 [layer_names]
 
+2d_render/layer_1="stones"
 2d_physics/layer_1="physics"
 2d_physics/layer_2="in_zone_detection"
 

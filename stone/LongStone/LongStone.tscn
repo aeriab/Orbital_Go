@@ -1,0 +1,5 @@
+[gd_scene format=3 uid="uid://d0uqgka2oadj0"]
+
+[ext_resource type="PackedScene" uid="uid://ca8du4avx1yur" path="res://stone/BaseStone.tscn" id="1_fb48q"]
+
+[node name="LongStone" unique_id=665321105 instance=ExtResource("1_fb48q")]
