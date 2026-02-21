@@ -37,8 +37,12 @@ p1_stone_scene = ExtResource("1_80nbo")
 p2_stone_scene = ExtResource("3_vsp63")
 p1_start_spot = NodePath("../P1StartLocation")
 p2_start_spot = NodePath("../P2StartLocation")
-launch_power_multiplier = 1.0
+launch_power_multiplier = 4.0
 trajectory_trace_handler = NodePath("../TrajectoryTraceHandler")
+max_pull_distance = 520.0
+min_pull_distance = 120.0
+rotation_lookahead = 800.0
+ring_color = Color(0.3987929, 0.39879292, 0.3987929, 0.3019608)
 
 [node name="TrajectoryTraceHandler" type="Node2D" parent="." unique_id=1472672657 node_paths=PackedStringArray("trajectory_line")]
 script = ExtResource("4_fc0e3")
