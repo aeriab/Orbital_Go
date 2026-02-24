@@ -28,7 +28,6 @@ mouse_filter = 2
 color = Color(0.9647059, 0.8784314, 0.70980394, 1)
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1627936826]
-zoom = Vector2(0.85, 0.85)
 
 [node name="InputHandler" type="Node2D" parent="." unique_id=1096041721 node_paths=PackedStringArray("p1_start_spot", "p2_start_spot", "trajectory_trace_handler")]
 script = ExtResource("2_e2o6t")
@@ -40,7 +39,6 @@ p2_fill_color = Color(0.05882353, 0.05882353, 0.05882353, 1)
 p2_outline_color = Color(0.3137255, 0.3137255, 0.3137255, 1)
 p1_start_spot = NodePath("../P1StartLocation")
 p2_start_spot = NodePath("../P2StartLocation")
-launch_power_multiplier = 4.0
 trajectory_trace_handler = NodePath("../TrajectoryTraceHandler")
 max_pull_distance = 520.0
 min_pull_distance = 120.0
