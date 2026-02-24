@@ -110,8 +110,8 @@ func assign_team(
 
 
 func _on_body_entered(body: Node) -> void:
-	print("entering a body")
-	if body.is_in_group(group_name):
+	#print("entering a body")
+	if body.is_in_group("connectable"):
 		if get_instance_id() < body.get_instance_id():
 			var joint_distance: float = radius + body.radius + separation
 			if (body not in connected_bodies) and (joint_distance - connection_buffer < (body.global_position - global_position).length()):

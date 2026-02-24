@@ -61,8 +61,11 @@ func _physics_process(delta: float) -> void:
 	
 	queue_redraw()
 
+@export var LineColor: Color = Color(0.502, 0.502, 0.502, 0.902)
+@export var LineWidth: float = 10.0
+
 func _draw() -> void:
 	if body1 and body2:
 		var dir: Vector2 = (body2.global_position - body1.global_position).normalized()
 		var local_start := to_local(body1.global_position)
-		draw_line(local_start, local_start + dir * pull_back_distance, Color(1, 1, 0, 0.4), 2.0)
+		draw_line(local_start, local_start + dir * pull_back_distance, LineColor, LineWidth)

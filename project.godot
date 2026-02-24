@@ -36,6 +36,7 @@ P1_Scoring=""
 P2_Scoring=""
 P2_Capturing=""
 P1_Capturing=""
+connectable=""
 
 [input]
 
@@ -55,6 +56,10 @@ test_fire={
 2d_render/layer_1="stones"
 2d_physics/layer_1="physics"
 2d_physics/layer_2="in_zone_detection"
+
+[physics]
+
+2d/solver/default_contact_bias=1.0
 
 [rendering]
 
