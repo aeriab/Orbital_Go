@@ -17,6 +17,21 @@ extends RigidBody2D
 @export var scores_for_teams: Array[String] = []   # e.g. ["P1_Scoring"]
 @export var captures_with_teams: Array[String] = [] # e.g. ["P1_Capturing"]
 
+var group_name: String = ""
+
+var radius: float = 23
+var connected_bodies: Array[RigidBody2D] = []
+
+@export_group("Rope Spring")
+@export var rope_joint_scene: PackedScene
+@export var spring_stiffness: float = 500.0
+@export var spring_damping: float = 5.0
+@export var separation: float = 0
+@export var connection_buffer: float = 150.0
+@export var rope_strength: float = 5.0
+
+
+
 func _ready() -> void:
 	stone_polygon_2d.color = fill_color
 	outline_polygon_2d.color = outline_color
@@ -54,8 +69,10 @@ func on_captured() -> void:
 	# Remove from all team groups
 	for group in scores_for_teams:
 		remove_from_group(group)
+		group_name = ""
 	for group in captures_with_teams:
 		remove_from_group(group)
+		group_name = ""
 	
 	# Reset to neutral
 	fill_color = Global.neutral_fill_color
@@ -84,6 +101,27 @@ func assign_team(
 	for group in scores_for_teams:
 		if not is_in_group(group):
 			add_to_group(group)
+			group_name = group
 	for group in captures_with_teams:
 		if not is_in_group(group):
 			add_to_group(group)
+			group_name = group
+
+
+
+func _on_body_entered(body: Node) -> void:
+	print("entering a body")
+	if body.is_in_group(group_name):
+		if get_instance_id() < body.get_instance_id():
+			var joint_distance: float = radius + body.radius + separation
+			if (body not in connected_bodies) and (joint_distance - connection_buffer < (body.global_position - global_position).length()):
+				connected_bodies.append(body)
+				
+				var rope_joint = rope_joint_scene.instantiate() as RopeJoint2D
+				get_tree().current_scene.add_child(rope_joint)
+				rope_joint.body1 = self
+				rope_joint.body2 = body
+				rope_joint.pull_back_distance = joint_distance
+				rope_joint.disconnect_distance = joint_distance + rope_strength
+				rope_joint.spring_stiffness = spring_stiffness
+				rope_joint.spring_damping = spring_damping

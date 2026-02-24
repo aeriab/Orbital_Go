@@ -3,7 +3,6 @@
 [ext_resource type="PackedScene" uid="uid://ca8du4avx1yur" path="res://stone/BaseStone.tscn" id="1_80nbo"]
 [ext_resource type="Script" uid="uid://cl8rjugaouj0n" path="res://game/finish_line_sprite.gd" id="2_dxrkv"]
 [ext_resource type="Script" uid="uid://c455fht0j102m" path="res://game/input_handler.gd" id="2_e2o6t"]
-[ext_resource type="PackedScene" uid="uid://d0uqgka2oadj0" path="res://stone/LongStone/LongStone.tscn" id="3_vsp63"]
 [ext_resource type="Texture2D" uid="uid://dipl25rh160l8" path="res://game/Orbital_Go_Individual_finish.png" id="4_4fuuu"]
 [ext_resource type="Script" uid="uid://cwfsl25rho6lh" path="res://trajectory/trajectory_trace_handler.gd" id="4_fc0e3"]
 [ext_resource type="PackedScene" uid="uid://b1641mfbhmk44" path="res://game/end_canvas_layer.tscn" id="5_l8g03"]
@@ -34,7 +33,11 @@ zoom = Vector2(0.85, 0.85)
 [node name="InputHandler" type="Node2D" parent="." unique_id=1096041721 node_paths=PackedStringArray("p1_start_spot", "p2_start_spot", "trajectory_trace_handler")]
 script = ExtResource("2_e2o6t")
 p1_stone_scene = ExtResource("1_80nbo")
-p2_stone_scene = ExtResource("3_vsp63")
+p2_stone_scene = ExtResource("1_80nbo")
+p1_fill_color = Color(0.9486248, 0.94412905, 0.9412797, 1)
+p1_outline_color = Color(0.3137255, 0.3137255, 0.3137255, 1)
+p2_fill_color = Color(0.05882353, 0.05882353, 0.05882353, 1)
+p2_outline_color = Color(0.3137255, 0.3137255, 0.3137255, 1)
 p1_start_spot = NodePath("../P1StartLocation")
 p2_start_spot = NodePath("../P2StartLocation")
 launch_power_multiplier = 4.0

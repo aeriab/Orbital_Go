@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://bntjjx23sp6rh"]
+
+[ext_resource type="Script" uid="uid://6glbpof6d33l" path="res://stone/Rope/rope_joint_2d.gd" id="1_r06ta"]
+
+[node name="RopeJoint2D" type="Node2D" unique_id=1893629935]
+script = ExtResource("1_r06ta")
