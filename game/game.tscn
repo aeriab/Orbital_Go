@@ -10,7 +10,7 @@
 [ext_resource type="Script" uid="uid://qd7n2ssjmeoa" path="res://game/zone_area_2d.gd" id="7_u5opy"]
 [ext_resource type="Script" path="res://game/PointManager.gd" id="9_j8tme"]
 [ext_resource type="Script" uid="uid://cwbskgy3hyted" path="res://game/PhysicsTest.cs" id="10_j8tme"]
-[ext_resource type="Script" uid="uid://bbkmlq0i31k53" path="res://game/CaptureManager.cs" id="13_vsp63"]
+[ext_resource type="Script" uid="uid://7tpijsx6wxey" path="res://game/capture_manager.gd" id="11_qf6n1"]
 [ext_resource type="Script" uid="uid://bcgom7m2td08q" path="res://game/testing_neutral.gd" id="14_b686c"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_dakft"]
@@ -94,10 +94,7 @@ end_canvas_layer = NodePath("../EndCanvasLayer")
 script = ExtResource("10_j8tme")
 
 [node name="CaptureManager" type="Node2D" parent="." unique_id=1565135333]
-script = ExtResource("13_vsp63")
-CaptureCheckInterval = 0.3
-PointCheckInterval = 0.05
-debug_alpha = 0.01
+script = ExtResource("11_qf6n1")
 
 [node name="TestingNeutral" type="Node2D" parent="." unique_id=161186164]
 script = ExtResource("14_b686c")
