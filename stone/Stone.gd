@@ -30,7 +30,7 @@ var connected_bodies: Array[RigidBody2D] = []
 @export var connection_buffer: float = 150.0
 @export var rope_strength: float = 5.0
 
-
+var stone_manager: Node2D
 
 func _ready() -> void:
 	stone_polygon_2d.color = fill_color
@@ -40,7 +40,10 @@ func _ready() -> void:
 		add_to_group(group)
 	for group in captures_with_teams:
 		add_to_group(group)
-	StoneManager.register_stone(self)
+	
+	stone_manager = get_tree().get_nodes_in_group("stone_manager")[0]
+	
+	stone_manager.register_stone(self)
 
 func _physics_process(_delta: float) -> void:
 	if not freeze:
@@ -115,6 +118,8 @@ func _on_body_entered(body: Node) -> void:
 			var joint_distance: float = radius + body.radius + separation
 			if (body not in connected_bodies) and (joint_distance - connection_buffer < (body.global_position - global_position).length()):
 				connected_bodies.append(body)
+				if self not in body.connected_bodies:
+					body.connected_bodies.append(self)
 				
 				var rope_joint = rope_joint_scene.instantiate() as RopeJoint2D
 				get_tree().current_scene.add_child(rope_joint)

@@ -23,13 +23,3 @@ func _on_zone_radius_changed(new_radius: float) -> void:
 # to see if a stone has drifted too far.
 func is_point_inside(global_pos: Vector2) -> bool:
 	return global_pos.length() <= Global.zone_radius
-
-
-
-func _on_area_entered(area: Area2D) -> void:
-	if area.get_parent() is Stone:
-		CaptureManager.call_deferred("UpdateTerritoryScore")
-
-func _on_area_exited(area: Area2D) -> void:
-	if area.get_parent() is Stone:
-		CaptureManager.call_deferred("UpdateTerritoryScore")
