@@ -28,11 +28,58 @@ func _physics_process(delta: float) -> void:
 
 func _run_capture_check() -> void:
 	# Filter out any stones that might have been queued for deletion
-	var active_stones = stones.filter(func(s): return is_instance_valid(s))
+	var active_stones = get_active_stones()
 	
 	# TODO: In the next step, we will call our C# CaptureManager here.
 	# For now, we just ensure the list is clean.
-	pass
+	
+	# Ignore if no stones
+	if (active_stones.is_empty()):
+		return
+		
+	var unvisited_stones = active_stones.duplicate()
+	print("====================")
+	while (!unvisited_stones.is_empty()):
+		_findClosedLoops(unvisited_stones[0], [], unvisited_stones)
+	
+
+func _findClosedLoops(rootStone: Stone, path: Array[Stone], unvisited_stones: Array[Stone]) -> void:
+	var newPath = path.duplicate()
+	newPath.push_back(rootStone)
+	
+	unvisited_stones.erase(rootStone)
+	
+	print(unvisited_stones.size())
+
+	for stone in rootStone.connected_bodies:
+		
+		# Ignore if not a stone
+		if !(stone is Stone):
+			continue
+		
+		# Only loops of the same color can form
+		if stone.captures_with_teams != rootStone.captures_with_teams:
+			continue
+		
+		# Ignore if connected stone is the previous stone (no loops of 2)
+		if !path.is_empty() and stone == path[-1]:
+			continue
+		
+		# Loop detected
+		if stone in path:
+			# TODO LOOP DETECTED, DO SMTH
+			
+			var loop_start_index = newPath.find(stone)
+			var loop_stones = newPath.slice(loop_start_index, newPath.size())
+			var color = "black" if stone.captures_with_teams[0] == "P2_Capturing" else "white"
+			print("LOOP DETECTED of length %d, %s" % [loop_stones.size(), color])
+			
+			
+			continue
+		
+		_findClosedLoops(stone, newPath, unvisited_stones);
+		
+	
 
 # --- Utility for C# ---
 # This allows C# to easily grab the stones without managing its own list
