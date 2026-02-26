@@ -22,6 +22,7 @@ func _physics_process(delta: float) -> void:
 	var dist := diff.length()
 	if dist > disconnect_distance:
 		body1.connected_bodies.erase(body2)
+		body2.connected_bodies.erase(body1)
 		queue_free()
 		return
 	
