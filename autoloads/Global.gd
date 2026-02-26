@@ -2,6 +2,13 @@ extends Node
 
 # --- Game State ---
 var is_p1_turn: bool = true # Typically P1 (Black) starts in Go
+
+var p1_throws_left: int = 3
+var p2_throws_left: int = 3
+
+signal p1_throw(amount: int)
+signal p2_throw(amount: int)
+
 var game_still_going: bool = true
 var gravity: float = 9.8
 
@@ -40,6 +47,24 @@ func update_score(team: String, amount: float) -> void:
 	else:
 		p2_score += amount
 	score_updated.emit(p1_score, p2_score)
+
+
+func p1_throw_stones(amount: int):
+	if (amount <= p1_throws_left):
+		p1_throws_left -= amount
+		if (p1_throws_left <= 0):
+			is_p1_turn = false
+			p1_throws_left = 3
+		p1_throw.emit(amount)
+
+func p2_throw_stones(amount: int):
+	if (amount <= p2_throws_left):
+		p2_throws_left -= amount
+		if (p2_throws_left <= 0):
+			is_p1_turn = true
+			p2_throws_left = 3
+		p2_throw.emit(amount)
+
 
 func change_zone_radius(new_radius: float) -> void:
 	zone_radius = new_radius

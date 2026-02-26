@@ -110,7 +110,10 @@ func fire_ball():
 
 	ball.freeze = false
 	ball.linear_velocity = clamped_launch_vector()
-	Global.is_p1_turn = !Global.is_p1_turn
+	if (Global.is_p1_turn):
+		Global.p1_throw_stones(1)
+	else:
+		Global.p2_throw_stones(1)
 	trajectory_trace_handler.clear_trajectory()
 	ball = null
 	queue_redraw()

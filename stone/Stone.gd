@@ -30,7 +30,7 @@ var connected_bodies: Array[RigidBody2D] = []
 @export var connection_buffer: float = 150.0
 @export var rope_strength: float = 5.0
 
-var stone_manager: Node2D
+var stone_manager: StoneManager
 
 func _ready() -> void:
 	stone_polygon_2d.color = fill_color
@@ -43,6 +43,7 @@ func _ready() -> void:
 	
 	stone_manager = get_tree().get_nodes_in_group("stone_manager")[0]
 	
+	print(stone_manager)
 	stone_manager.register_stone(self)
 
 func _physics_process(_delta: float) -> void:

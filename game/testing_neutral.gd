@@ -3,9 +3,16 @@ extends Node2D
 @export var stone_scene: PackedScene
 var stone: Stone
 
+var time: float = 0.0
+
+@export var spawn_delay: float = 0.02
+
 func _process(delta: float) -> void:
+	time += delta
 	if Input.is_action_pressed("test_fire"):
-		spawn_neutral()
+		if time >= spawn_delay:
+			time = 0
+			spawn_neutral()
 
 #func _unhandled_input(event: InputEvent) -> void:
 	#if event.is_action_pressed("test_fire"):
