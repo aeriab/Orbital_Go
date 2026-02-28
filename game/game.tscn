@@ -94,6 +94,7 @@ stone_scene = ExtResource("1_80nbo")
 
 [node name="StoneManager" type="Node2D" parent="." unique_id=1392433059 groups=["stone_manager"]]
 script = ExtResource("11_3vho3")
+capture_interval = null
 
 [connection signal="area_entered" from="Zone/ZoneArea2D" to="Zone/ZoneArea2D" method="_on_area_entered"]
 [connection signal="area_exited" from="Zone/ZoneArea2D" to="Zone/ZoneArea2D" method="_on_area_exited"]

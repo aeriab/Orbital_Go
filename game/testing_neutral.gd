@@ -27,8 +27,8 @@ func spawn_neutral() -> void:
 	#capturing_groups: Array[String],
 	#points: int = 1
 	
-	stone.assign_team(Global.neutral_fill_color, Global.neutral_outline_color, [], ["P1_Capturing", "P2_Capturing"], 1)
-	
+	#stone.assign_team(Global.neutral_fill_color, Global.neutral_outline_color, [], ["P1_Capturing", "P2_Capturing"], 1)
+	stone.assign_team(Global.neutral_fill_color, Global.neutral_outline_color, [], [], 1)
 	var spawn_pos: Vector2 = get_global_mouse_position()
 	stone.global_position = spawn_pos
 	get_parent().add_child(stone)

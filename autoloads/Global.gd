@@ -3,8 +3,10 @@ extends Node
 # --- Game State ---
 var is_p1_turn: bool = true # Typically P1 (Black) starts in Go
 
-var p1_throws_left: int = 3
+var p1_throws_left: int = 99999
 var p2_throws_left: int = 3
+
+var first_stone_is_available: bool = true
 
 signal p1_throw(amount: int)
 signal p2_throw(amount: int)

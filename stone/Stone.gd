@@ -32,7 +32,22 @@ var connected_bodies: Array[RigidBody2D] = []
 
 var stone_manager: StoneManager
 
+var is_first_stone: bool = false
+
+
+var current_family: Array[RigidBody2D] = []
+
+
 func _ready() -> void:
+	
+	current_family = [self]
+	#stone_manager.register_stone_to_dict(current_family)
+	
+	if Global.first_stone_is_available:
+		is_first_stone = true
+		Global.first_stone_is_available = false
+	
+	
 	stone_polygon_2d.color = fill_color
 	outline_polygon_2d.color = outline_color
 	mass = mass_multiplier
@@ -43,7 +58,6 @@ func _ready() -> void:
 	
 	stone_manager = get_tree().get_nodes_in_group("stone_manager")[0]
 	
-	print(stone_manager)
 	stone_manager.register_stone(self)
 
 func _physics_process(_delta: float) -> void:
@@ -111,22 +125,34 @@ func assign_team(
 			add_to_group(group)
 			group_name = group
 
-
+func create_rope_joint(body: Node, joint_distance: float) -> void:
+	var rope_joint = rope_joint_scene.instantiate() as RopeJoint2D
+	get_tree().current_scene.add_child(rope_joint)
+	rope_joint.body1 = self
+	rope_joint.body2 = body
+	rope_joint.pull_back_distance = joint_distance
+	rope_joint.disconnect_distance = joint_distance + rope_strength
+	rope_joint.spring_stiffness = spring_stiffness
+	rope_joint.spring_damping = spring_damping
 
 func _on_body_entered(body: Node) -> void:
 	if body.is_in_group("connectable"):
 		if get_instance_id() < body.get_instance_id():
 			var joint_distance: float = radius + body.radius + separation
-			if (body not in connected_bodies) and (joint_distance - connection_buffer < (body.global_position - global_position).length()):
+			if (body not in connected_bodies):
 				connected_bodies.append(body)
 				if self not in body.connected_bodies:
 					body.connected_bodies.append(self)
 				
-				var rope_joint = rope_joint_scene.instantiate() as RopeJoint2D
-				get_tree().current_scene.add_child(rope_joint)
-				rope_joint.body1 = self
-				rope_joint.body2 = body
-				rope_joint.pull_back_distance = joint_distance
-				rope_joint.disconnect_distance = joint_distance + rope_strength
-				rope_joint.spring_stiffness = spring_stiffness
-				rope_joint.spring_damping = spring_damping
+				create_rope_joint(body, joint_distance)
+				
+				#stone_manager.merge_families(self, body)
+				
+			
+			
+	
+	#if is_first_stone:
+		#print("Connected to: ")
+		#for cb in connected_bodies:
+			#print(cb)
+			#pass
