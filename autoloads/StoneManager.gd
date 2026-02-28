@@ -1,20 +1,15 @@
 # StoneManager.gd — Autoload Singleton
 class_name StoneManager
-extends Node
-
-@export var capture_interval: float = 0.2
+extends Node2D
 
 # --- Internal State ---
 var stones: Array[Stone] = []
-
 var connected_stone_families: Dictionary = {}
 
 func add_node_group(group_key: String):
 	# Initialize a new typed array for this key
 	var new_array: Array[Node] = []
 	connected_stone_families[group_key] = new_array
-
-var capture_timer: float = 0.0
 
 # --- Registration ---
 func register_stone(stone: Stone) -> void:
@@ -29,33 +24,16 @@ func register_stone(stone: Stone) -> void:
 func unregister_stone(stone: Stone) -> void:
 	stones.erase(stone)
 
-# --- Main Loop ---
-func _physics_process(delta: float) -> void:
-	capture_timer += delta
-	if capture_timer >= capture_interval:
-		capture_timer = 0.0
-		# This is where we will eventually call the C# logic
-		_run_capture_check()
-
-func _run_capture_check() -> void:
-	# Filter out any stones that might have been queued for deletion
-	var active_stones = stones.filter(func(s): return is_instance_valid(s))
-	
-	# TODO: In the next step, we will call our C# CaptureManager here.
-	# For now, we just ensure the list is clean.
-	pass
-
 # --- Utility for C# ---
 # This allows C# to easily grab the stones without managing its own list
 func get_active_stones() -> Array[Stone]:
 	return stones.filter(func(s): return is_instance_valid(s))
-<<<<<<< Updated upstream
-=======
 
+var my_vertices: Array[Vector2] = []
 
 func _ready() -> void:
-#	Update my_vertices to define the captured area
-#	This is an example to demonstrate a hexagon
+	# Update my_vertices to define the captured area
+	# This is an example to demonstrate a hexagon
 	for i in range(6):
 		var angle: float = i * (TAU / 6.0) 
 		var point := Vector2(cos(angle), sin(angle)) * 50.0
@@ -86,6 +64,9 @@ func _transfer_family(from_family: Array[RigidBody2D], to_family: Array[RigidBod
 	for stone in from_family:
 		stone.current_family = to_family
 		to_family.append(stone)
-	# Remove the old, now empty array from your Dictionary
-	connected_stone_families.erase(from_family.get_instance_id())
->>>>>>> Stashed changes
+	
+	for key in connected_stone_families.keys():
+		if connected_stone_families[key] == from_family:
+			connected_stone_families.erase(key)
+			break
+	

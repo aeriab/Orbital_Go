@@ -8,7 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://b1641mfbhmk44" path="res://game/end_canvas_layer.tscn" id="5_l8g03"]
 [ext_resource type="PackedScene" uid="uid://bwr7a38eggnl5" path="res://game/GameUI/game_canvas_layer.tscn" id="6_dakft"]
 [ext_resource type="Script" uid="uid://qd7n2ssjmeoa" path="res://game/zone_area_2d.gd" id="7_u5opy"]
-[ext_resource type="Script" uid="uid://cnspslx1vuwbo" path="res://game/PointManager.gd" id="9_j8tme"]
+[ext_resource type="Script" path="res://game/PointManager.gd" id="9_j8tme"]
 [ext_resource type="Script" uid="uid://cx8nmm5hvkhcl" path="res://autoloads/StoneManager.gd" id="11_3vho3"]
 [ext_resource type="Script" uid="uid://bcgom7m2td08q" path="res://game/testing_neutral.gd" id="14_b686c"]
 
@@ -94,7 +94,6 @@ stone_scene = ExtResource("1_80nbo")
 
 [node name="StoneManager" type="Node2D" parent="." unique_id=1392433059 groups=["stone_manager"]]
 script = ExtResource("11_3vho3")
-capture_interval = null
 
 [connection signal="area_entered" from="Zone/ZoneArea2D" to="Zone/ZoneArea2D" method="_on_area_entered"]
 [connection signal="area_exited" from="Zone/ZoneArea2D" to="Zone/ZoneArea2D" method="_on_area_exited"]
