@@ -26,6 +26,9 @@ func clear_trajectory():
 	trajectory_line.clear_points()
 	shared_width_curve.clear_points()
 
+func stone_acceleration(pos: Vector2) -> Vector2:
+	return pos.direction_to(Vector2.ZERO) * Global.gravity * 100
+
 func update_trajectory(ball: Stone, start_velocity: Vector2):
 	trajectory_line.clear_points()
 	shared_width_curve.clear_points()
