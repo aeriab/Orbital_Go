@@ -19,7 +19,7 @@ extends RigidBody2D
 
 var group_name: String = ""
 var radius: float = 23
-var connected_bodies: Array[RigidBody2D] = []
+var connected_bodies: Array[Stone] = []
 
 @export_group("Rope Spring")
 @export var rope_joint_scene: PackedScene
@@ -31,7 +31,7 @@ var connected_bodies: Array[RigidBody2D] = []
 
 var stone_manager: StoneManager
 var is_first_stone: bool = false
-var current_family: Array[RigidBody2D] = []
+var current_family: Array[Stone] = []
 
 # --- Lifecycle ---
 
@@ -107,7 +107,7 @@ func create_rope_joint(body: Node, joint_distance: float) -> void:
 	# Listen for the rope breaking to trigger a family split check
 	rope_joint.tree_exiting.connect(_handle_break.bind(body))
 
-func _handle_break(other_body: RigidBody2D) -> void:
+func _handle_break(other_body: Stone) -> void:
 	if stone_manager and is_instance_valid(other_body):
 		stone_manager.break_connection(self, other_body)
 
@@ -172,7 +172,7 @@ func debug_set_color(new_color: Color) -> void:
 	if stone_polygon_2d:
 		stone_polygon_2d.color = new_color
 
-func disconnect_from(body: RigidBody2D) -> void:
+func disconnect_from(body: Stone) -> void:
 	connected_bodies.erase(body)
 	body.connected_bodies.erase(self)
 	pass

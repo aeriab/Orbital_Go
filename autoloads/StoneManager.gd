@@ -3,17 +3,93 @@ class_name StoneManager
 extends Node2D
 
 var stones: Array[Stone] = []
-var connected_stone_families: Dictionary = {} 
+var connected_stone_families: Dictionary = {}  # family key (instance_id) -> Array[Stone]
 var family_colors: Dictionary = {}  # family key (instance_id) -> Color
+var outer_connected_stones: Dictionary = {}  # family key (instance_id) -> Array[Stone]
+
+var _outer_stone_set: Dictionary = {}
 
 var _rebuild_timer: float = 0.0
 @export var rebuild_interval: float = 0.3
 
 func _physics_process(delta: float) -> void:
+	
 	_rebuild_timer += delta
 	if _rebuild_timer >= rebuild_interval:
 		_rebuild_timer = 0.0
 		_rebuild_families()
+		_find_outer_nodes()
+
+func _find_outer_nodes() -> void:
+	_outer_stone_set.clear()
+	for key in connected_stone_families:
+		var current_family: Array[Stone] = connected_stone_families[key]
+		if current_family.size() >= 3:
+			var leftmost_node: Stone = _get_leftmost_node(current_family)
+			var outer: Array[Stone] = _get_outer_nodes(leftmost_node)
+			outer_connected_stones[key] = outer
+			for s in outer:
+				_outer_stone_set[s] = true
+		queue_redraw()
+			#var leftmost_node: Stone = _get_leftmost_node(current_family)
+			#outer_connected_stones[key] = _get_outer_nodes(leftmost_node)
+
+func _get_outer_nodes(leftmost_node: Stone) -> Array[Stone]:
+	var outer_nodes: Array[Stone] = [leftmost_node]
+	var current_connected_bodies: Array[Stone] = leftmost_node.connected_bodies
+	var next_outer_node_index: int = _index_of_next_outer_node(current_connected_bodies, PI, leftmost_node.position)
+	var prev_node: Stone = leftmost_node
+	var cur_node: Stone = leftmost_node.connected_bodies[next_outer_node_index]
+	
+	var safety: int = 0
+	while(cur_node != leftmost_node):
+		outer_nodes.append(current_connected_bodies[next_outer_node_index])
+		current_connected_bodies = cur_node.connected_bodies
+		next_outer_node_index = _index_of_next_outer_node(current_connected_bodies, raw_angle(cur_node.position, prev_node.position) + 0.001, cur_node.position)
+		prev_node = cur_node
+		cur_node = cur_node.connected_bodies[next_outer_node_index]
+		
+		safety += 1
+		if safety > stones.size() + 2:
+			print("StoneManager: outer hull walk exceeded stone count, breaking")
+			break
+	
+	return outer_nodes
+
+func _get_leftmost_node(current_family: Array[Stone]) -> Stone:
+	var leftmost_node: Stone = current_family[0]
+	for body in current_family:
+		if body.global_position.x < leftmost_node.global_position.x:
+			leftmost_node = body
+	return leftmost_node
+
+func _index_of_next_outer_node(connected_nodes: Array[Stone], 
+				start_sweep_angle: float, my_pos: Vector2) -> int:
+	
+	var next_index: int = -1
+	var lowest_cwd: float = 999.0
+	for i in connected_nodes.size():
+		var clockwise_distance: float = get_cwd(start_sweep_angle, my_pos, connected_nodes[i].global_position)
+		if clockwise_distance < lowest_cwd:
+			lowest_cwd = clockwise_distance
+			next_index = i
+	
+	return next_index
+
+func get_cwd(start_angle: float, my_pos: Vector2, end_pos: Vector2) -> float:
+	var angle: float = raw_angle(my_pos, end_pos)
+	var diff_angle: float = angle - start_angle
+	if (start_angle > angle):
+		diff_angle += 2 * PI
+	return diff_angle
+
+func raw_angle(center_pos: Vector2, outer_pos: Vector2) -> float:
+	var angle = (outer_pos - center_pos).angle()
+	if angle < 0:
+		angle += 2 * PI
+	return angle
+
+
 
 func _rebuild_families() -> void:
 	var visited: Dictionary = {}
@@ -21,7 +97,7 @@ func _rebuild_families() -> void:
 	for stone in stones:
 		if not is_instance_valid(stone) or stone in visited:
 			continue
-		var component: Array[RigidBody2D] = []
+		var component: Array[Stone] = []
 		var stack: Array = [stone]
 		while stack.size() > 0:
 			var s = stack.pop_back()
@@ -60,7 +136,7 @@ func _rebuild_families() -> void:
 func register_stone(stone: Stone) -> void:
 	if not stones.has(stone):
 		stones.append(stone)
-		var new_family: Array[RigidBody2D] = [stone]
+		var new_family: Array[Stone] = [stone]
 		stone.current_family = new_family
 		var key = stone.get_instance_id()
 		connected_stone_families[key] = new_family
@@ -91,10 +167,7 @@ func merge_families(stone_a: Stone, stone_b: Stone):
 	else:
 		_transfer_family(family_b, family_a)
 
-func _transfer_family(from_family: Array[RigidBody2D], to_family: Array[RigidBody2D]):
-	# Find the color already assigned to to_family
-	var to_color := (to_family[0] as Stone).fill_color
-	
+func _transfer_family(from_family: Array[Stone], to_family: Array[Stone]):
 	# Remove the from_family entry
 	for key in connected_stone_families.keys():
 		if connected_stone_families[key] == from_family:
@@ -113,12 +186,12 @@ func break_connection(stone_a: Stone, stone_b: Stone):
 
 	# We check if they are still connected via another path (Breadth-First Search)
 	var seen_a = []
-	var family_a: Array[RigidBody2D] = []
+	var family_a: Array[Stone] = []
 	_flood_fill(stone_a, family_a, seen_a)
 	
 	if stone_b not in family_a:
 		var seen_b = []
-		var family_b: Array[RigidBody2D] = []
+		var family_b: Array[Stone] = []
 		_flood_fill(stone_b, family_b, seen_b)
 		
 		for s in family_b:
@@ -131,7 +204,7 @@ func break_connection(stone_a: Stone, stone_b: Stone):
 		family_colors[new_key] = new_color
 		
 
-func _flood_fill(start: Stone, new_list: Array[RigidBody2D], seen: Array):
+func _flood_fill(start: Stone, new_list: Array[Stone], seen: Array):
 	var stack = [start]
 	while stack.size() > 0:
 		var s = stack.pop_back()
@@ -172,3 +245,11 @@ func _ready() -> void:
 
 func _draw():
 	draw_polygon(my_vertices, PackedColorArray([Color(Color.DARK_CYAN, 0.4)]))
+	
+	# Highlight outer stones with a bright ring
+	for stone in _outer_stone_set:
+		if is_instance_valid(stone):
+			var local_pos: Vector2 = to_local(stone.global_position)
+			draw_circle(local_pos, 18.0, Color(Color.YELLOW, 0.85))
+			draw_arc(local_pos, 18.0, 0, TAU, 32, Color.WHITE, 2.0)
+	
