@@ -33,7 +33,6 @@ func merge_families(stone_a: Stone, stone_b: Stone):
 	
 	var family_a = stone_a.current_family
 	var family_b = stone_b.current_family
-
 	if family_a.size() < family_b.size():
 		_transfer_family(family_a, family_b)
 	else:
@@ -48,6 +47,7 @@ func _transfer_family(from_family: Array[RigidBody2D], to_family: Array[RigidBod
 			
 	for stone in from_family:
 		stone.current_family = to_family
+		stone.debug_set_color(to_family[0].fill_color)
 		to_family.append(stone)
 
 # --- Disconnect Logic ---
@@ -85,19 +85,19 @@ func _flood_fill(start: Stone, new_list: Array[RigidBody2D], seen: Array):
 
 # --- Utilities & Drawing ---
 
-func debug_recolor_families() -> void:
-	for family_id in connected_stone_families:
-		var family_array = connected_stone_families[family_id]
-		# Generate a random high-saturation color for visibility
-		var random_color = Color.from_hsv(randf(), 0.8, 1.0)
-		
-		for stone in family_array:
-			if is_instance_valid(stone):
-				stone.debug_set_color(random_color)
-
-func _input(event):
-	if event.is_action_pressed("show_color"): # Default 'Enter' or 'Space'
-		debug_recolor_families()
+#func debug_recolor_families() -> void:
+	#for family_id in connected_stone_families:
+		#var family_array = connected_stone_families[family_id]
+		## Generate a random high-saturation color for visibility
+		#var random_color = Color.from_hsv(Global.rng.randf(), 0.8, 1.0)
+		#
+		#for stone in family_array:
+			#if is_instance_valid(stone):
+				#stone.debug_set_color(random_color)
+#
+#func _input(event):
+	#if event.is_action_pressed("show_color"): # Default 'Enter' or 'Space'
+		#debug_recolor_families()
 
 
 func get_active_stones() -> Array[Stone]:

@@ -36,6 +36,8 @@ var current_family: Array[RigidBody2D] = []
 # --- Lifecycle ---
 
 func _ready() -> void:
+	debug_set_color(Color.from_hsv(Global.rng.randf(), 0.8, 1.0))
+	
 	# 1. Get Manager First
 	var managers = get_tree().get_nodes_in_group("stone_manager")
 	if managers.size() > 0:

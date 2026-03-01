@@ -30,7 +30,10 @@ var neutral_outline_color: Color = Color.DIM_GRAY
 signal score_updated(p1_val: float, p2_val: float)
 signal game_over(p1_won: bool)
 
+var rng = RandomNumberGenerator.new()
 func _ready() -> void:
+	rng.seed = 67
+	
 	# Use a safe call to check for the Debug layer
 	var debug = get_node_or_null("/root/DebugCanvasLayer")
 	if debug:
