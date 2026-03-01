@@ -17,11 +17,11 @@ func _ready() -> void:
 	if body1 and body2:
 		contact_distance = body1.radius + body2.radius
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	var diff := body2.global_position - body1.global_position
 	var dist := diff.length()
 	if dist > disconnect_distance:
-		body1.connected_bodies.erase(body2)
+		body1.disconnect_from(body2)
 		queue_free()
 		return
 	
