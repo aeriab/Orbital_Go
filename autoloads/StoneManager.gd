@@ -25,36 +25,75 @@ func _find_outer_nodes() -> void:
 	outer_connected_stones.clear()
 	for key in connected_stone_families:
 		var current_family: Array[Stone] = connected_stone_families[key]
-		if current_family.size() >= 3:
-			var leftmost_node: Stone = _get_leftmost_node(current_family)
-			var outer: Array[Stone] = _get_outer_nodes(leftmost_node)
+		
+		# This recursively chops off all "hairs" and chains
+		var loop_candidates = _get_loop_core(current_family)
+		
+		if loop_candidates.size() >= 3:
+			# FIX: Use loop_candidates here, not current_family
+			var leftmost_node: Stone = _get_leftmost_node(loop_candidates)
+			# FIX: Pass loop_candidates into the walk
+			var outer: Array[Stone] = _get_outer_nodes(leftmost_node, loop_candidates)
 			outer_connected_stones[key] = outer
 			for s in outer:
 				_outer_stone_set[s] = true
+			
 		queue_redraw()
 			#var leftmost_node: Stone = _get_leftmost_node(current_family)
 			#outer_connected_stones[key] = _get_outer_nodes(leftmost_node)
 
-func _get_outer_nodes(leftmost_node: Stone) -> Array[Stone]:
-	var outer_nodes: Array[Stone] = [leftmost_node]
-	var current_connected_bodies: Array[Stone] = leftmost_node.connected_bodies
-	var next_outer_node_index: int = _index_of_next_outer_node(current_connected_bodies, PI, leftmost_node.position)
-	var prev_node: Stone = leftmost_node
-	var cur_node: Stone = leftmost_node.connected_bodies[next_outer_node_index]
+func _get_loop_core(family: Array[Stone]) -> Array[Stone]:
+	var core = family.duplicate()
+	var changed = true
 	
-	var safety: int = 0
-	while(cur_node != leftmost_node):
-		outer_nodes.append(current_connected_bodies[next_outer_node_index])
-		current_connected_bodies = cur_node.connected_bodies
-		next_outer_node_index = _index_of_next_outer_node(current_connected_bodies, raw_angle(cur_node.position, prev_node.position) + 0.001, cur_node.position)
-		prev_node = cur_node
-		cur_node = cur_node.connected_bodies[next_outer_node_index]
+	while changed:
+		changed = false
+		var to_remove = []
 		
-		safety += 1
-		if safety > stones.size() + 2:
-			print("StoneManager: outer hull walk exceeded stone count, breaking")
-			break
+		# Find all nodes that currently have 1 or 0 connections WITHIN the core
+		for stone in core:
+			var active_connections_in_core = 0
+			for neighbor in stone.connected_bodies:
+				if neighbor in core:
+					active_connections_in_core += 1
+			
+			if active_connections_in_core < 2:
+				to_remove.append(stone)
+		
+		if to_remove.size() > 0:
+			for stone in to_remove:
+				core.erase(stone)
+			changed = true # Something was removed, so we must check again
+			
+	return core
+
+func _get_outer_nodes(leftmost_node: Stone, valid_nodes: Array[Stone]) -> Array[Stone]:
+	var outer_nodes: Array[Stone] = [leftmost_node]
 	
+	# Only look at connections that are part of the pruned 'valid_nodes'
+	var get_valid_conns = func(s: Stone): return s.connected_bodies.filter(func(n): return n in valid_nodes)
+	
+	var current_conns = get_valid_conns.call(leftmost_node)
+	if current_conns.is_empty(): return outer_nodes
+	
+	var next_idx = _index_of_next_outer_node(current_conns, PI, leftmost_node.position)
+	var prev_node: Stone = leftmost_node
+	var cur_node: Stone = current_conns[next_idx]
+	
+	var safety = 0
+	while cur_node != leftmost_node and safety < stones.size() + 2:
+		outer_nodes.append(cur_node)
+		var conns = get_valid_conns.call(cur_node)
+		
+		# Prevent immediate backtracking
+		var options = conns.filter(func(s): return s != prev_node)
+		if options.is_empty(): break
+		
+		next_idx = _index_of_next_outer_node(options, raw_angle(cur_node.position, prev_node.position) + 0.001, cur_node.position)
+		prev_node = cur_node
+		cur_node = options[next_idx]
+		safety += 1
+		
 	return outer_nodes
 
 func _get_leftmost_node(current_family: Array[Stone]) -> Stone:
