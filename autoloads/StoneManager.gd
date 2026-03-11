@@ -243,13 +243,37 @@ func _ready() -> void:
 		my_vertices.append(point)
 	queue_redraw()
 
+#func _draw():
+	#draw_polygon(my_vertices, PackedColorArray([Color(Color.DARK_CYAN, 0.4)]))
+	#
+	## Highlight outer stones with a bright ring
+	#for stone in _outer_stone_set:
+		#if is_instance_valid(stone):
+			#var local_pos: Vector2 = to_local(stone.global_position)
+			#draw_circle(local_pos, 18.0, Color(Color.YELLOW, 0.85))
+			#draw_arc(local_pos, 18.0, 0, TAU, 32, Color.WHITE, 2.0)
+	#
+
 func _draw():
-	draw_polygon(my_vertices, PackedColorArray([Color(Color.DARK_CYAN, 0.4)]))
+	# Draw the area for each family that has enough outer nodes
+	for key in outer_connected_stones:
+		var outer_nodes: Array[Stone] = outer_connected_stones[key]
+		if outer_nodes.size() < 3:
+			continue
+			
+		var points: PackedVector2Array = []
+		for stone in outer_nodes:
+			if is_instance_valid(stone):
+				points.append(to_local(stone.global_position))
+		
+		# Get the color for this family, default to gray if not found
+		var fill_color = family_colors.get(key, Color.GRAY)
+		fill_color.a = 0.3 # Set transparency so it looks like a "captured area"
+		
+		draw_polygon(points, PackedColorArray([fill_color]))
 	
-	# Highlight outer stones with a bright ring
+	# Keep your existing highlight logic for individual outer stones
 	for stone in _outer_stone_set:
 		if is_instance_valid(stone):
 			var local_pos: Vector2 = to_local(stone.global_position)
 			draw_circle(local_pos, 18.0, Color(Color.YELLOW, 0.85))
-			draw_arc(local_pos, 18.0, 0, TAU, 32, Color.WHITE, 2.0)
-	
