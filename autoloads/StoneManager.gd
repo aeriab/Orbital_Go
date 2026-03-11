@@ -22,6 +22,7 @@ func _physics_process(delta: float) -> void:
 
 func _find_outer_nodes() -> void:
 	_outer_stone_set.clear()
+	outer_connected_stones.clear()
 	for key in connected_stone_families:
 		var current_family: Array[Stone] = connected_stone_families[key]
 		if current_family.size() >= 3:
@@ -270,7 +271,9 @@ func _draw():
 		var fill_color = family_colors.get(key, Color.GRAY)
 		fill_color.a = 0.3 # Set transparency so it looks like a "captured area"
 		
-		draw_polygon(points, PackedColorArray([fill_color]))
+		if points.size() >= 3:
+			draw_polygon(points, PackedColorArray([fill_color]))
+		
 	
 	# Keep your existing highlight logic for individual outer stones
 	for stone in _outer_stone_set:
