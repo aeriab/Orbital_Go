@@ -306,13 +306,21 @@ func _draw():
 			if is_instance_valid(stone):
 				points.append(to_local(stone.global_position))
 		
+		
+		if points.size() < 3:
+			continue
+		# If the walk went counter-clockwise, reverse the points to make them clockwise
+		if not Geometry2D.is_polygon_clockwise(points):
+			points.reverse()
+		
 		# Get the color for this family, default to gray if not found
 		var fill_color = family_colors.get(key, Color.GRAY)
 		fill_color.a = 0.3 # Set transparency so it looks like a "captured area"
 		
-		if points.size() >= 3:
+		# Now that we've forced them to be clockwise, this check will always pass 
+		# unless the polygon is technically "degenerate" (a straight line or zero area).
+		if Geometry2D.is_polygon_clockwise(points):
 			draw_polygon(points, PackedColorArray([fill_color]))
-		
 	
 	# Keep your existing highlight logic for individual outer stones
 	for stone in _outer_stone_set:
