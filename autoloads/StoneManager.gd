@@ -162,7 +162,7 @@ func _rebuild_families() -> void:
 				min_id = sid
 		
 		var color: Color
-		if Global.debug_stone_colors_on:
+		if Global.debug_color_stones_on:
 			# Reuse old color if this family existed before, otherwise generate one
 			if old_colors.has(min_id):
 				color = old_colors[min_id]
@@ -174,7 +174,7 @@ func _rebuild_families() -> void:
 		
 		for s in component:
 			s.current_family = component
-			if Global.debug_stone_colors_on:
+			if Global.debug_color_stones_on:
 				s.debug_set_color(color)
 
 # --- Registration ---
@@ -300,35 +300,37 @@ func _ready() -> void:
 	#
 
 func _draw():
-	# Draw the area for each family that has enough outer nodes
-	for key in outer_connected_stones:
-		var outer_nodes: Array[Stone] = outer_connected_stones[key]
-		if outer_nodes.size() < 3:
-			continue
+	if Global.debug_shade_capture_area_on:
+		# Draw the area for each family that has enough outer nodes
+		for key in outer_connected_stones:
+			var outer_nodes: Array[Stone] = outer_connected_stones[key]
+			if outer_nodes.size() < 3:
+				continue
+				
+			var points: PackedVector2Array = []
+			for stone in outer_nodes:
+				if is_instance_valid(stone):
+					points.append(to_local(stone.global_position))
 			
-		var points: PackedVector2Array = []
-		for stone in outer_nodes:
-			if is_instance_valid(stone):
-				points.append(to_local(stone.global_position))
-		
-		
-		if points.size() < 3:
-			continue
-		# If the walk went counter-clockwise, reverse the points to make them clockwise
-		if not Geometry2D.is_polygon_clockwise(points):
-			points.reverse()
-		
-		# Get the color for this family, default to gray if not found
-		var fill_color = family_colors.get(key, Color.GRAY)
-		fill_color.a = 0.3 # Set transparency so it looks like a "captured area"
-		
-		# Now that we've forced them to be clockwise, this check will always pass 
-		# unless the polygon is technically "degenerate" (a straight line or zero area).
-		if Geometry2D.is_polygon_clockwise(points):
-			draw_polygon(points, PackedColorArray([fill_color]))
+			
+			if points.size() < 3:
+				continue
+			# If the walk went counter-clockwise, reverse the points to make them clockwise
+			if not Geometry2D.is_polygon_clockwise(points):
+				points.reverse()
+			
+			# Get the color for this family, default to gray if not found
+			var fill_color = family_colors.get(key, Color.GRAY)
+			fill_color.a = 0.3 # Set transparency so it looks like a "captured area"
+			
+			# Now that we've forced them to be clockwise, this check will always pass 
+			# unless the polygon is technically "degenerate" (a straight line or zero area).
+			if Geometry2D.is_polygon_clockwise(points):
+				draw_polygon(points, PackedColorArray([fill_color]))
 	
 	# Keep your existing highlight logic for individual outer stones
-	for stone in _outer_stone_set:
-		if is_instance_valid(stone):
-			var local_pos: Vector2 = to_local(stone.global_position)
-			draw_circle(local_pos, 18.0, Color(Color.YELLOW, 0.85))
+	if Global.debug_highlight_outer_on:
+		for stone in _outer_stone_set:
+			if is_instance_valid(stone):
+				var local_pos: Vector2 = to_local(stone.global_position)
+				draw_circle(local_pos, 18.0, Color(Color.YELLOW, 0.85))

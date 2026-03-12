@@ -32,8 +32,9 @@ signal game_over(p1_won: bool)
 
 
 # --- Debug Settings ---
-var debug_stone_colors_on: bool = false
-
+var debug_color_stones_on: bool = false
+var debug_highlight_outer_on: bool = false
+var debug_shade_capture_area_on: bool = false
 
 var rng = RandomNumberGenerator.new()
 func _ready() -> void:
