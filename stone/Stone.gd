@@ -4,6 +4,7 @@ extends RigidBody2D
 @export_group("Internal References")
 @export var stone_polygon_2d: Polygon2D
 @export var outline_polygon_2d: Polygon2D
+@export var cpu_particles_2d: CPUParticles2D
 
 @export_group("Stone Properties")
 @export var fill_color: Color = Color.WHITE
@@ -50,6 +51,7 @@ func _ready() -> void:
 	# Apply Visuals
 	stone_polygon_2d.color = fill_color
 	outline_polygon_2d.color = outline_color
+	cpu_particles_2d.color = fill_color
 	mass = mass_multiplier
 	
 	for group in scores_for_teams:
@@ -117,6 +119,7 @@ func on_captured() -> void:
 	if not can_be_captured:
 		return
 	
+	cpu_particles_2d.emitting = true
 	# Award points to the OTHER team
 	for group in scores_for_teams:
 		if group == "P1_Scoring":
