@@ -24,6 +24,13 @@ signal zone_radius_changed(new_radius: float)
 var p1_score: float = 0.0 
 var p2_score: float = 0.5 
 
+
+var black_fill_color: Color = Color.BLACK
+var black_outline_color: Color = Color.DIM_GRAY
+
+var white_fill_color: Color = Color.WHITE
+var white_outline_color: Color = Color.DIM_GRAY
+
 var neutral_fill_color: Color = Color.WEB_GRAY
 var neutral_outline_color: Color = Color.DIM_GRAY
 

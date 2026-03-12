@@ -4,11 +4,17 @@ extends Node2D
 @export var p1_stone_scene: PackedScene
 @export var p2_stone_scene: PackedScene
 
-@export_group("Team Colors")
-@export var p1_fill_color: Color = Color.BLUE
-@export var p1_outline_color: Color = Color.DARK_BLUE
-@export var p2_fill_color: Color = Color.RED
-@export var p2_outline_color: Color = Color.DARK_RED
+#@export_group("Team Colors")
+#@export var p1_fill_color: Color = Color.BLUE
+#@export var p1_outline_color: Color = Color.DARK_BLUE
+#@export var p2_fill_color: Color = Color.RED
+#@export var p2_outline_color: Color = Color.DARK_RED
+
+# -- Team Colors --
+var p1_fill_color = Global.black_fill_color
+var p1_outline_color = Global.black_outline_color
+var p2_fill_color = Global.white_fill_color
+var p2_outline_color = Global.white_outline_color
 
 @export_group("Launch Settings")
 @export var p1_start_spot: Node2D
