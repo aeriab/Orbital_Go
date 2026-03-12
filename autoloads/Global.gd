@@ -4,10 +4,10 @@ extends Node
 var is_p1_turn: bool = true # Typically P1 (Black) starts in Go
 
 var p1_throws_left: int = 3
-var p1_total_throws_left: int = 30
+var p1_total_throws_left: int = 18
 
 var p2_throws_left: int = 3
-var p2_total_throws_left: int = 30
+var p2_total_throws_left: int = 18
 
 var first_stone_is_available: bool = true
 
