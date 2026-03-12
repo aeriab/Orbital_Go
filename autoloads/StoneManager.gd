@@ -38,9 +38,38 @@ func _find_outer_nodes() -> void:
 			for s in outer:
 				_outer_stone_set[s] = true
 			
+			_check_for_captures(key, outer)
+			
 		queue_redraw()
 			#var leftmost_node: Stone = _get_leftmost_node(current_family)
 			#outer_connected_stones[key] = _get_outer_nodes(leftmost_node)
+
+
+func _check_for_captures(_family_key: Variant, outer_nodes: Array[Stone]) -> void:
+	if outer_nodes.size() < 3: return
+	
+	# 1. Prepare the polygon points (Global coordinates for easy comparison)
+	var poly_points: PackedVector2Array = []
+	for s in outer_nodes:
+		poly_points.append(s.global_position)
+		
+	# 2. Identify the capturing team
+	# Assuming group names are "P1_Capturing" and "P2_Capturing"
+	var capturing_stone = outer_nodes[0]
+	var opponent_group = "P2_Capturing" if capturing_stone.is_in_group("P1_Capturing") else "P1_Capturing"
+	
+	# 3. Check every stone against this polygon
+	for stone in stones:
+		if not is_instance_valid(stone): continue
+		
+		# Only check stones belonging to the opponent
+		if stone.is_in_group(opponent_group):
+			# Geometry2D.is_point_in_polygon returns true if the position is inside
+			if Geometry2D.is_point_in_polygon(stone.global_position, poly_points):
+				# Trigger the capture logic on the stone
+				if stone.has_method("on_captured"):
+					stone.on_captured()
+
 
 func _get_loop_core(family: Array[Stone]) -> Array[Stone]:
 	var core = family.duplicate()

@@ -3,7 +3,7 @@ extends Node
 # --- Game State ---
 var is_p1_turn: bool = true # Typically P1 (Black) starts in Go
 
-var p1_throws_left: int = 99999
+var p1_throws_left: int = 3
 var p2_throws_left: int = 3
 
 var first_stone_is_available: bool = true
@@ -22,7 +22,7 @@ signal zone_radius_changed(new_radius: float)
 # White (P2) often starts with 0.5 or 6.5 "Komi" points in Go to offset 
 # the disadvantage of going second.
 var p1_score: float = 0.0 
-var p2_score: float = 0.5 
+var p2_score: float = 0.0
 
 
 var black_fill_color: Color = Color.BLACK
@@ -40,8 +40,8 @@ signal game_over(p1_won: bool)
 
 # --- Debug Settings ---
 var debug_color_stones_on: bool = false
-var debug_highlight_outer_on: bool = true
-var debug_shade_capture_area_on: bool = true
+var debug_highlight_outer_on: bool = false
+var debug_shade_capture_area_on: bool = false
 
 var rng = RandomNumberGenerator.new()
 func _ready() -> void:
