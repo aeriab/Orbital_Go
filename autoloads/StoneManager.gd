@@ -160,17 +160,22 @@ func _rebuild_families() -> void:
 			var sid = s.get_instance_id()
 			if sid < min_id:
 				min_id = sid
-		# Reuse old color if this family existed before, otherwise generate one
+		
 		var color: Color
-		if old_colors.has(min_id):
-			color = old_colors[min_id]
-		else:
-			color = Color.from_hsv(Global.rng.randf(), 0.8, 1.0)
+		if Global.debug_stone_colors_on:
+			# Reuse old color if this family existed before, otherwise generate one
+			if old_colors.has(min_id):
+				color = old_colors[min_id]
+			else:
+				color = Color.from_hsv(Global.rng.randf(), 0.8, 1.0)
+			family_colors[min_id] = color
+		
 		connected_stone_families[min_id] = component
-		family_colors[min_id] = color
+		
 		for s in component:
 			s.current_family = component
-			s.debug_set_color(color)
+			if Global.debug_stone_colors_on:
+				s.debug_set_color(color)
 
 # --- Registration ---
 func register_stone(stone: Stone) -> void:

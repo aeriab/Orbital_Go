@@ -30,6 +30,11 @@ var neutral_outline_color: Color = Color.DIM_GRAY
 signal score_updated(p1_val: float, p2_val: float)
 signal game_over(p1_won: bool)
 
+
+# --- Debug Settings ---
+var debug_stone_colors_on: bool = false
+
+
 var rng = RandomNumberGenerator.new()
 func _ready() -> void:
 	rng.seed = 67
