@@ -129,13 +129,11 @@ func raw_angle(center_pos: Vector2, outer_pos: Vector2) -> float:
 		angle += 2 * PI
 	return angle
 
-
-
-func _rebuild_families() -> void:
+func _build_families_for_group(group_name: String, group_color: Color) -> void:
 	var visited: Dictionary = {}
 	var components: Array = []
 	for stone in stones:
-		if not is_instance_valid(stone) or stone in visited:
+		if not is_instance_valid(stone) or stone in visited or not stone.is_in_group(group_name):
 			continue
 		var component: Array[Stone] = []
 		var stack: Array = [stone]
@@ -146,20 +144,24 @@ func _rebuild_families() -> void:
 			visited[s] = true
 			component.append(s)
 			for neighbor in s.connected_bodies:
-				if is_instance_valid(neighbor) and neighbor not in visited:
+				if is_instance_valid(neighbor) and neighbor not in visited and neighbor.is_in_group(group_name):
 					stack.append(neighbor)
 		components.append(component)
 	# Save old colors before rebuilding so stable families keep their color
 	var old_colors: Dictionary = family_colors.duplicate()
-	connected_stone_families.clear()
-	family_colors.clear()
 	for component in components:
-		# Stable identity: lowest instance_id in the component
+		##Stable identity: lowest instance_id in the component
+		#var min_id: int = component[0].get_instance_id()
+		
 		var min_id: int = component[0].get_instance_id()
 		for s in component:
-			var sid = s.get_instance_id()
-			if sid < min_id:
-				min_id = sid
+			min_id = min(min_id, s.get_instance_id())
+		var family_key = group_name + "_" + str(min_id)
+		connected_stone_families[family_key] = component
+		family_colors[family_key] = group_color
+		
+		for s in component:
+			s.current_family = component
 		
 		var color: Color
 		if Global.debug_color_stones_on:
@@ -176,6 +178,14 @@ func _rebuild_families() -> void:
 			s.current_family = component
 			if Global.debug_color_stones_on:
 				s.debug_set_color(color)
+	
+
+func _rebuild_families() -> void:
+	connected_stone_families.clear()
+	family_colors.clear()
+	_build_families_for_group("P1_Capturing", Global.black_fill_color)
+	_build_families_for_group("P2_Capturing", Global.white_fill_color)
+	
 
 # --- Registration ---
 func register_stone(stone: Stone) -> void:
@@ -247,7 +257,6 @@ func break_connection(stone_a: Stone, stone_b: Stone):
 		connected_stone_families[new_key] = family_b
 		var new_color = Color.from_hsv(Global.rng.randf(), 0.8, 1.0)
 		family_colors[new_key] = new_color
-		
 
 func _flood_fill(start: Stone, new_list: Array[Stone], seen: Array):
 	var stack = [start]
@@ -258,23 +267,6 @@ func _flood_fill(start: Stone, new_list: Array[Stone], seen: Array):
 			new_list.append(s)
 			for neighbor in s.connected_bodies:
 				stack.append(neighbor)
-
-# --- Utilities & Drawing ---
-
-#func debug_recolor_families() -> void:
-	#for family_id in connected_stone_families:
-		#var family_array = connected_stone_families[family_id]
-		## Generate a random high-saturation color for visibility
-		#var random_color = Color.from_hsv(Global.rng.randf(), 0.8, 1.0)
-		#
-		#for stone in family_array:
-			#if is_instance_valid(stone):
-				#stone.debug_set_color(random_color)
-#
-#func _input(event):
-	#if event.is_action_pressed("show_color"): # Default 'Enter' or 'Space'
-		#debug_recolor_families()
-
 
 func get_active_stones() -> Array[Stone]:
 	return stones.filter(func(s): return is_instance_valid(s))
@@ -287,17 +279,6 @@ func _ready() -> void:
 		var point := Vector2(cos(angle), sin(angle)) * 50.0
 		my_vertices.append(point)
 	queue_redraw()
-
-#func _draw():
-	#draw_polygon(my_vertices, PackedColorArray([Color(Color.DARK_CYAN, 0.4)]))
-	#
-	## Highlight outer stones with a bright ring
-	#for stone in _outer_stone_set:
-		#if is_instance_valid(stone):
-			#var local_pos: Vector2 = to_local(stone.global_position)
-			#draw_circle(local_pos, 18.0, Color(Color.YELLOW, 0.85))
-			#draw_arc(local_pos, 18.0, 0, TAU, 32, Color.WHITE, 2.0)
-	#
 
 func _draw():
 	if Global.debug_shade_capture_area_on:
