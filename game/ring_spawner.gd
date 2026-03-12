@@ -22,7 +22,7 @@ func spawn_ring() -> void:
 	# 3. Spawn in a circle
 	for i in stone_count:
 		var angle = i * (TAU / stone_count)
-		var spawn_pos = Vector2(cos(angle), sin(angle)) * radius
+		var spawn_pos = Vector2(cos(angle) + randf_range(-2.0,2.0), sin(angle) + randf_range(-2.0,2.0)) * radius
 		
 		var is_p1 = types[i] == 1
 		var scene = p1_stone_scene if is_p1 else p2_stone_scene

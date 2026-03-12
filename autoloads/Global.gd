@@ -11,6 +11,9 @@ var first_stone_is_available: bool = true
 signal p1_throw(amount: int)
 signal p2_throw(amount: int)
 
+signal turn_passed_to_p1()
+signal turn_passed_to_p2()
+
 var game_still_going: bool = true
 var gravity: float = 9.8
 
@@ -73,6 +76,7 @@ func p1_throw_stones(amount: int):
 		if (p1_throws_left <= 0):
 			is_p1_turn = false
 			p1_throws_left = 3
+			turn_passed_to_p2.emit()
 		p1_throw.emit(amount)
 
 func p2_throw_stones(amount: int):
@@ -81,7 +85,9 @@ func p2_throw_stones(amount: int):
 		if (p2_throws_left <= 0):
 			is_p1_turn = true
 			p2_throws_left = 3
+			turn_passed_to_p1.emit()
 		p2_throw.emit(amount)
+
 
 
 func change_zone_radius(new_radius: float) -> void:

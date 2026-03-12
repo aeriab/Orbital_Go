@@ -97,6 +97,8 @@ script = ExtResource("11_3vho3")
 
 [node name="RingSpawner" type="Node2D" parent="." unique_id=1633250066]
 script = ExtResource("12_qf6n1")
+radius = 400.0
+stone_count = 9
 p1_stone_scene = ExtResource("1_80nbo")
 p2_stone_scene = ExtResource("1_80nbo")
 
