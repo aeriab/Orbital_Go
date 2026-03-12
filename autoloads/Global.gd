@@ -4,12 +4,18 @@ extends Node
 var is_p1_turn: bool = true # Typically P1 (Black) starts in Go
 
 var p1_throws_left: int = 3
+var p1_total_throws_left: int = 30
+
 var p2_throws_left: int = 3
+var p2_total_throws_left: int = 30
 
 var first_stone_is_available: bool = true
 
 signal p1_throw(amount: int)
 signal p2_throw(amount: int)
+signal p1_throws_amount_updated
+signal p2_throws_amount_updated
+
 
 signal turn_passed_to_p1()
 signal turn_passed_to_p2()
@@ -26,6 +32,8 @@ signal zone_radius_changed(new_radius: float)
 # the disadvantage of going second.
 var p1_score: float = 0.0 
 var p2_score: float = 0.0
+var p1_won: bool = false
+var draw_occurred: bool = true
 
 
 var black_fill_color: Color = Color.BLACK
@@ -38,7 +46,7 @@ var neutral_fill_color: Color = Color.WEB_GRAY
 var neutral_outline_color: Color = Color.DIM_GRAY
 
 signal score_updated(p1_val: float, p2_val: float)
-signal game_over(p1_won: bool)
+signal game_over()
 
 
 # --- Debug Settings ---
@@ -71,8 +79,11 @@ func update_score(team: String, amount: float) -> void:
 
 
 func p1_throw_stones(amount: int):
-	if (amount <= p1_throws_left):
+	if (amount <= p1_throws_left && amount <= p1_total_throws_left):
 		p1_throws_left -= amount
+		p1_total_throws_left -= amount
+		p1_throws_amount_updated.emit()
+		check_for_game_over()
 		if (p1_throws_left <= 0):
 			is_p1_turn = false
 			p1_throws_left = 3
@@ -80,15 +91,20 @@ func p1_throw_stones(amount: int):
 		p1_throw.emit(amount)
 
 func p2_throw_stones(amount: int):
-	if (amount <= p2_throws_left):
+	if (amount <= p2_throws_left && amount <= p2_total_throws_left):
 		p2_throws_left -= amount
+		p2_total_throws_left -= amount
+		p2_throws_amount_updated.emit()
+		check_for_game_over()
 		if (p2_throws_left <= 0):
 			is_p1_turn = true
 			p2_throws_left = 3
 			turn_passed_to_p1.emit()
 		p2_throw.emit(amount)
 
-
+func check_for_game_over() -> void:
+	if (p2_total_throws_left == 0) && (p1_total_throws_left == 0):
+		tally_score()
 
 func change_zone_radius(new_radius: float) -> void:
 	zone_radius = new_radius
@@ -96,8 +112,10 @@ func change_zone_radius(new_radius: float) -> void:
 
 func tally_score() -> void:
 	game_still_going = false
-	var p1_won = p1_score > p2_score
-	game_over.emit(p1_won)
+	draw_occurred = p1_score == p2_score
+	p1_won = p1_score > p2_score
+	
+	game_over.emit()
 
 # --- Utilities ---
 

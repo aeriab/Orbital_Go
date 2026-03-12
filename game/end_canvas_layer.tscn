@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://b1641mfbhmk44"]
 
 [ext_resource type="Script" uid="uid://2i5v45niuctx" path="res://game/end_canvas_layer.gd" id="1_rk3ue"]
-[ext_resource type="Script" path="res://game/who_won_label.gd" id="3_bc4yv"]
+[ext_resource type="Script" uid="uid://ctk6txo3xvfxg" path="res://game/who_won_label.gd" id="3_bc4yv"]
 
 [node name="EndCanvasLayer" type="CanvasLayer" unique_id=1682578805 node_paths=PackedStringArray("p1_label", "p2_label", "who_won_label")]
 script = ExtResource("1_rk3ue")
@@ -33,7 +33,7 @@ offset_right = 1550.0007
 offset_bottom = 215.0
 pivot_offset_ratio = Vector2(1, 0)
 theme_override_font_sizes/font_size = 120
-text = "Score: 0.5"
+text = "Score: 0"
 horizontal_alignment = 2
 metadata/_edit_use_anchors_ = true
 
@@ -42,13 +42,13 @@ anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -164.0
-offset_bottom = -54.0
+offset_top = -531.0
+offset_bottom = -398.0
 grow_horizontal = 2
 grow_vertical = 0
 pivot_offset_ratio = Vector2(0.5, 0.5)
-theme_override_font_sizes/font_size = 80
-text = "[___] is the winner !!!"
+theme_override_font_sizes/font_size = 97
+text = "Draw"
 horizontal_alignment = 1
 vertical_alignment = 1
 script = ExtResource("3_bc4yv")
