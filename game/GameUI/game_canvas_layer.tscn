@@ -5,16 +5,16 @@
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_sj0dk"]
 shader = ExtResource("2_sj0dk")
-shader_parameter/alpha = 0.2
-shader_parameter/inner_radius = 0.0
-shader_parameter/outer_radius = 0.67
+shader_parameter/alpha = 1.0
+shader_parameter/inner_radius = 0.55
+shader_parameter/outer_radius = 1.72
 shader_parameter/base_color = Color(1, 1, 1, 1)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ye4fk"]
 shader = ExtResource("2_sj0dk")
-shader_parameter/alpha = 0.2
-shader_parameter/inner_radius = 0.0
-shader_parameter/outer_radius = 0.67
+shader_parameter/alpha = 1.0
+shader_parameter/inner_radius = 0.22
+shader_parameter/outer_radius = 4.14
 shader_parameter/base_color = Color(0, 0, 0, 1)
 
 [node name="GameCanvasLayer" type="CanvasLayer" unique_id=1682578805 node_paths=PackedStringArray("p1_label", "p2_label")]
