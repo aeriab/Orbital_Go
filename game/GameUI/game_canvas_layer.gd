@@ -22,16 +22,19 @@ func _ready() -> void:
 	
 	Global.p1_throws_amount_updated.connect(update_p1_total_throws_amount)
 	Global.p2_throws_amount_updated.connect(update_p2_total_throws_amount)
+	
+	update_p1_total_throws_amount()
+	update_p2_total_throws_amount()
 
 func end_game() -> void:
 	visible = false
 	
 
 func update_p1_total_throws_amount():
-	p1_throws_left_label.text = "Throws left: " + str(Global.p1_total_throws_left)
+	p1_throws_left_label.text = "Stones left: " + str(Global.p1_total_throws_left)
 
 func update_p2_total_throws_amount():
-	p2_throws_left_label.text = "Throws left: " + str(Global.p2_total_throws_left)
+	p2_throws_left_label.text = "Stones left: " + str(Global.p2_total_throws_left)
 
 func score_text_update(p1_val: float, p2_val: float) -> void:
 	p1_label.text = "Score: " + str(p1_val)

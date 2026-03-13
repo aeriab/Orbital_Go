@@ -64,6 +64,21 @@ func _ready() -> void:
 		debug.param_changed.connect(_on_debug_param_changed)
 		gravity = debug.get_value("gravity")
 
+func reset_game_state():
+	is_p1_turn = true
+	p1_throws_left = 3
+	p1_total_throws_left = 18
+	p2_throws_left = 3
+	p2_total_throws_left = 18
+	p1_score = 0.0
+	p2_score = 0.0
+	game_still_going = true
+	# Re-emit signals so the UI updates to the new (reset) values
+	p1_throws_amount_updated.emit()
+	p2_throws_amount_updated.emit()
+	score_updated.emit(p1_score, p2_score)
+
+
 func _on_debug_param_changed(param_name: String, value: float) -> void:
 	if param_name == "gravity":
 		gravity = value

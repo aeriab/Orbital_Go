@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://2i5v45niuctx" path="res://game/end_canvas_layer.gd" id="1_rk3ue"]
 [ext_resource type="Script" uid="uid://ctk6txo3xvfxg" path="res://game/who_won_label.gd" id="3_bc4yv"]
+[ext_resource type="Script" uid="uid://dmcpl5u3ienll" path="res://game/play_again_button.gd" id="3_rk3ue"]
 
 [node name="EndCanvasLayer" type="CanvasLayer" unique_id=1682578805 node_paths=PackedStringArray("p1_label", "p2_label", "who_won_label")]
 script = ExtResource("1_rk3ue")
@@ -14,7 +15,7 @@ offset_left = -16564.0
 offset_top = -14514.0
 offset_right = 21163.0
 offset_bottom = 13706.0
-color = Color(0, 0, 0, 0.39215687)
+color = Color(0, 0, 0, 0.69803923)
 
 [node name="P1ScoreLabel" type="Label" parent="." unique_id=1336823343]
 offset_left = 50.0
@@ -47,8 +48,27 @@ offset_bottom = -398.0
 grow_horizontal = 2
 grow_vertical = 0
 pivot_offset_ratio = Vector2(0.5, 0.5)
-theme_override_font_sizes/font_size = 97
+theme_override_font_sizes/font_size = 131
 text = "Draw"
 horizontal_alignment = 1
 vertical_alignment = 1
 script = ExtResource("3_bc4yv")
+
+[node name="PlayAgainButton" type="Button" parent="." unique_id=75339016]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -123.5
+offset_top = -312.0
+offset_right = 123.5
+offset_bottom = -237.0
+grow_horizontal = 2
+grow_vertical = 0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_font_sizes/font_size = 74
+text = "Play Again"
+script = ExtResource("3_rk3ue")
+
+[connection signal="pressed" from="PlayAgainButton" to="PlayAgainButton" method="_on_pressed"]
