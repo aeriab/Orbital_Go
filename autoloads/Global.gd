@@ -16,6 +16,7 @@ signal p2_throw(amount: int)
 signal p1_throws_amount_updated
 signal p2_throws_amount_updated
 
+signal buttons_reset()
 
 signal turn_passed_to_p1()
 signal turn_passed_to_p2()
@@ -73,11 +74,22 @@ func reset_game_state():
 	p1_score = 0.0
 	p2_score = 0.0
 	game_still_going = true
-	# Re-emit signals so the UI updates to the new (reset) values
+	
+	# Update UI: Re-enable buttons and refresh labels
+	buttons_reset.emit()
 	p1_throws_amount_updated.emit()
 	p2_throws_amount_updated.emit()
 	score_updated.emit(p1_score, p2_score)
 
+func p1_gain_throws(amount: int):
+	p1_throws_left += amount
+	p1_total_throws_left += amount
+	p1_throws_amount_updated.emit()
+
+func p2_gain_throws(amount: int):
+	p2_throws_left += amount
+	p2_total_throws_left += amount
+	p2_throws_amount_updated.emit()
 
 func _on_debug_param_changed(param_name: String, value: float) -> void:
 	if param_name == "gravity":
@@ -97,25 +109,47 @@ func p1_throw_stones(amount: int):
 	if (amount <= p1_throws_left && amount <= p1_total_throws_left):
 		p1_throws_left -= amount
 		p1_total_throws_left -= amount
-		p1_throws_amount_updated.emit()
 		check_for_game_over()
+		
 		if (p1_throws_left <= 0):
-			is_p1_turn = false
 			p1_throws_left = 3
-			turn_passed_to_p2.emit()
+			if p2_total_throws_left > 0:
+				is_p1_turn = false
+				turn_passed_to_p2.emit()
+			else:
+				# P2 has nothing left, keep it P1's turn if they have stones
+				# Or let check_for_game_over handle the finish
+				pass
+		
+		#if (p1_throws_left <= 0):
+			#is_p1_turn = false
+			#p1_throws_left = 3
+			#turn_passed_to_p2.emit()
+		
 		p1_throw.emit(amount)
+		p1_throws_amount_updated.emit()
 
 func p2_throw_stones(amount: int):
 	if (amount <= p2_throws_left && amount <= p2_total_throws_left):
 		p2_throws_left -= amount
 		p2_total_throws_left -= amount
-		p2_throws_amount_updated.emit()
 		check_for_game_over()
 		if (p2_throws_left <= 0):
-			is_p1_turn = true
 			p2_throws_left = 3
-			turn_passed_to_p1.emit()
+			if p1_total_throws_left > 0:
+				is_p1_turn = true
+				turn_passed_to_p1.emit()
+			else:
+				# P1 has nothing left, keep it P2's turn if they have stones
+				pass
+		
+		#if (p2_throws_left <= 0):
+			#is_p1_turn = true
+			#p2_throws_left = 3
+			#turn_passed_to_p1.emit()
+		
 		p2_throw.emit(amount)
+		p2_throws_amount_updated.emit()
 
 func check_for_game_over() -> void:
 	if (p2_total_throws_left == 0) && (p1_total_throws_left == 0):
