@@ -121,11 +121,12 @@ func on_captured() -> void:
 	
 	cpu_particles_2d.emitting = true
 	# Award points to the OTHER team
-	for group in scores_for_teams:
-		if group == "P1_Scoring":
-			Global.update_score("P2", point_value)
-		elif group == "P2_Scoring":
-			Global.update_score("P1", point_value)
+	if Global.does_capturing_score:
+		for group in scores_for_teams:
+			if group == "P1_Scoring":
+				Global.update_score("P2", point_value)
+			elif group == "P2_Scoring":
+				Global.update_score("P1", point_value)
 	
 	# Remove from all team groups
 	for group in scores_for_teams:

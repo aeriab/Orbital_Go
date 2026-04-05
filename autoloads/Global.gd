@@ -1,5 +1,8 @@
 extends Node
 
+
+var does_capturing_score: bool = false
+
 # --- Game State ---
 var is_p1_turn: bool = true # Typically P1 (Black) starts in Go
 
