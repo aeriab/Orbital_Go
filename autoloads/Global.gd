@@ -3,11 +3,13 @@ extends Node
 # --- Game State ---
 var is_p1_turn: bool = true # Typically P1 (Black) starts in Go
 
-var p1_throws_left: int = 3
-var p1_total_throws_left: int = 18
+var p1_start_turn_throws_amount: int = 3
+var p1_throws_left: int = p1_start_turn_throws_amount
+#var p1_total_throws_left: int = 18
 
-var p2_throws_left: int = 3
-var p2_total_throws_left: int = 18
+var p2_start_turn_throws_amount: int = 3
+var p2_throws_left: int = p2_start_turn_throws_amount
+#var p2_total_throws_left: int = 18
 
 var first_stone_is_available: bool = true
 
@@ -47,6 +49,12 @@ var neutral_fill_color: Color = Color.WEB_GRAY
 var neutral_outline_color: Color = Color.DIM_GRAY
 
 signal score_updated(p1_val: float, p2_val: float)
+
+# ------ Round System ------
+signal round_changed() # TODO call Global.next_round() after black throws their stones
+var cur_round: int = 1
+var final_round: int = 8
+
 signal game_over()
 
 
@@ -68,9 +76,9 @@ func _ready() -> void:
 func reset_game_state():
 	is_p1_turn = true
 	p1_throws_left = 3
-	p1_total_throws_left = 18
+	#p1_total_throws_left = 18
 	p2_throws_left = 3
-	p2_total_throws_left = 18
+	#p2_total_throws_left = 18
 	p1_score = 0.0
 	p2_score = 0.0
 	game_still_going = true
@@ -83,12 +91,12 @@ func reset_game_state():
 
 func p1_gain_throws(amount: int):
 	p1_throws_left += amount
-	p1_total_throws_left += amount
+	#p1_total_throws_left += amount
 	p1_throws_amount_updated.emit()
 
 func p2_gain_throws(amount: int):
 	p2_throws_left += amount
-	p2_total_throws_left += amount
+	#p2_total_throws_left += amount
 	p2_throws_amount_updated.emit()
 
 func _on_debug_param_changed(param_name: String, value: float) -> void:
@@ -106,54 +114,44 @@ func update_score(team: String, amount: float) -> void:
 
 
 func p1_throw_stones(amount: int):
-	if (amount <= p1_throws_left && amount <= p1_total_throws_left):
+	#if (amount <= p1_throws_left && amount <= p1_total_throws_left):
+	if (amount <= p1_throws_left):
 		p1_throws_left -= amount
-		p1_total_throws_left -= amount
-		check_for_game_over()
+		#p1_total_throws_left -= amount
+		#check_for_game_over()
 		
 		if (p1_throws_left <= 0):
-			p1_throws_left = 3
-			if p2_total_throws_left > 0:
-				is_p1_turn = false
-				turn_passed_to_p2.emit()
-			else:
-				# P2 has nothing left, keep it P1's turn if they have stones
-				# Or let check_for_game_over handle the finish
-				pass
-		
-		#if (p1_throws_left <= 0):
-			#is_p1_turn = false
-			#p1_throws_left = 3
-			#turn_passed_to_p2.emit()
+			p1_throws_left = p1_start_turn_throws_amount
+			is_p1_turn = false
+			turn_passed_to_p2.emit()
 		
 		p1_throw.emit(amount)
 		p1_throws_amount_updated.emit()
 
 func p2_throw_stones(amount: int):
-	if (amount <= p2_throws_left && amount <= p2_total_throws_left):
+	if (amount <= p2_throws_left):
 		p2_throws_left -= amount
-		p2_total_throws_left -= amount
-		check_for_game_over()
-		if (p2_throws_left <= 0):
-			p2_throws_left = 3
-			if p1_total_throws_left > 0:
-				is_p1_turn = true
-				turn_passed_to_p1.emit()
-			else:
-				# P1 has nothing left, keep it P2's turn if they have stones
-				pass
 		
-		#if (p2_throws_left <= 0):
-			#is_p1_turn = true
-			#p2_throws_left = 3
-			#turn_passed_to_p1.emit()
+		if (p2_throws_left <= 0):
+			p2_throws_left = p2_start_turn_throws_amount
+			is_p1_turn = true
+			turn_passed_to_p1.emit()
 		
 		p2_throw.emit(amount)
 		p2_throws_amount_updated.emit()
 
-func check_for_game_over() -> void:
-	if (p2_total_throws_left == 0) && (p1_total_throws_left == 0):
-		tally_score()
+
+func next_round() -> void:
+	cur_round += 1
+	round_changed.emit()
+
+func change_round(new_round: int) -> void:
+	cur_round = new_round
+	round_changed.emit()
+
+#func check_for_game_over() -> void:
+	#if (p2_total_throws_left == 0) && (p1_total_throws_left == 0):
+		#tally_score()
 
 func change_zone_radius(new_radius: float) -> void:
 	zone_radius = new_radius
@@ -165,6 +163,8 @@ func tally_score() -> void:
 	p1_won = p1_score > p2_score
 	
 	game_over.emit()
+
+
 
 # --- Utilities ---
 

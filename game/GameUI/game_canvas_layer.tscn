@@ -17,16 +17,10 @@ shader_parameter/inner_radius = 0.22
 shader_parameter/outer_radius = 4.14
 shader_parameter/base_color = Color(0, 0, 0, 1)
 
-[node name="GameCanvasLayer" type="CanvasLayer" unique_id=1682578805 node_paths=PackedStringArray("p1_label", "p2_label", "p1_throws_left_label", "p2_throws_left_label", "p1_current_throws_label", "p2_current_throws_label", "p1_gain_throws_button", "p2_gain_throws_button")]
+[node name="GameCanvasLayer" type="CanvasLayer" unique_id=1682578805 node_paths=PackedStringArray("p1_label", "p2_label")]
 script = ExtResource("1_ye4fk")
 p1_label = NodePath("P1ScoreLabel")
 p2_label = NodePath("P2ScoreLabel")
-p1_throws_left_label = NodePath("P1ThrowsLeftLabel")
-p2_throws_left_label = NodePath("P2ThrowsLeftLabel")
-p1_current_throws_label = NodePath("P1CurrentThrowsLabel")
-p2_current_throws_label = NodePath("P2CurrentThrowsLabel")
-p1_gain_throws_button = NodePath("P1GainThrowsButton")
-p2_gain_throws_button = NodePath("P2GainThrowsButton")
 
 [node name="White_Vignette_ColorRect" type="ColorRect" parent="." unique_id=574334174]
 visible = false
@@ -61,20 +55,6 @@ theme_override_font_sizes/font_size = 90
 text = "Score: 0"
 metadata/_edit_use_anchors_ = true
 
-[node name="P1ThrowsLeftLabel" type="Label" parent="." unique_id=837015931]
-offset_left = 54.0
-offset_top = 784.0
-offset_right = 1438.0
-offset_bottom = 949.0
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_colors/font_shadow_color = Color(0.69135684, 0.6913568, 0.6913567, 1)
-theme_override_constants/shadow_offset_x = 0
-theme_override_constants/shadow_offset_y = 0
-theme_override_constants/shadow_outline_size = 13
-theme_override_font_sizes/font_size = 50
-text = "Stones left: 30"
-metadata/_edit_use_anchors_ = true
-
 [node name="P2ScoreLabel" type="Label" parent="." unique_id=220344554]
 offset_left = 178.0
 offset_top = 50.0
@@ -90,65 +70,18 @@ text = "Score: 0"
 horizontal_alignment = 2
 metadata/_edit_use_anchors_ = true
 
-[node name="P2ThrowsLeftLabel" type="Label" parent="." unique_id=1442511306]
-offset_left = 178.0
-offset_top = 784.0
-offset_right = 1550.0007
-offset_bottom = 949.0
-pivot_offset_ratio = Vector2(1, 0)
-theme_override_colors/font_shadow_color = Color(0.6528635, 0.6528636, 0.6528636, 1)
-theme_override_constants/shadow_offset_x = 0
-theme_override_constants/shadow_offset_y = 0
-theme_override_constants/shadow_outline_size = 13
-theme_override_font_sizes/font_size = 50
-text = "Stones left: 30"
-horizontal_alignment = 2
-metadata/_edit_use_anchors_ = true
-
-[node name="P1GainThrowsButton" type="Button" parent="." unique_id=541602002]
-offset_left = 99.0
-offset_top = 643.0
-offset_right = 349.0
-offset_bottom = 743.0
-pivot_offset_ratio = Vector2(0.5, 0.5)
-theme_override_font_sizes/font_size = 30
-text = "Gain +3 throws
-(one time)"
-
-[node name="P1CurrentThrowsLabel" type="Label" parent="." unique_id=406050649]
-offset_left = 77.0
-offset_top = 586.0
-offset_right = 1461.0
-offset_bottom = 751.0
+[node name="RoundLabel" type="Label" parent="." unique_id=837015931]
+anchors_preset = -1
+anchor_right = 0.13625
+offset_top = 776.0
+offset_right = 1382.0
+offset_bottom = 876.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_shadow_color = Color(0.69135684, 0.6913568, 0.6913567, 1)
 theme_override_constants/shadow_offset_x = 0
 theme_override_constants/shadow_offset_y = 0
-theme_override_constants/shadow_outline_size = 10
-theme_override_font_sizes/font_size = 35
-text = "Current throws: 3"
-metadata/_edit_use_anchors_ = true
-
-[node name="P2GainThrowsButton" type="Button" parent="." unique_id=530672750]
-offset_left = 1260.0
-offset_top = 643.0
-offset_right = 1510.0
-offset_bottom = 743.0
-pivot_offset_ratio = Vector2(0.5, 0.5)
-theme_override_font_sizes/font_size = 30
-text = "Gain +3 throws
-(one time)"
-
-[node name="P2CurrentThrowsLabel" type="Label" parent="." unique_id=1830546745]
-offset_left = 1238.0
-offset_top = 586.0
-offset_right = 2622.0
-offset_bottom = 751.0
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_shadow_color = Color(0.6528635, 0.6528636, 0.6528636, 1)
-theme_override_constants/shadow_offset_x = 0
-theme_override_constants/shadow_offset_y = 0
-theme_override_constants/shadow_outline_size = 10
-theme_override_font_sizes/font_size = 35
-text = "Current throws: 3"
+theme_override_constants/shadow_outline_size = 13
+theme_override_font_sizes/font_size = 50
+text = "Round 1 of 8"
+horizontal_alignment = 1
 metadata/_edit_use_anchors_ = true

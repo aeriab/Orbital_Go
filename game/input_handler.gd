@@ -78,10 +78,11 @@ func clamped_launch_vector() -> Vector2:
 	return pull.normalized() * effective_distance * launch_power_multiplier
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("spawn_piece"):
-		start_dragging()
-	if event.is_action_released("spawn_piece") and is_dragging:
-		fire_ball()
+	if Global.is_p1_turn:
+		if event.is_action_pressed("spawn_piece"):
+			start_dragging()
+		if event.is_action_released("spawn_piece") and is_dragging:
+			fire_ball()
 
 func start_dragging():
 	launch_point = get_global_mouse_position()
