@@ -169,7 +169,6 @@ func assign_team(
 	for group in captures_with_teams:
 		if not is_in_group(group):
 			add_to_group(group)
-			group_name = group
 
 func debug_set_color(new_color: Color) -> void:
 	fill_color = new_color

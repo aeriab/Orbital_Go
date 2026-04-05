@@ -17,10 +17,11 @@ shader_parameter/inner_radius = 0.22
 shader_parameter/outer_radius = 4.14
 shader_parameter/base_color = Color(0, 0, 0, 1)
 
-[node name="GameCanvasLayer" type="CanvasLayer" unique_id=1682578805 node_paths=PackedStringArray("p1_label", "p2_label")]
+[node name="GameCanvasLayer" type="CanvasLayer" unique_id=1682578805 node_paths=PackedStringArray("p1_label", "p2_label", "round_label")]
 script = ExtResource("1_ye4fk")
 p1_label = NodePath("P1ScoreLabel")
 p2_label = NodePath("P2ScoreLabel")
+round_label = NodePath("RoundLabel")
 
 [node name="White_Vignette_ColorRect" type="ColorRect" parent="." unique_id=574334174]
 visible = false

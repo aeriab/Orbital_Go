@@ -16,3 +16,4 @@ func spawn_p2_ring() -> void:
 	Global.p2_throws_left = Global.p2_start_turn_throws_amount
 	Global.is_p1_turn = true
 	Global.turn_passed_to_p1.emit()
+	

@@ -55,8 +55,11 @@ signal score_updated(p1_val: float, p2_val: float)
 
 # ------ Round System ------
 signal round_changed() # TODO call Global.next_round() after black throws their stones
-var cur_round: int = 1
-var final_round: int = 8
+
+var start_cur_round: int = 1
+var cur_round: int = start_cur_round
+var start_final_round: int = 8
+var final_round: int = start_final_round
 
 signal game_over()
 
@@ -75,6 +78,8 @@ func _ready() -> void:
 	if debug:
 		debug.param_changed.connect(_on_debug_param_changed)
 		gravity = debug.get_value("gravity")
+	
+	turn_passed_to_p1.connect(_on_turn_passed_to_p1)
 
 func reset_game_state():
 	is_p1_turn = true
@@ -82,6 +87,9 @@ func reset_game_state():
 	#p1_total_throws_left = 18
 	p2_throws_left = 3
 	#p2_total_throws_left = 18
+	cur_round = start_cur_round
+	final_round = start_final_round
+	
 	p1_score = 0.0
 	p2_score = 0.0
 	game_still_going = true
@@ -143,10 +151,15 @@ func p2_throw_stones(amount: int):
 		p2_throw.emit(amount)
 		p2_throws_amount_updated.emit()
 
+func _on_turn_passed_to_p1() -> void:
+	next_round()
 
 func next_round() -> void:
-	cur_round += 1
-	round_changed.emit()
+	if cur_round >= final_round:
+		tally_score()
+	else:
+		cur_round += 1
+		round_changed.emit()
 
 func change_round(new_round: int) -> void:
 	cur_round = new_round
