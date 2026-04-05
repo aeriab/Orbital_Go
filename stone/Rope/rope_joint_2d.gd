@@ -1,7 +1,7 @@
 class_name RopeJoint2D
 extends Node2D
-@export var body1: RigidBody2D
-@export var body2: RigidBody2D
+@export var body1: Stone
+@export var body2: Stone
 @export var pull_back_distance: float
 @export var disconnect_distance: float
 @export var spring_stiffness: float = 50.0
@@ -9,13 +9,35 @@ extends Node2D
 
 ## How strongly stones repel when compressed # 20000.0 works
 @export var repulsion_strength: float = 25000.0
+@export var LineColor: Color = Color(0.502, 0.502, 0.502, 0.902)
+@export var LineWidth: float = 10.0
 
 ## The distance at which repulsion becomes near-infinite (sum of radii)
 var contact_distance: float
 
 func _ready() -> void:
 	if body1 and body2:
-		contact_distance = body1.radius + body2.radius
+		evaluate_connection_color()
+
+func evaluate_connection_color() -> void:
+	if body1 and body2:
+		if (body1.is_in_group("P1_Scoring")):
+			if (body2.is_in_group("P1_Scoring")):
+				change_line_color(Global.black_fill_color)
+				#LineColor = Global.black_fill_color
+			else:
+				change_line_color(Global.grey_fill_color)
+				#LineColor = Global.grey_fill_color
+		if (body1.is_in_group("P2_Scoring")):
+			if (body2.is_in_group("P2_Scoring")):
+				change_line_color(Global.white_fill_color)
+				#LineColor = Global.white_fill_color
+			else:
+				change_line_color(Global.grey_fill_color)
+				#LineColor = Global.grey_fill_color
+
+func change_line_color(new_color: Color) -> void:
+	LineColor = new_color
 
 func _physics_process(_delta: float) -> void:
 	var diff := body2.global_position - body1.global_position
@@ -60,9 +82,6 @@ func _physics_process(_delta: float) -> void:
 		body2.apply_central_force(-spring_force - repulsion_force)
 	
 	queue_redraw()
-
-@export var LineColor: Color = Color(0.502, 0.502, 0.502, 0.902)
-@export var LineWidth: float = 10.0
 
 func _draw() -> void:
 	if body1 and body2:

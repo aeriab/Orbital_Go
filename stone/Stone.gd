@@ -96,7 +96,6 @@ func _on_body_entered(body: Node) -> void:
 
 func create_rope_joint(body: Node, joint_distance: float) -> void:
 	var rope_joint = rope_joint_scene.instantiate()
-	get_tree().current_scene.add_child(rope_joint)
 	
 	# Pass initial parameters to the rope joint
 	rope_joint.body1 = self
@@ -105,6 +104,8 @@ func create_rope_joint(body: Node, joint_distance: float) -> void:
 	rope_joint.disconnect_distance = joint_distance + rope_strength
 	rope_joint.spring_stiffness = spring_stiffness
 	rope_joint.spring_damping = spring_damping
+	
+	get_tree().current_scene.add_child(rope_joint)
 	
 	# Listen for the rope breaking to trigger a family split check
 	rope_joint.tree_exiting.connect(_handle_break.bind(body))
@@ -120,30 +121,42 @@ func on_captured() -> void:
 		return
 	
 	cpu_particles_2d.emitting = true
-	# Award points to the OTHER team
-	if Global.does_capturing_score:
-		for group in scores_for_teams:
-			if group == "P1_Scoring":
-				Global.update_score("P2", point_value)
-			elif group == "P2_Scoring":
-				Global.update_score("P1", point_value)
 	
-	# Remove from all team groups
-	for group in scores_for_teams:
-		remove_from_group(group)
-	for group in captures_with_teams:
-		remove_from_group(group)
+	if is_in_group("P1_Scoring"):
+		remove_from_group("P1_Scoring")
+		remove_from_group("P1_Capturing")
+		assign_team(Global.white_fill_color, Global.white_outline_color, ["P2_Scoring"], ["P2_Capturing"])
+		
+	elif is_in_group("P2_Scoring"):
+		remove_from_group("P2_Scoring")
+		remove_from_group("P2_Capturing")
+		assign_team(Global.black_fill_color, Global.black_outline_color, ["P1_Scoring"], ["P1_Capturing"])
+		
 	
-	group_name = ""
+	## Award points to the OTHER team
+	#if Global.does_capturing_score:
+		#for group in scores_for_teams:
+			#if group == "P1_Scoring":
+				#Global.update_score("P2", point_value)
+			#elif group == "P2_Scoring":
+				#Global.update_score("P1", point_value)
 	
-	# Reset to neutral
-	fill_color = Global.neutral_fill_color
-	outline_color = Global.neutral_outline_color
-	stone_polygon_2d.color = fill_color
-	outline_polygon_2d.color = outline_color
-	scores_for_teams = []
-	captures_with_teams = []
-	can_be_captured = false
+	## Remove from all team groups
+	#for group in scores_for_teams:
+		#remove_from_group(group)
+	#for group in captures_with_teams:
+		#remove_from_group(group)
+	
+	#group_name = ""
+	
+	## Reset to neutral
+	#fill_color = Global.grey_fill_color
+	#outline_color = Global.grey_outline_color
+	#stone_polygon_2d.color = fill_color
+	#outline_polygon_2d.color = outline_color
+	#scores_for_teams = []
+	#captures_with_teams = []
+	#can_be_captured = false
 
 func assign_team(
 	team_fill: Color,
