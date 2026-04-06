@@ -36,8 +36,8 @@ signal zone_radius_changed(new_radius: float)
 # --- Scoring ---
 # White (P2) often starts with 0.5 or 6.5 "Komi" points in Go to offset 
 # the disadvantage of going second.
-var p1_score: float = 0.0 
-var p2_score: float = 0.0
+var p1_total_score: float = 0.0 
+var p2_total_score: float = 0.0
 var p1_won: bool = false
 var draw_occurred: bool = true
 
@@ -51,16 +51,22 @@ var white_outline_color: Color = Color.DIM_GRAY
 var grey_fill_color: Color = Color(0.522, 0.522, 0.522, 0.392)
 var grey_outline_color: Color = Color.DIM_GRAY
 
-signal score_updated(p1_val: float, p2_val: float)
-
 # ------ Round System ------
 signal round_changed() # TODO call Global.next_round() after black throws their stones
 
 var start_cur_round: int = 1
 var cur_round: int = start_cur_round
-var start_final_round: int = 8
+var start_final_round: int = 3
 var final_round: int = start_final_round
 
+signal update_rope_score()
+var p1_rope_score: int = 0
+var p2_rope_score: int = 0
+
+signal update_total_score()
+
+var wait_for_game_over_time: float = 2.0
+var game_is_ending: bool = false
 signal game_over()
 
 
@@ -80,6 +86,8 @@ func _ready() -> void:
 		gravity = debug.get_value("gravity")
 	
 	turn_passed_to_p1.connect(_on_turn_passed_to_p1)
+	update_rope_score.connect(_on_update_rope_score)
+	update_total_score.connect(_on_update_total_score)
 
 func reset_game_state():
 	is_p1_turn = true
@@ -90,15 +98,19 @@ func reset_game_state():
 	cur_round = start_cur_round
 	final_round = start_final_round
 	
-	p1_score = 0.0
-	p2_score = 0.0
+	p1_total_score = 0.0
+	p2_total_score = 0.0
+	
+	p1_rope_score = 0
+	p2_rope_score = 0
+	
+	game_is_ending = false
 	game_still_going = true
 	
 	# Update UI: Re-enable buttons and refresh labels
 	buttons_reset.emit()
 	p1_throws_amount_updated.emit()
 	p2_throws_amount_updated.emit()
-	score_updated.emit(p1_score, p2_score)
 
 func p1_gain_throws(amount: int):
 	p1_throws_left += amount
@@ -113,15 +125,6 @@ func p2_gain_throws(amount: int):
 func _on_debug_param_changed(param_name: String, value: float) -> void:
 	if param_name == "gravity":
 		gravity = value
-
-# --- Methods ---
-
-func update_score(team: String, amount: float) -> void:
-	if team == "P1":
-		p1_score += amount
-	else:
-		p2_score += amount
-	score_updated.emit(p1_score, p2_score)
 
 
 func p1_throw_stones(amount: int):
@@ -151,11 +154,22 @@ func p2_throw_stones(amount: int):
 		p2_throw.emit(amount)
 		p2_throws_amount_updated.emit()
 
+func _on_update_rope_score() -> void:
+	p1_total_score = p1_rope_score
+	p2_total_score = p2_rope_score
+	update_total_score.emit()
+
+func _on_update_total_score() -> void:
+	pass
+
 func _on_turn_passed_to_p1() -> void:
 	next_round()
 
 func next_round() -> void:
 	if cur_round >= final_round:
+#		Await line of code here TODO
+		game_is_ending = true
+		await get_tree().create_timer(wait_for_game_over_time).timeout
 		tally_score()
 	else:
 		cur_round += 1
@@ -165,18 +179,14 @@ func change_round(new_round: int) -> void:
 	cur_round = new_round
 	round_changed.emit()
 
-#func check_for_game_over() -> void:
-	#if (p2_total_throws_left == 0) && (p1_total_throws_left == 0):
-		#tally_score()
-
 func change_zone_radius(new_radius: float) -> void:
 	zone_radius = new_radius
 	zone_radius_changed.emit(zone_radius)
 
 func tally_score() -> void:
 	game_still_going = false
-	draw_occurred = p1_score == p2_score
-	p1_won = p1_score > p2_score
+	draw_occurred = p1_total_score == p2_total_score
+	p1_won = p1_total_score > p2_total_score
 	
 	game_over.emit()
 

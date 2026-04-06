@@ -109,10 +109,14 @@ func create_rope_joint(body: Node, joint_distance: float) -> void:
 	
 	# Listen for the rope breaking to trigger a family split check
 	rope_joint.tree_exiting.connect(_handle_break.bind(body))
+	
+	Global.update_rope_score.emit()
 
 func _handle_break(other_body: Stone) -> void:
 	if stone_manager and is_instance_valid(other_body):
 		stone_manager.break_connection(self, other_body)
+	
+	Global.update_rope_score.emit()
 
 # --- Team & Scoring Logic ---
 

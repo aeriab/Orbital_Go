@@ -79,7 +79,6 @@ func _physics_process(_delta: float) -> void:
 			# 1/(1-x) curve — approaches infinity as stones approach contact
 			var repulsion_magnitude := repulsion_strength * (1.0 / (1.0 - compress_ratio) - 1.0)
 			repulsion_force = -dir * repulsion_magnitude
-			#print("repulsion force: " + str(repulsion_force))
 		
 		body1.apply_central_force(spring_force + repulsion_force)
 		body2.apply_central_force(-spring_force - repulsion_force)

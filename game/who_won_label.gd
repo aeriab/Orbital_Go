@@ -5,12 +5,12 @@ func make_winner_text():
 		text = "Draw"
 	else:
 		if Global.p1_won:
-			if (Global.p1_score - Global.p2_score) == 1:
-				text = "Black won by " + str(Global.p1_score - Global.p2_score) + " point."
+			if (Global.p1_total_score - Global.p2_total_score) == 1:
+				text = "Black won by " + str(Global.p1_total_score - Global.p2_total_score) + " point."
 			else:
-				text = "Black won by " + str(Global.p1_score - Global.p2_score) + " points."
+				text = "Black won by " + str(Global.p1_total_score - Global.p2_total_score) + " points."
 		else:
-			if (Global.p2_score - Global.p1_score) == 1:
-				text = "White won by " + str(Global.p2_score - Global.p1_score) + " point."
+			if (Global.p2_total_score - Global.p1_total_score) == 1:
+				text = "White won by " + str(Global.p2_total_score - Global.p1_total_score) + " point."
 			else:
-				text = "White won by " + str(Global.p2_score - Global.p1_score) + " points."
+				text = "White won by " + str(Global.p2_total_score - Global.p1_total_score) + " points."

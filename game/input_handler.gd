@@ -78,7 +78,7 @@ func clamped_launch_vector() -> Vector2:
 	return pull.normalized() * effective_distance * launch_power_multiplier
 
 func _unhandled_input(event: InputEvent) -> void:
-	if Global.is_p1_turn:
+	if Global.is_p1_turn && !Global.game_is_ending:
 		if event.is_action_pressed("spawn_piece"):
 			start_dragging()
 		if event.is_action_released("spawn_piece") and is_dragging:

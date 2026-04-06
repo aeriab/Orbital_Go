@@ -11,6 +11,7 @@
 [ext_resource type="Script" uid="uid://cx8nmm5hvkhcl" path="res://autoloads/StoneManager.gd" id="11_3vho3"]
 [ext_resource type="Script" uid="uid://bsvee1l800qik" path="res://game/ring_spawner.gd" id="12_qf6n1"]
 [ext_resource type="Script" uid="uid://cwji2v0twkovj" path="res://game/p_2_automatic_spawner.gd" id="12_vsp63"]
+[ext_resource type="Script" uid="uid://skyb4j7q7w8q" path="res://game/rope_points_manager.gd" id="13_vsp63"]
 [ext_resource type="Script" uid="uid://bcgom7m2td08q" path="res://game/testing_buttons.gd" id="14_b686c"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_dakft"]
@@ -100,6 +101,9 @@ p2_stone_scene = ExtResource("1_80nbo")
 script = ExtResource("12_vsp63")
 ring_spawner = NodePath("../RingSpawner")
 wait_for_p2_time = 2.0
+
+[node name="RopePointsManager" type="Node2D" parent="." unique_id=1933625760]
+script = ExtResource("13_vsp63")
 
 [connection signal="area_entered" from="Zone/ZoneArea2D" to="Zone/ZoneArea2D" method="_on_area_entered"]
 [connection signal="area_exited" from="Zone/ZoneArea2D" to="Zone/ZoneArea2D" method="_on_area_exited"]

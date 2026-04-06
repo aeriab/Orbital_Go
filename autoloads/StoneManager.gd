@@ -69,6 +69,8 @@ func _check_for_captures(_family_key: Variant, outer_nodes: Array[Stone]) -> voi
 				# Trigger the capture logic on the stone
 				if stone.has_method("on_captured"):
 					stone.on_captured()
+	
+	Global.update_rope_score.emit()
 
 
 func _get_loop_core(family: Array[Stone]) -> Array[Stone]:
