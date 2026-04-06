@@ -51,14 +51,14 @@ func spawn_neutral() -> void:
 
 func spawn_black() -> void:
 	stone = stone_scene.instantiate() as Stone
-	stone.assign_team(Global.black_fill_color, Global.black_outline_color, [], ["P1_Capturing"], 1)
+	stone.assign_team(Global.black_fill_color, Global.black_outline_color, ["P1_Scoring"], ["P1_Capturing"], 1)
 	var spawn_pos: Vector2 = get_global_mouse_position()
 	stone.global_position = spawn_pos
 	get_parent().add_child(stone)
 
 func spawn_white() -> void:
 	stone = stone_scene.instantiate() as Stone
-	stone.assign_team(Global.white_fill_color, Global.white_outline_color, [], ["P2_Capturing"], 1)
+	stone.assign_team(Global.white_fill_color, Global.white_outline_color, ["P2_Scoring"], ["P2_Capturing"], 1)
 	var spawn_pos: Vector2 = get_global_mouse_position()
 	stone.global_position = spawn_pos
 	get_parent().add_child(stone)

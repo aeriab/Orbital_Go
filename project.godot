@@ -38,6 +38,7 @@ P1_Capturing=""
 connectable=""
 stone_manager=""
 physics_bodies=""
+rope_joint=""
 
 [input]
 

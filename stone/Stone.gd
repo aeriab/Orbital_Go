@@ -133,30 +133,14 @@ func on_captured() -> void:
 		assign_team(Global.black_fill_color, Global.black_outline_color, ["P1_Scoring"], ["P1_Capturing"])
 		
 	
-	## Award points to the OTHER team
-	#if Global.does_capturing_score:
-		#for group in scores_for_teams:
-			#if group == "P1_Scoring":
-				#Global.update_score("P2", point_value)
-			#elif group == "P2_Scoring":
-				#Global.update_score("P1", point_value)
-	
-	## Remove from all team groups
-	#for group in scores_for_teams:
-		#remove_from_group(group)
-	#for group in captures_with_teams:
-		#remove_from_group(group)
-	
-	#group_name = ""
-	
-	## Reset to neutral
-	#fill_color = Global.grey_fill_color
-	#outline_color = Global.grey_outline_color
-	#stone_polygon_2d.color = fill_color
-	#outline_polygon_2d.color = outline_color
-	#scores_for_teams = []
-	#captures_with_teams = []
-	#can_be_captured = false
+	get_tree().call_group("rope_joint", "evaluate_connection_color")
+	#_reevaluate_rope_colors()
+
+#func _reevaluate_rope_colors() -> void:
+	#for node in get_tree().current_scene.get_children():
+		#print("looking through: " + str(node.name))
+		#if node is RopeJoint2D and (node.body1 == self or node.body2 == self):
+			#node.evaluate_connection_color()
 
 func assign_team(
 	team_fill: Color,

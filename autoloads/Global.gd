@@ -48,7 +48,7 @@ var black_outline_color: Color = Color.DIM_GRAY
 var white_fill_color: Color = Color.WHITE
 var white_outline_color: Color = Color.DIM_GRAY
 
-var grey_fill_color: Color = Color.WEB_GRAY
+var grey_fill_color: Color = Color(0.522, 0.522, 0.522, 0.392)
 var grey_outline_color: Color = Color.DIM_GRAY
 
 signal score_updated(p1_val: float, p2_val: float)
