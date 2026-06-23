@@ -23,6 +23,8 @@ signal p2_throws_amount_updated
 
 signal buttons_reset()
 
+signal player_started_dragging()
+signal player_stopped_dragging()
 signal turn_passed_to_p1()
 signal turn_passed_to_p2()
 
@@ -36,7 +38,7 @@ signal zone_radius_changed(new_radius: float)
 # --- Scoring ---
 # White (P2) often starts with 0.5 or 6.5 "Komi" points in Go to offset 
 # the disadvantage of going second.
-var p1_total_score: float = 0.0 
+var p1_total_score: float = 0.0
 var p2_total_score: float = 0.0
 var p1_won: bool = false
 var draw_occurred: bool = true
@@ -56,7 +58,7 @@ signal round_changed() # TODO call Global.next_round() after black throws their 
 
 var start_cur_round: int = 1
 var cur_round: int = start_cur_round
-var start_final_round: int = 3
+var start_final_round: int = 8
 var final_round: int = start_final_round
 
 signal update_rope_score()
@@ -88,6 +90,14 @@ func _ready() -> void:
 	turn_passed_to_p1.connect(_on_turn_passed_to_p1)
 	update_rope_score.connect(_on_update_rope_score)
 	update_total_score.connect(_on_update_total_score)
+	player_started_dragging.connect(_on_player_started_dragging)
+	player_stopped_dragging.connect(_on_player_stopped_dragging)
+
+func _on_player_started_dragging() -> void:
+	pass
+
+func _on_player_stopped_dragging() -> void:
+	pass
 
 func reset_game_state():
 	is_p1_turn = true

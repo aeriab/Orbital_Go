@@ -17,11 +17,13 @@ shader_parameter/inner_radius = 0.22
 shader_parameter/outer_radius = 4.14
 shader_parameter/base_color = Color(0, 0, 0, 1)
 
-[node name="GameCanvasLayer" type="CanvasLayer" unique_id=1682578805 node_paths=PackedStringArray("p1_label", "p2_label", "round_label")]
+[node name="GameCanvasLayer" type="CanvasLayer" unique_id=1682578805 node_paths=PackedStringArray("p1_label", "p2_label", "round_label", "your_turn_label", "white_turn_label")]
 script = ExtResource("1_ye4fk")
 p1_label = NodePath("P1ScoreLabel")
 p2_label = NodePath("P2ScoreLabel")
 round_label = NodePath("RoundLabel")
+your_turn_label = NodePath("YourTurnLabel")
+white_turn_label = NodePath("WhiteTurnLabel")
 
 [node name="White_Vignette_ColorRect" type="ColorRect" parent="." unique_id=574334174]
 visible = false
@@ -82,7 +84,43 @@ theme_override_colors/font_shadow_color = Color(0.69135684, 0.6913568, 0.6913567
 theme_override_constants/shadow_offset_x = 0
 theme_override_constants/shadow_offset_y = 0
 theme_override_constants/shadow_outline_size = 13
-theme_override_font_sizes/font_size = 50
+theme_override_font_sizes/font_size = 60
 text = "Round 1 of 8"
+horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="YourTurnLabel" type="Label" parent="." unique_id=226599899]
+anchors_preset = -1
+anchor_right = 0.13625
+offset_top = 776.0
+offset_right = 382.0
+offset_bottom = 876.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.69135684, 0.6913568, 0.6913567, 1)
+theme_override_constants/shadow_offset_x = 0
+theme_override_constants/shadow_offset_y = 0
+theme_override_constants/shadow_outline_size = 13
+theme_override_font_sizes/font_size = 50
+text = "Your Turn"
+horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="WhiteTurnLabel" type="Label" parent="." unique_id=1894376579]
+visible = false
+anchors_preset = -1
+anchor_right = 0.13625
+offset_left = 1000.0
+offset_top = 776.0
+offset_right = 1382.0
+offset_bottom = 876.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0.20033014, 0.20032996, 0.20032999, 0.3254902)
+theme_override_constants/shadow_offset_x = 0
+theme_override_constants/shadow_offset_y = 0
+theme_override_constants/shadow_outline_size = 13
+theme_override_font_sizes/font_size = 50
+text = "White's Turn"
 horizontal_alignment = 1
 metadata/_edit_use_anchors_ = true

@@ -85,6 +85,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			fire_ball()
 
 func start_dragging():
+	Global.player_started_dragging.emit()
 	launch_point = get_global_mouse_position()
 	is_dragging = true
 	is_armed = false
@@ -103,6 +104,7 @@ func start_dragging():
 	ball.global_position = p1_start_spot.global_position if Global.is_p1_turn else p2_start_spot.global_position
 
 func fire_ball():
+	Global.player_stopped_dragging.emit()
 	is_dragging = false
 	if not ball:
 		return
