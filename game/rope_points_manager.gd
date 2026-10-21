@@ -11,9 +11,9 @@ func update_rope_scores() -> void:
 	var p2_count: int = 0
 	
 	for rope in get_tree().get_nodes_in_group("rope_joint"):
-		if rope.LineColor == Global.black_fill_color:
+		if rope.isBlack:
 			p1_count += 1
-		elif rope.LineColor == Global.white_fill_color:
+		elif rope.isWhite:
 			p2_count += 1
 	
 	Global.p1_rope_score = p1_count

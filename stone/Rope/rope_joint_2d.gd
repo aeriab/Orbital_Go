@@ -12,8 +12,11 @@ extends Node2D
 @export var LineColor: Color = Color(0.502, 0.502, 0.502, 0.902)
 @export var LineWidth: float = 10.0
 
-@export var color_width: float = 13.0
+var isBlack: bool = false
+var isWhite: bool = false
+@export var black_width: float = 13.0
 @export var grey_width: float = 8.0
+@export var white_width: float = 13.0
 
 ## The distance at which repulsion becomes near-infinite (sum of radii)
 var contact_distance: float
@@ -22,22 +25,36 @@ func _ready() -> void:
 	if body1 and body2:
 		evaluate_connection_color()
 
+func changeToBlack() -> void:
+	change_line_color(Global.black_fill_color)
+	isBlack = true
+	isWhite = false
+	LineWidth = black_width
+
+func changeToGrey() -> void:
+	change_line_color(Global.grey_fill_color)
+	isBlack = false
+	isWhite = false
+	LineWidth = grey_width
+
+func changeToWhite() -> void:
+	change_line_color(Global.white_fill_color)
+	isBlack = false
+	isWhite = true
+	LineWidth = white_width
+
 func evaluate_connection_color() -> void:
 	if body1 and body2:
 		if (body1.is_in_group("P1_Scoring")):
 			if (body2.is_in_group("P1_Scoring")):
-				change_line_color(Global.black_fill_color)
-				LineWidth = color_width
+				changeToBlack()
 			else:
-				change_line_color(Global.grey_fill_color)
-				LineWidth = grey_width
+				changeToGrey()
 		if (body1.is_in_group("P2_Scoring")):
 			if (body2.is_in_group("P2_Scoring")):
-				change_line_color(Global.white_fill_color)
-				LineWidth = color_width
+				changeToWhite()
 			else:
-				change_line_color(Global.grey_fill_color)
-				LineWidth = grey_width
+				changeToGrey()
 
 func change_line_color(new_color: Color) -> void:
 	LineColor = new_color

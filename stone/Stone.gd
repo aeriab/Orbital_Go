@@ -1,6 +1,9 @@
 class_name Stone
 extends RigidBody2D
 
+var stone_ID: int = 0
+@onready var stone_id_label = $StoneIDLabel
+
 @export_group("Internal References")
 @export var stone_polygon_2d: Polygon2D
 @export var outline_polygon_2d: Polygon2D
@@ -37,6 +40,10 @@ var current_family: Array[Stone] = []
 # --- Lifecycle ---
 
 func _ready() -> void:
+	stone_ID = Global.next_stone_ID
+	stone_id_label.text = str(stone_ID)
+	Global.next_stone_ID += 1
+	
 	# 1. Get Manager First
 	var managers = get_tree().get_nodes_in_group("stone_manager")
 	if managers.size() > 0:
@@ -94,6 +101,20 @@ func _on_body_entered(body: Node) -> void:
 				if stone_manager:
 					stone_manager.merge_families(self, body)
 
+
+func _check_for_connect_captures() -> void:
+	var capture_count: int = 0
+	for body in connected_bodies:
+		if is_in_group("P2_Scoring") and body.is_in_group("P1_Capturing"):
+			capture_count += 1
+		elif is_in_group("P1_Scoring") and body.is_in_group("P2_Capturing"):
+			capture_count += 1
+		
+		if capture_count >= Global.connected_capturers_amount:
+			print("Stone ID ", str(stone_ID), " should be captured now!")
+			on_captured()
+			return
+
 func create_rope_joint(body: Node, joint_distance: float) -> void:
 	var rope_joint = rope_joint_scene.instantiate()
 	
@@ -111,6 +132,8 @@ func create_rope_joint(body: Node, joint_distance: float) -> void:
 	rope_joint.tree_exiting.connect(_handle_break.bind(body))
 	
 	Global.update_rope_score.emit()
+	
+	_check_for_connect_captures()
 
 func _handle_break(other_body: Stone) -> void:
 	if stone_manager and is_instance_valid(other_body):

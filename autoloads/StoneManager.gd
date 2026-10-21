@@ -38,14 +38,14 @@ func _find_outer_nodes() -> void:
 			for s in outer:
 				_outer_stone_set[s] = true
 			
-			_check_for_captures(key, outer)
+			_check_for_surround_captures(key, outer)
 			
 		queue_redraw()
 			#var leftmost_node: Stone = _get_leftmost_node(current_family)
 			#outer_connected_stones[key] = _get_outer_nodes(leftmost_node)
 
 
-func _check_for_captures(_family_key: Variant, outer_nodes: Array[Stone]) -> void:
+func _check_for_surround_captures(_family_key: Variant, outer_nodes: Array[Stone]) -> void:
 	if outer_nodes.size() < 3: return
 	
 	# 1. Prepare the polygon points (Global coordinates for easy comparison)

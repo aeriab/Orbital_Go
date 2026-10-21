@@ -78,4 +78,17 @@ collision_mask = 2
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CenterArea2D" unique_id=1642118010]
 shape = SubResource("CircleShape2D_ylx43")
 
+[node name="StoneIDLabel" type="Label" parent="." unique_id=1848780651]
+z_index = 1
+offset_left = -27.0
+offset_top = -18.0
+offset_right = 27.0
+offset_bottom = 18.0
+pivot_offset = Vector2(27, 18)
+theme_override_colors/font_color = Color(0, 0, 1, 1)
+theme_override_font_sizes/font_size = 26
+text = "001"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]

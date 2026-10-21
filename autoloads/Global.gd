@@ -1,5 +1,8 @@
 extends Node
 
+var next_stone_ID: int = 0
+
+var connected_capturers_amount: int = 4
 
 var does_capturing_score: bool = false
 
