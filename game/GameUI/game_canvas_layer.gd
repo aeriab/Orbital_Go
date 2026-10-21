@@ -7,15 +7,7 @@ extends CanvasLayer
 
 @export var your_turn_label: Label
 @export var white_turn_label: Label
-
-#@export var p1_throws_left_label: Label
-#@export var p2_throws_left_label: Label
-
-#@export var p1_current_throws_label: Label
-#@export var p2_current_throws_label: Label
-
-#@export var p1_gain_throws_button: Button
-#@export var p2_gain_throws_button: Button
+@export var black_turn_label: Label
 
 @onready var white_vignette_color_rect: ColorRect = $White_Vignette_ColorRect
 @onready var black_vignette_color_rect: ColorRect = $Black_Vignette_ColorRect
@@ -24,8 +16,14 @@ var time: float = 0.0
 
 func _process(delta: float) -> void:
 	time += delta
-	your_turn_label.scale = Vector2(1 + sin(time) * 0.2, 1 + sin(time) * 0.2)
-	white_turn_label.scale = Vector2(1 + sin(time) * 0.2, 1 + sin(time) * 0.2)
+	if your_turn_label.visible:
+		your_turn_label.scale = Vector2(1 + sin(time) * 0.2, 1 + sin(time) * 0.2)
+	
+	if white_turn_label.visible:
+		white_turn_label.scale = Vector2(1 + sin(time) * 0.2, 1 + sin(time) * 0.2)
+	
+	if black_turn_label.visible:
+		black_turn_label.scale = Vector2(1 + sin(time) * 0.2, 1 + sin(time) * 0.2)
 
 
 func _ready() -> void:
@@ -40,6 +38,13 @@ func _ready() -> void:
 	Global.round_changed.connect(change_round_text)
 	
 	Global.update_total_score.connect(score_text_update)
+	
+	white_vignette_color_rect.visible = false
+	black_vignette_color_rect.visible = true
+	if !Global.both_players_playing:
+		your_turn_label.visible = true
+	else:
+		black_turn_label.visible = true
 
 func change_round_text() -> void:
 	round_label.text = "Round: " + str(Global.cur_round) + " of " + str(Global.final_round)
@@ -54,21 +59,30 @@ func score_text_update() -> void:
 func _on_turn_passed_to_p1() -> void:
 	white_vignette_color_rect.visible = false
 	black_vignette_color_rect.visible = true
-	#update_visibility()
 	
-	your_turn_label.visible = true
-	white_turn_label.visible = false
+	if !Global.both_players_playing:
+		your_turn_label.visible = true
+		white_turn_label.visible = false
+	else:
+		black_turn_label.visible = true
+		white_turn_label.visible = false
 
 func _on_turn_passed_to_p2() -> void:
 	black_vignette_color_rect.visible = false
 	white_vignette_color_rect.visible = true
 	#update_visibility()
 	
-	your_turn_label.visible = false
-	white_turn_label.visible = true
+	if !Global.both_players_playing:
+		your_turn_label.visible = false
+		white_turn_label.visible = true
+	else:
+		black_turn_label.visible = false
+		white_turn_label.visible = true
 
 func _on_player_started_dragging() -> void:
-	your_turn_label.visible = false
+	if !Global.both_players_playing:
+		your_turn_label.visible = false
 
 func _on_player_stopped_dragging() -> void:
-	your_turn_label.visible = true
+	if !Global.both_players_playing:
+		your_turn_label.visible = true

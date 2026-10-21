@@ -100,9 +100,12 @@ func _on_body_entered(body: Node) -> void:
 				# Update the Dictionary of Families
 				if stone_manager:
 					stone_manager.merge_families(self, body)
+				
+				check_for_connect_captures()
+				body.check_for_connect_captures()
 
 
-func _check_for_connect_captures() -> void:
+func check_for_connect_captures() -> void:
 	var capture_count: int = 0
 	for body in connected_bodies:
 		if is_in_group("P2_Scoring") and body.is_in_group("P1_Capturing"):
@@ -111,7 +114,6 @@ func _check_for_connect_captures() -> void:
 			capture_count += 1
 		
 		if capture_count >= Global.connected_capturers_amount:
-			print("Stone ID ", str(stone_ID), " should be captured now!")
 			on_captured()
 			return
 
@@ -133,13 +135,13 @@ func create_rope_joint(body: Node, joint_distance: float) -> void:
 	
 	Global.update_rope_score.emit()
 	
-	_check_for_connect_captures()
 
 func _handle_break(other_body: Stone) -> void:
 	if stone_manager and is_instance_valid(other_body):
 		stone_manager.break_connection(self, other_body)
 	
 	Global.update_rope_score.emit()
+	
 
 # --- Team & Scoring Logic ---
 
@@ -161,13 +163,11 @@ func on_captured() -> void:
 		
 	
 	get_tree().call_group("rope_joint", "evaluate_connection_color")
-	#_reevaluate_rope_colors()
+	
+	check_for_connect_captures()
+	for body in connected_bodies:
+		body.check_for_connect_captures()
 
-#func _reevaluate_rope_colors() -> void:
-	#for node in get_tree().current_scene.get_children():
-		#print("looking through: " + str(node.name))
-		#if node is RopeJoint2D and (node.body1 == self or node.body2 == self):
-			#node.evaluate_connection_color()
 
 func assign_team(
 	team_fill: Color,

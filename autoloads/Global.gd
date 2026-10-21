@@ -3,6 +3,7 @@ extends Node
 var next_stone_ID: int = 0
 
 var connected_capturers_amount: int = 4
+var both_players_playing: bool = true
 
 var does_capturing_score: bool = false
 
