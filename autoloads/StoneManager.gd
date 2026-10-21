@@ -12,8 +12,18 @@ var _outer_stone_set: Dictionary = {}
 var _rebuild_timer: float = 0.0
 @export var rebuild_interval: float = 0.3
 
+func update_stone_score() -> void:
+	var black_stones: int = 0
+	var white_stones: int = 0
+	for stone in stones:
+		if stone.is_in_group("P1_Scoring"):
+			black_stones += 1
+		if stone.is_in_group("P2_Scoring"):
+			white_stones += 1
+	Global.update_stone_score(black_stones, white_stones)
+
+
 func _physics_process(delta: float) -> void:
-	
 	_rebuild_timer += delta
 	if _rebuild_timer >= rebuild_interval:
 		_rebuild_timer = 0.0

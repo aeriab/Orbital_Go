@@ -10,6 +10,11 @@ var does_capturing_score: bool = false
 # --- Game State ---
 var is_p1_turn: bool = true # Typically P1 (Black) starts in Go
 
+
+var black_start_stone_count: int = 1
+var white_start_stone_count: int = 3
+
+
 var p1_start_turn_throws_amount: int = 3
 var p1_throws_left: int = p1_start_turn_throws_amount
 #var p1_total_throws_left: int = 18
@@ -42,8 +47,8 @@ signal zone_radius_changed(new_radius: float)
 # --- Scoring ---
 # White (P2) often starts with 0.5 or 6.5 "Komi" points in Go to offset 
 # the disadvantage of going second.
-var p1_total_score: float = 0.0
-var p2_total_score: float = 0.0
+var p1_total_score: int = 0
+var p2_total_score: int = 0
 var p1_won: bool = false
 var draw_occurred: bool = true
 
@@ -81,6 +86,8 @@ var debug_color_stones_on: bool = false
 var debug_highlight_outer_on: bool = false
 var debug_shade_capture_area_on: bool = false
 
+var debug_stoneID_on: bool = false
+
 var rng = RandomNumberGenerator.new()
 func _ready() -> void:
 	rng.seed = 67
@@ -112,8 +119,8 @@ func reset_game_state():
 	cur_round = start_cur_round
 	final_round = start_final_round
 	
-	p1_total_score = 0.0
-	p2_total_score = 0.0
+	p1_total_score = 0
+	p2_total_score = 0
 	
 	p1_rope_score = 0
 	p2_rope_score = 0
@@ -168,10 +175,16 @@ func p2_throw_stones(amount: int):
 		p2_throw.emit(amount)
 		p2_throws_amount_updated.emit()
 
-func _on_update_rope_score() -> void:
-	p1_total_score = p1_rope_score
-	p2_total_score = p2_rope_score
+func update_stone_score(p1_stones: int, p2_stones: int) -> void:
+	p1_total_score = p1_stones
+	p2_total_score = p2_stones
 	update_total_score.emit()
+
+func _on_update_rope_score() -> void:
+	#p1_total_score = p1_rope_score
+	#p2_total_score = p2_rope_score
+	#update_total_score.emit()
+	pass
 
 func _on_update_total_score() -> void:
 	pass

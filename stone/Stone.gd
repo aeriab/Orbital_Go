@@ -41,7 +41,11 @@ var current_family: Array[Stone] = []
 
 func _ready() -> void:
 	stone_ID = Global.next_stone_ID
-	stone_id_label.text = str(stone_ID)
+	if Global.debug_stoneID_on:
+		stone_id_label.visible = true
+		stone_id_label.text = str(stone_ID)
+	else:
+		stone_id_label.visible = false
 	Global.next_stone_ID += 1
 	
 	# 1. Get Manager First
@@ -65,6 +69,8 @@ func _ready() -> void:
 		add_to_group(group)
 	for group in captures_with_teams:
 		add_to_group(group)
+	
+	stone_manager.update_stone_score()
 
 func _physics_process(_delta: float) -> void:
 	if not freeze:
@@ -167,6 +173,8 @@ func on_captured() -> void:
 	check_for_connect_captures()
 	for body in connected_bodies:
 		body.check_for_connect_captures()
+	
+	stone_manager.update_stone_score()
 
 
 func assign_team(
